@@ -1143,86 +1143,6 @@ body.pwa-banner-visible .hero {
 }
 
 /* ============================================
-   References Section
-   ============================================ */
-.references-section {
-    position: relative;
-    z-index: 1;
-    padding: 80px 20px;
-    background: var(--bg-primary);
-    border-top: 1px solid var(--border);
-    text-align: center;
-}
-
-.references-subtitle {
-    color: var(--text-muted);
-    font-size: 14px;
-    margin-top: -32px;
-    margin-bottom: 40px;
-}
-
-.references-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-.reference-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 32px 24px;
-    text-decoration: none;
-    color: var(--text-primary);
-    transition: all var(--transition);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-}
-
-.reference-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 32px rgba(200, 255, 0, 0.05);
-}
-
-.reference-icon {
-    width: 56px;
-    height: 56px;
-    background: rgba(200, 255, 0, 0.1);
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    color: var(--accent);
-}
-
-.reference-card h3 {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.reference-card p {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.6;
-}
-
-.reference-link-text {
-    font-size: 13px;
-    color: var(--accent);
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 4px;
-}
-
-/* ============================================
    Footer
    ============================================ */
 .footer {
@@ -1372,10 +1292,6 @@ body.pwa-banner-visible .hero {
     }
 
     .steps {
-        grid-template-columns: 1fr;
-    }
-
-    .references-grid {
         grid-template-columns: 1fr;
     }
 

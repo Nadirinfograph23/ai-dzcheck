@@ -81,11 +81,6 @@ var TRANSLATIONS = {
         analysis_method: 'Method',
         engines_agree: 'engines agree on the verdict',
         consensus: 'Consensus',
-        references_title: 'External Detection Tools',
-        references_subtitle: 'Explore more AI detection tools for comprehensive analysis',
-        ref_fauxlens: 'Free AI Image & Video Deepfake Detector',
-        ref_aidetectlab: 'AI Image Detection Tool with Advanced Analysis',
-        ref_visit: 'Visit'
     },
     ar: {
         nav_features: '\u0627\u0644\u0645\u0645\u064a\u0632\u0627\u062a',
@@ -161,11 +156,6 @@ var TRANSLATIONS = {
         analysis_method: '\u0627\u0644\u0637\u0631\u064a\u0642\u0629',
         engines_agree: '\u0645\u062d\u0631\u0643\u0627\u062a \u0645\u062a\u0641\u0642\u0629 \u0639\u0644\u0649 \u0627\u0644\u0646\u062a\u064a\u062c\u0629',
         consensus: '\u0627\u0644\u0625\u062c\u0645\u0627\u0639',
-        references_title: '\u0623\u062f\u0648\u0627\u062a \u0643\u0634\u0641 \u062e\u0627\u0631\u062c\u064a\u0629',
-        references_subtitle: '\u0627\u0633\u062a\u0643\u0634\u0641 \u0627\u0644\u0645\u0632\u064a\u062f \u0645\u0646 \u0623\u062f\u0648\u0627\u062a \u0643\u0634\u0641 \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a',
-        ref_fauxlens: '\u0643\u0627\u0634\u0641 \u0627\u0644\u062a\u0632\u064a\u064a\u0641 \u0627\u0644\u0639\u0645\u064a\u0642 \u0644\u0644\u0635\u0648\u0631 \u0648\u0627\u0644\u0641\u064a\u062f\u064a\u0648',
-        ref_aidetectlab: '\u0623\u062f\u0627\u0629 \u0643\u0634\u0641 \u0627\u0644\u0635\u0648\u0631 \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a',
-        ref_visit: '\u0632\u064a\u0627\u0631\u0629'
     },
     fr: {
         nav_features: 'Fonctionnalit\u00e9s',
@@ -241,11 +231,6 @@ var TRANSLATIONS = {
         analysis_method: 'M\u00e9thode',
         engines_agree: 'moteurs sont d\'accord sur le verdict',
         consensus: 'Consensus',
-        references_title: 'Outils de D\u00e9tection Externes',
-        references_subtitle: 'D\u00e9couvrez plus d\'outils de d\u00e9tection IA pour une analyse compl\u00e8te',
-        ref_fauxlens: 'D\u00e9tecteur gratuit de Deepfake pour images et vid\u00e9os',
-        ref_aidetectlab: 'Outil de d\u00e9tection d\'images IA avec analyse avanc\u00e9e',
-        ref_visit: 'Visiter'
     }
 };
 
