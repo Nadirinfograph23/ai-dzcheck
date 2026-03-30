@@ -582,24 +582,11 @@ async function analyzeReverseSearch(file, prevResults) {
 // Step 5: Compare Results - Average all scores, if < 50% => Natural, >= 50% => AI
 async function compareResults(results) {
     await delay(600 + Math.random() * 400);
-    var totalScore = 0;
-    var count = 0;
-    
-    results.forEach(function(r) {
-        totalScore += r.aiScore;
-        count++;
-    });
-    
-    var finalScore = count > 0 ? Math.round(totalScore / count) : 50;
-    
-    // Decision logic: if average < 50%, AI decides it's natural (real)
-    // if average >= 50%, AI decides it's AI-generated
-    var consensus;
-    if (finalScore >= 50) {
-        consensus = 'ai';
-    } else {
-        consensus = 'real';
-    }
+
+    // Use Deepfake Detection API (first result) as the primary verdict
+    var primaryResult = results[0];
+    var finalScore = primaryResult.aiScore;
+    var consensus = primaryResult.verdict;
 
     var verdicts = { ai: 0, real: 0, uncertain: 0 };
     results.forEach(function(r) { verdicts[r.verdict]++; });
