@@ -254,7 +254,6 @@ body.pwa-banner-visible .hero {
     font-size: 13px;
     text-decoration: none;
     transition: all var(--transition);
-    margin-left: 4px;
 }
 
 .nav-fb-icon:hover {
@@ -277,6 +276,13 @@ body.pwa-banner-visible .hero {
 
 .nav-link:hover {
     color: var(--accent);
+}
+
+/* Nav Right (Facebook + Language) */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 /* Language Switcher */
@@ -1316,9 +1322,6 @@ body.pwa-banner-visible .hero {
 }
 
 @media (max-width: 480px) {
-    .nav-fb-icon {
-        display: none;
-    }
 
     .upload-text {
         font-size: 14px;

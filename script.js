@@ -885,10 +885,16 @@ function resetAnalysis() {
 // ==================== PWA ====================
 var deferredPrompt = null;
 
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           (window.innerWidth <= 768);
+}
+
 function initPWA() {
     window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         deferredPrompt = e;
+        if (!isMobileDevice()) return;
         var banner = document.getElementById('pwaInstallBanner');
         if (banner) {
             banner.classList.add('show');
