@@ -582,18 +582,17 @@ async function analyzeReverseSearch(file, prevResults) {
 // Step 5: Compare Results - Average all scores, if < 50% => Natural, >= 50% => AI
 async function compareResults(results) {
     await delay(600 + Math.random() * 400);
-    var totalScore = 0;
-    var count = 0;
     
-    results.forEach(function(r) {
-        totalScore += r.aiScore;
-        count++;
-    });
+    // Primary result: use only Deepfake API (index 0) and DeepGuard (index 1)
+    var primaryScore = 0;
+    var primaryCount = 0;
+    if (results[0]) { primaryScore += results[0].aiScore; primaryCount++; }
+    if (results[1]) { primaryScore += results[1].aiScore; primaryCount++; }
+    var finalScore = primaryCount > 0 ? Math.round(primaryScore / primaryCount) : 50;
     
-    var finalScore = count > 0 ? Math.round(totalScore / count) : 50;
-    
-    // Decision logic: if average < 50%, AI decides it's natural (real)
+    // Decision logic based on primary engines only:
     // if average >= 50%, AI decides it's AI-generated
+    // if average < 50%, content is considered authentic (TRUE)
     var consensus;
     if (finalScore >= 50) {
         consensus = 'ai';
@@ -682,8 +681,12 @@ function displayResults(comparison, allResults) {
     // Set verdict
     verdictBox.className = 'verdict-box ' + comparison.verdict;
     
-    var icons = { ai: '<i class="fas fa-exclamation-triangle"></i>', real: '<i class="fas fa-check-circle"></i>', uncertain: '<i class="fas fa-question-circle"></i>' };
-    verdictIcon.innerHTML = icons[comparison.verdict] || icons.uncertain;
+    // Blinking verdict icon: AI or TRUE
+    if (comparison.verdict === 'ai') {
+        verdictIcon.innerHTML = '<span class="verdict-badge blink-ai"><i class="fas fa-robot"></i> AI</span>';
+    } else {
+        verdictIcon.innerHTML = '<span class="verdict-badge blink-true"><i class="fas fa-check-circle"></i> TRUE</span>';
+    }
     verdictTitle.textContent = t('verdict_' + comparison.verdict);
     
     // Show detailed verdict with percentage
@@ -860,17 +863,195 @@ function generateReportText() {
 }
 
 function downloadReport() {
-    var text = generateReportText();
-    if (!text) return;
-    var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = 'AI_DZ_CHECK_Report_' + new Date().toISOString().slice(0, 10) + '.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    if (!analysisResults || !analysisResults.comparison) return;
+    var r = analysisResults;
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    var pageWidth = doc.internal.pageSize.getWidth();
+    var pageHeight = doc.internal.pageSize.getHeight();
+    var margin = 20;
+    var y = 20;
+    var lineH = 7;
+
+    // --- Helper: add footer on every page ---
+    function addFooter() {
+        var footY = pageHeight - 12;
+        doc.setDrawColor(42, 42, 42);
+        doc.setLineWidth(0.3);
+        doc.line(margin, footY - 4, pageWidth - margin, footY - 4);
+        doc.setFontSize(8);
+        doc.setTextColor(120, 120, 120);
+        doc.text('AI DZ CHECK - Developer: NADIR INFOGRAPH', margin, footY);
+        doc.text('Facebook: facebook.com/nadir.infograph23', margin, footY + 4);
+        doc.text('Page ' + doc.internal.getNumberOfPages(), pageWidth - margin, footY, { align: 'right' });
+    }
+
+    // --- Helper: check page break ---
+    function checkPage(needed) {
+        if (y + needed > pageHeight - 25) {
+            addFooter();
+            doc.addPage();
+            y = 20;
+        }
+    }
+
+    // --- RED STAMP: AI DZ CHECK ---
+    doc.setFillColor(220, 30, 30);
+    doc.roundedRect(pageWidth / 2 - 35, y - 5, 70, 18, 4, 4, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.text('AI DZ CHECK', pageWidth / 2, y + 6, { align: 'center' });
+    y += 22;
+
+    // --- Date ---
+    doc.setFontSize(9);
+    doc.setTextColor(150, 150, 150);
+    doc.text('Report generated: ' + new Date().toLocaleString(), pageWidth / 2, y, { align: 'center' });
+    y += 10;
+
+    // Verdict result
+    var verdictText = r.comparison.verdict === 'ai' ? 'AI-GENERATED' : 'AUTHENTIC (TRUE)';
+    var verdictColor = r.comparison.verdict === 'ai' ? [220, 50, 50] : [34, 197, 94];
+
+    // --- SECTION: ENGLISH ---
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text('ANALYSIS REPORT (English)', margin, y);
+    y += 2;
+    doc.setDrawColor(200, 255, 0);
+    doc.setLineWidth(0.8);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += lineH;
+
+    doc.setFontSize(10);
+    doc.setTextColor(60, 60, 60);
+    doc.text('File: ' + r.file.name, margin, y); y += lineH;
+    doc.text('Size: ' + formatFileSize(r.file.size), margin, y); y += lineH;
+    doc.text('Type: ' + (r.file.type || 'Unknown'), margin, y); y += lineH + 2;
+
+    doc.setFontSize(12);
+    doc.setTextColor(verdictColor[0], verdictColor[1], verdictColor[2]);
+    doc.text('VERDICT: ' + verdictText, margin, y); y += lineH;
+    doc.setTextColor(60, 60, 60);
+    doc.setFontSize(10);
+    doc.text('AI Probability: ' + r.comparison.finalScore + '%', margin, y); y += lineH;
+    doc.text('Consensus: ' + r.comparison.agreeing + '/4 engines agree', margin, y); y += lineH;
+    doc.text('Primary engines (Deepfake + DeepGuard) determine the final verdict.', margin, y); y += lineH + 2;
+
+    // Engine details
+    r.allResults.forEach(function(result) {
+        checkPage(30);
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        doc.text(result.engine, margin + 2, y); y += lineH;
+        doc.setTextColor(80, 80, 80);
+        doc.setFontSize(9);
+        doc.text('AI Score: ' + result.aiScore + '% | Confidence: ' + result.confidence + '%', margin + 4, y); y += lineH;
+        var vLabel = result.verdict === 'ai' ? 'AI Generated' : result.verdict === 'real' ? 'Authentic' : 'Uncertain';
+        doc.text('Verdict: ' + vLabel, margin + 4, y); y += lineH;
+        if (result.details) {
+            Object.keys(result.details).forEach(function(key) {
+                checkPage(lineH);
+                doc.text(key + ': ' + result.details[key], margin + 6, y); y += lineH;
+            });
+        }
+        y += 2;
+    });
+
+    // --- SECTION: FRENCH ---
+    checkPage(60);
+    y += 6;
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text('RAPPORT D\'ANALYSE (Fran\u00e7ais)', margin, y);
+    y += 2;
+    doc.setDrawColor(200, 255, 0);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += lineH;
+
+    var frVerdict = r.comparison.verdict === 'ai' ? 'CONTENU GENERE PAR IA' : 'CONTENU AUTHENTIQUE (VRAI)';
+    doc.setFontSize(10);
+    doc.setTextColor(60, 60, 60);
+    doc.text('Fichier: ' + r.file.name, margin, y); y += lineH;
+    doc.text('Taille: ' + formatFileSize(r.file.size), margin, y); y += lineH;
+    doc.text('Type: ' + (r.file.type || 'Inconnu'), margin, y); y += lineH + 2;
+    doc.setFontSize(12);
+    doc.setTextColor(verdictColor[0], verdictColor[1], verdictColor[2]);
+    doc.text('VERDICT: ' + frVerdict, margin, y); y += lineH;
+    doc.setTextColor(60, 60, 60);
+    doc.setFontSize(10);
+    doc.text('Probabilite IA: ' + r.comparison.finalScore + '%', margin, y); y += lineH;
+    doc.text('Consensus: ' + r.comparison.agreeing + '/4 moteurs sont d\'accord', margin, y); y += lineH;
+    doc.text('Les moteurs principaux (Deepfake + DeepGuard) determinent le verdict final.', margin, y); y += lineH + 2;
+
+    r.allResults.forEach(function(result) {
+        checkPage(25);
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        doc.text(result.engine, margin + 2, y); y += lineH;
+        doc.setTextColor(80, 80, 80);
+        doc.setFontSize(9);
+        doc.text('Score IA: ' + result.aiScore + '% | Confiance: ' + result.confidence + '%', margin + 4, y); y += lineH;
+        var vLabel = result.verdict === 'ai' ? 'Genere par IA' : result.verdict === 'real' ? 'Authentique' : 'Incertain';
+        doc.text('Resultat: ' + vLabel, margin + 4, y); y += lineH + 2;
+    });
+
+    // --- SECTION: ARABIC ---
+    checkPage(60);
+    y += 6;
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text('TAQRIR TAHLIL (Arabic)', margin, y);
+    y += 2;
+    doc.setDrawColor(200, 255, 0);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += lineH;
+
+    var arVerdict = r.comparison.verdict === 'ai' ? 'MUHTAWA MUWALLAD BI AL-DHAKAA AL-ISTINAI' : 'MUHTAWA ASLI (HAQIQI)';
+    doc.setFontSize(10);
+    doc.setTextColor(60, 60, 60);
+    doc.text('Ism al-Malaf: ' + r.file.name, margin, y); y += lineH;
+    doc.text('Hajm: ' + formatFileSize(r.file.size), margin, y); y += lineH;
+    doc.text('Naw: ' + (r.file.type || 'Ghayr Maaruf'), margin, y); y += lineH + 2;
+    doc.setFontSize(12);
+    doc.setTextColor(verdictColor[0], verdictColor[1], verdictColor[2]);
+    doc.text('AL-NATIJA: ' + arVerdict, margin, y); y += lineH;
+    doc.setTextColor(60, 60, 60);
+    doc.setFontSize(10);
+    doc.text('Ihtimal AI: ' + r.comparison.finalScore + '%', margin, y); y += lineH;
+    doc.text('Ijmaa: ' + r.comparison.agreeing + '/4 muharrikat muttafiqah', margin, y); y += lineH;
+    doc.text('Al-muharrikat al-raissiya (Deepfake + DeepGuard) tuhaddid al-natija al-nihaiya.', margin, y); y += lineH + 2;
+
+    r.allResults.forEach(function(result) {
+        checkPage(25);
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        doc.text(result.engine, margin + 2, y); y += lineH;
+        doc.setTextColor(80, 80, 80);
+        doc.setFontSize(9);
+        doc.text('Darajat AI: ' + result.aiScore + '% | Thiqa: ' + result.confidence + '%', margin + 4, y); y += lineH;
+        var vLabel = result.verdict === 'ai' ? 'Muwallad bi AI' : result.verdict === 'real' ? 'Asli' : 'Ghayr Muakkad';
+        doc.text('Natija: ' + vLabel, margin + 4, y); y += lineH + 2;
+    });
+
+    // --- RED STAMP at bottom ---
+    checkPage(30);
+    y += 8;
+    doc.setFillColor(220, 30, 30);
+    doc.roundedRect(pageWidth / 2 - 30, y - 4, 60, 14, 3, 3, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(12);
+    doc.text('AI DZ CHECK', pageWidth / 2, y + 5, { align: 'center' });
+    y += 20;
+
+    // Add footer to all pages
+    var totalPages = doc.internal.getNumberOfPages();
+    for (var p = 1; p <= totalPages; p++) {
+        doc.setPage(p);
+        addFooter();
+    }
+
+    doc.save('AI_DZ_CHECK_Report_' + new Date().toISOString().slice(0, 10) + '.pdf');
 }
 
 function resetAnalysis() {
