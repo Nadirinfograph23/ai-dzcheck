@@ -727,7 +727,7 @@ function initPWA() {
         e.preventDefault();
         deferredPrompt = e;
         var banner = document.getElementById('pwaInstallBanner');
-        if (banner && window.innerWidth < 769) {
+        if (banner) {
             banner.classList.add('show');
             document.body.classList.add('pwa-banner-visible');
         }

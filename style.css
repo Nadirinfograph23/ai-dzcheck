@@ -169,14 +169,11 @@ body.pwa-banner-visible .hero {
 }
 
 @media (min-width: 769px) {
-    .pwa-install-banner {
-        display: none !important;
-    }
     body.pwa-banner-visible .navbar {
-        top: 0;
+        top: 48px;
     }
     body.pwa-banner-visible .hero {
-        padding-top: 120px;
+        padding-top: 168px;
     }
 }
 
@@ -1359,4 +1356,16 @@ html[dir="rtl"] .file-info {
 ::selection {
     background: var(--accent);
     color: #000;
+}
+
+/* Allow screenshots and user interaction */
+* {
+    -webkit-touch-callout: default !important;
+    -webkit-user-select: auto !important;
+    user-select: auto !important;
+}
+
+input, button, a, [role="button"] {
+    -webkit-user-select: auto !important;
+    user-select: auto !important;
 }
