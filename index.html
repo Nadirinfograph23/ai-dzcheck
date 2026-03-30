@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI DZ CHECK - AI Content Detector</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="description" content="Detect AI-generated images, videos, and audio with advanced deepfake detection technology">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+    <!-- PWA Install Banner -->
+    <div class="pwa-install-banner" id="pwaInstallBanner">
+        <button class="pwa-close-btn" id="pwaCloseBtn" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+        <span class="pwa-text" data-i18n="pwa_install_text">Install app for a better experience</span>
+        <button class="pwa-install-btn" id="pwaInstallBtn">INSTALL APP</button>
+    </div>
+
+    <!-- Animated background particles -->
+    <div class="bg-particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="nav-logo">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <span class="nav-title">AI DZ CHECK</span>
+            <a href="https://www.facebook.com/nadir.infograph23" class="nav-fb-icon" target="_blank" rel="noopener noreferrer" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="#features" class="nav-link" data-i18n="nav_features">Features</a>
+            <a href="#how-it-works" class="nav-link" data-i18n="nav_how">How it works</a>
+        </div>
+        <div class="lang-switcher" id="langSwitcher">
+            <button class="lang-btn" id="langBtn" title="Language">
+                <i class="fas fa-globe"></i>
+            </button>
+            <div class="lang-dropdown" id="langDropdown">
+                <button class="lang-option" data-lang="ar">
+                    <span class="flag-emoji">&#127465;&#127487;</span>
+                    <span>العربية</span>
+                </button>
+                <button class="lang-option" data-lang="fr">
+                    <span class="flag-emoji">&#127467;&#127479;</span>
+                    <span>Français</span>
+                </button>
+                <button class="lang-option active" data-lang="en">
+                    <span class="flag-emoji">&#127468;&#127463;</span>
+                    <span>English</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main class="hero">
+        <!-- Icon -->
+        <div class="icon-container" id="iconContainer">
+            <div class="icon-glow"></div>
+            <div class="icon-box" id="iconBox">
+                <i class="fas fa-brain" id="mainIcon"></i>
+            </div>
+            <div class="sparkle sparkle-1"><i class="fas fa-star"></i></div>
+            <div class="sparkle sparkle-2"><i class="fas fa-star"></i></div>
+        </div>
+
+        <!-- Title -->
+        <h1 class="main-title">AI DZ CHECK</h1>
+        <p class="subtitle" data-i18n="subtitle">Detect AI-generated content — images, videos, and audio — with advanced analysis</p>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-arrow-up"></i>
+                </div>
+                <p class="upload-text" data-i18n="upload_text">Drag & drop your file here or click to browse</p>
+                <p class="upload-hint" data-i18n="upload_hint">Supports: Images (JPG, PNG, WebP), Videos (MP4, AVI), Audio (MP3, WAV)</p>
+                <input type="file" id="fileInput" accept="image/*,video/*,audio/*" hidden>
+                <button class="upload-btn" id="uploadBtn">
+                    <i class="fas fa-folder-open"></i>
+                    <span data-i18n="btn_browse">Browse Files</span>
+                </button>
+            </div>
+            <p class="helper-text" data-i18n="helper_text">Max file size: 50MB — Analysis uses multiple AI detection engines</p>
+        </div>
+
+        <!-- Media Type Badges -->
+        <div class="platform-badges" id="features">
+            <div class="badge" data-type="image">
+                <i class="fas fa-image"></i>
+                <span data-i18n="badge_image">Images</span>
+            </div>
+            <div class="badge" data-type="video">
+                <i class="fas fa-video"></i>
+                <span data-i18n="badge_video">Videos</span>
+            </div>
+            <div class="badge" data-type="audio">
+                <i class="fas fa-microphone"></i>
+                <span data-i18n="badge_audio">Audio</span>
+            </div>
+            <div class="badge" data-type="deepfake">
+                <i class="fas fa-user-secret"></i>
+                <span data-i18n="badge_deepfake">Deepfake</span>
+            </div>
+            <div class="badge" data-type="metadata">
+                <i class="fas fa-database"></i>
+                <span data-i18n="badge_metadata">Metadata</span>
+            </div>
+            <div class="badge" data-type="reverse">
+                <i class="fas fa-magnifying-glass"></i>
+                <span data-i18n="badge_reverse">Reverse Search</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Analysis Progress Section -->
+    <section class="analysis-section" id="analysisSection" style="display:none;">
+        <div class="analysis-card">
+            <h2 class="analysis-title" data-i18n="analysis_title">
+                <i class="fas fa-cog fa-spin"></i> Analyzing Content...
+            </h2>
+            
+            <!-- File Preview -->
+            <div class="file-preview" id="filePreview">
+                <img id="previewImage" style="display:none;" alt="Preview">
+                <video id="previewVideo" style="display:none;" controls></video>
+                <div id="previewAudio" style="display:none;">
+                    <i class="fas fa-music audio-icon"></i>
+                    <audio id="audioPlayer" controls></audio>
+                </div>
+                <div class="file-info" id="fileInfo"></div>
+            </div>
+
+            <!-- Analysis Steps -->
+            <div class="analysis-steps" id="analysisSteps">
+                <div class="step-item" id="step1" data-step="1">
+                    <div class="step-status"><i class="fas fa-circle-notch fa-spin"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_api_title">Deepfake Detection API</h4>
+                        <p data-i18n="step_api_desc">Analyzing with primary AI detection engine</p>
+                    </div>
+                    <div class="step-result" id="step1Result"></div>
+                </div>
+                <div class="step-item" id="step2" data-step="2">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_deepguard_title">DeepGuard Analysis</h4>
+                        <p data-i18n="step_deepguard_desc">Secondary verification with DeepGuard engine</p>
+                    </div>
+                    <div class="step-result" id="step2Result"></div>
+                </div>
+                <div class="step-item" id="step3" data-step="3">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_meta_title">Metadata Inspection</h4>
+                        <p data-i18n="step_meta_desc">Checking file metadata for AI generation signatures</p>
+                    </div>
+                    <div class="step-result" id="step3Result"></div>
+                </div>
+                <div class="step-item" id="step4" data-step="4">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_reverse_title">Reverse Search</h4>
+                        <p data-i18n="step_reverse_desc">Searching for original sources online</p>
+                    </div>
+                    <div class="step-result" id="step4Result"></div>
+                </div>
+                <div class="step-item" id="step5" data-step="5">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_compare_title">Results Comparison</h4>
+                        <p data-i18n="step_compare_desc">Cross-referencing all analysis results</p>
+                    </div>
+                    <div class="step-result" id="step5Result"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="resultsSection" style="display:none;">
+        <div class="results-card">
+            <!-- Verdict -->
+            <div class="verdict-box" id="verdictBox">
+                <div class="verdict-icon" id="verdictIcon"></div>
+                <h2 class="verdict-title" id="verdictTitle"></h2>
+                <p class="verdict-subtitle" id="verdictSubtitle"></p>
+                <div class="verdict-score" id="verdictScore">
+                    <div class="score-ring" id="scoreRing">
+                        <svg viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="52" class="score-bg"/>
+                            <circle cx="60" cy="60" r="52" class="score-fill" id="scoreFill"/>
+                        </svg>
+                        <span class="score-text" id="scoreText">0%</span>
+                    </div>
+                    <p class="score-label" data-i18n="ai_probability">AI Generation Probability</p>
+                </div>
+            </div>
+
+            <!-- Detailed Report -->
+            <div class="report-section">
+                <h3 class="report-title" data-i18n="report_title"><i class="fas fa-file-lines"></i> Detailed Report</h3>
+                
+                <div class="report-grid">
+                    <!-- Deepfake API Result -->
+                    <div class="report-item" id="reportApi">
+                        <div class="report-item-header">
+                            <i class="fas fa-robot"></i>
+                            <span data-i18n="report_api">Deepfake Detection API</span>
+                        </div>
+                        <div class="report-item-body" id="reportApiBody"></div>
+                    </div>
+
+                    <!-- DeepGuard Result -->
+                    <div class="report-item" id="reportDeepguard">
+                        <div class="report-item-header">
+                            <i class="fas fa-shield-halved"></i>
+                            <span data-i18n="report_deepguard">DeepGuard</span>
+                        </div>
+                        <div class="report-item-body" id="reportDeepguardBody"></div>
+                    </div>
+
+                    <!-- Metadata Result -->
+                    <div class="report-item" id="reportMetadata">
+                        <div class="report-item-header">
+                            <i class="fas fa-database"></i>
+                            <span data-i18n="report_metadata">Metadata Analysis</span>
+                        </div>
+                        <div class="report-item-body" id="reportMetadataBody"></div>
+                    </div>
+
+                    <!-- Reverse Search Result -->
+                    <div class="report-item" id="reportReverse">
+                        <div class="report-item-header">
+                            <i class="fas fa-magnifying-glass"></i>
+                            <span data-i18n="report_reverse">Reverse Search</span>
+                        </div>
+                        <div class="report-item-body" id="reportReverseBody"></div>
+                    </div>
+                </div>
+
+                <!-- Comparison Summary -->
+                <div class="comparison-box" id="comparisonBox">
+                    <h4 data-i18n="comparison_title"><i class="fas fa-scale-balanced"></i> Cross-Analysis Summary</h4>
+                    <div class="comparison-body" id="comparisonBody"></div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="result-actions">
+                <button class="action-btn primary" id="downloadReport">
+                    <i class="fas fa-download"></i>
+                    <span data-i18n="btn_download_report">Download Report</span>
+                </button>
+                <button class="action-btn secondary" id="newAnalysis">
+                    <i class="fas fa-rotate"></i>
+                    <span data-i18n="btn_new_analysis">New Analysis</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <h2 class="section-title" data-i18n="how_title">How it works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-cloud-arrow-up"></i>
+                </div>
+                <h3 data-i18n="how_step1_title">1. Upload Content</h3>
+                <p data-i18n="how_step1_desc">Upload an image, video, or audio file you want to verify</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <h3 data-i18n="how_step2_title">2. AI Analysis</h3>
+                <p data-i18n="how_step2_desc">Multiple AI engines analyze the content for signs of artificial generation</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <h3 data-i18n="how_step3_title">3. Get Report</h3>
+                <p data-i18n="how_step3_desc">Receive a detailed report with confidence scores from all detection methods</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-i18n="footer_copy">&copy; 2025 AI DZ CHECK. All rights reserved.</p>
+        <p class="developer-credit">
+            <span data-i18n="footer_dev">تطوير : </span>
+            <a href="https://www.facebook.com/nadir.infograph23" class="developer-link" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-facebook-f"></i>
+                نذير حوامرية - NADIR INFOGRAPH
+            </a>
+        </p>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
