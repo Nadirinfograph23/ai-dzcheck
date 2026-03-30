@@ -3,13 +3,16 @@
    Offline support & caching
    ============================================ */
 
-var CACHE_NAME = 'aidzcheck-v1';
+var CACHE_NAME = 'aidzcheck-v2';
 var ASSETS = [
     '/',
     '/index.html',
     '/style.css',
     '/script.js',
     '/manifest.json',
+    '/icon-192.png',
+    '/icon-512.png',
+    '/apple-touch-icon.png',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
     'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
 ];
