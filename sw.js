@@ -3,7 +3,7 @@
    Offline support & caching
    ============================================ */
 
-var CACHE_NAME = 'aidzcheck-v4';
+var CACHE_NAME = 'aidzcheck-v5';
 var ASSETS = [
     '/',
     '/index.html',
@@ -14,7 +14,6 @@ var ASSETS = [
     '/icon-512.png',
     '/apple-touch-icon.png',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js',
     'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
 ];
 
@@ -46,6 +45,10 @@ self.addEventListener('activate', function(event) {
 
 // Fetch
 self.addEventListener('fetch', function(event) {
+    // Skip caching for jsPDF CDN - always fetch from network
+    if (event.request.url.indexOf('jspdf') !== -1) {
+        return;
+    }
     event.respondWith(
         caches.match(event.request).then(function(cached) {
             return cached || fetch(event.request).then(function(response) {
