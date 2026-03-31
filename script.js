@@ -81,6 +81,18 @@ var TRANSLATIONS = {
         analysis_method: 'Method',
         engines_agree: 'engines agree on the verdict',
         consensus: 'Consensus',
+        insight_deepfake_title: 'Deepfake Detection Alert',
+        insight_deepfake_media_ai: 'The {media} appears to be AI-generated or manipulated.',
+        insight_deepfake_news_note: 'However, the news content itself may still be accurate. Always verify the source of the information independently.',
+        insight_authentic_title: 'Authentic Content',
+        insight_authentic_desc: 'The {media} appears to be authentic and not AI-generated. No deepfake manipulation was detected.',
+        insight_uncertain_title: 'Verification Recommended',
+        insight_uncertain_desc: 'The analysis of this {media} is inconclusive. We recommend manual verification to confirm authenticity.',
+        media_image: 'image',
+        media_video: 'video',
+        media_audio: 'audio',
+        ai_repos_title: 'Supported AI Detection Technologies',
+        ai_repos_subtitle: 'Powered by open-source AI detection research and models',
     },
     ar: {
         nav_features: '\u0627\u0644\u0645\u0645\u064a\u0632\u0627\u062a',
@@ -156,6 +168,18 @@ var TRANSLATIONS = {
         analysis_method: '\u0627\u0644\u0637\u0631\u064a\u0642\u0629',
         engines_agree: '\u0645\u062d\u0631\u0643\u0627\u062a \u0645\u062a\u0641\u0642\u0629 \u0639\u0644\u0649 \u0627\u0644\u0646\u062a\u064a\u062c\u0629',
         consensus: '\u0627\u0644\u0625\u062c\u0645\u0627\u0639',
+        insight_deepfake_title: '\u062a\u0646\u0628\u064a\u0647 \u0643\u0634\u0641 \u0627\u0644\u062a\u0632\u064a\u064a\u0641 \u0627\u0644\u0639\u0645\u064a\u0642',
+        insight_deepfake_media_ai: '{media} \u064a\u0628\u062f\u0648 \u0623\u0646\u0647 \u0645\u0648\u0644\u062f \u0623\u0648 \u0645\u0639\u062f\u0644 \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a.',
+        insight_deepfake_news_note: '\u0648\u0645\u0639 \u0630\u0644\u0643\u060c \u0642\u062f \u064a\u0643\u0648\u0646 \u0627\u0644\u062e\u0628\u0631 \u0646\u0641\u0633\u0647 \u0635\u062d\u064a\u062d\u0627\u064b. \u062a\u062d\u0642\u0642 \u062f\u0627\u0626\u0645\u0627\u064b \u0645\u0646 \u0645\u0635\u062f\u0631 \u0627\u0644\u0645\u0639\u0644\u0648\u0645\u0629 \u0628\u0634\u0643\u0644 \u0645\u0633\u062a\u0642\u0644.',
+        insight_authentic_title: '\u0645\u062d\u062a\u0648\u0649 \u0623\u0635\u0644\u064a',
+        insight_authentic_desc: '{media} \u064a\u0628\u062f\u0648 \u0623\u0635\u0644\u064a\u0627\u064b \u0648\u0644\u064a\u0633 \u0645\u0648\u0644\u062f\u0627\u064b \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a. \u0644\u0645 \u064a\u062a\u0645 \u0627\u0643\u062a\u0634\u0627\u0641 \u0623\u064a \u062a\u0632\u064a\u064a\u0641 \u0639\u0645\u064a\u0642.',
+        insight_uncertain_title: '\u064a\u0646\u0635\u062d \u0628\u0627\u0644\u062a\u062d\u0642\u0642',
+        insight_uncertain_desc: '\u062a\u062d\u0644\u064a\u0644 \u0647\u0630\u0627 {media} \u063a\u064a\u0631 \u062d\u0627\u0633\u0645. \u0646\u0646\u0635\u062d \u0628\u0627\u0644\u062a\u062d\u0642\u0642 \u0627\u0644\u064a\u062f\u0648\u064a \u0644\u062a\u0623\u0643\u064a\u062f \u0627\u0644\u0623\u0635\u0627\u0644\u0629.',
+        media_image: '\u0627\u0644\u0635\u0648\u0631\u0629',
+        media_video: '\u0627\u0644\u0641\u064a\u062f\u064a\u0648',
+        media_audio: '\u0627\u0644\u0635\u0648\u062a',
+        ai_repos_title: '\u062a\u0642\u0646\u064a\u0627\u062a \u0643\u0634\u0641 \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0627\u0644\u0645\u062f\u0639\u0648\u0645\u0629',
+        ai_repos_subtitle: '\u0645\u062f\u0639\u0648\u0645 \u0628\u0623\u0628\u062d\u0627\u062b \u0648\u0646\u0645\u0627\u0630\u062c \u0643\u0634\u0641 \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0645\u0641\u062a\u0648\u062d\u0629 \u0627\u0644\u0645\u0635\u062f\u0631',
     },
     fr: {
         nav_features: 'Fonctionnalit\u00e9s',
@@ -231,6 +255,18 @@ var TRANSLATIONS = {
         analysis_method: 'M\u00e9thode',
         engines_agree: 'moteurs sont d\'accord sur le verdict',
         consensus: 'Consensus',
+        insight_deepfake_title: 'Alerte D\u00e9tection Deepfake',
+        insight_deepfake_media_ai: 'Le {media} semble \u00eatre g\u00e9n\u00e9r\u00e9 ou manipul\u00e9 par l\'IA.',
+        insight_deepfake_news_note: 'Cependant, le contenu de l\'information peut toujours \u00eatre exact. V\u00e9rifiez toujours la source ind\u00e9pendamment.',
+        insight_authentic_title: 'Contenu Authentique',
+        insight_authentic_desc: 'Le {media} semble authentique et non g\u00e9n\u00e9r\u00e9 par l\'IA. Aucune manipulation deepfake d\u00e9tect\u00e9e.',
+        insight_uncertain_title: 'V\u00e9rification Recommand\u00e9e',
+        insight_uncertain_desc: 'L\'analyse de ce {media} n\'est pas concluante. Nous recommandons une v\u00e9rification manuelle.',
+        media_image: 'image',
+        media_video: 'vid\u00e9o',
+        media_audio: 'audio',
+        ai_repos_title: 'Technologies de D\u00e9tection IA Support\u00e9es',
+        ai_repos_subtitle: 'Aliment\u00e9 par la recherche et les mod\u00e8les de d\u00e9tection IA open-source',
     }
 };
 
@@ -579,22 +615,32 @@ async function analyzeReverseSearch(file, prevResults) {
     };
 }
 
-// Step 5: Compare Results - Average all scores, if < 50% => Natural, >= 50% => AI
+// Step 5: Compare Results - Deepfake detection is the PRIMARY basis for the final result
+// Weight: Deepfake API = 60%, DeepGuard = 25%, Metadata + Reverse = 15%
 async function compareResults(results) {
     await delay(600 + Math.random() * 400);
     
-    // Primary result: use only Deepfake API (index 0) and DeepGuard (index 1)
-    var primaryScore = 0;
-    var primaryCount = 0;
-    if (results[0]) { primaryScore += results[0].aiScore; primaryCount++; }
-    if (results[1]) { primaryScore += results[1].aiScore; primaryCount++; }
-    var finalScore = primaryCount > 0 ? Math.round(primaryScore / primaryCount) : 50;
+    // Deepfake detection is the PRIMARY basis for the final score
+    var deepfakeScore = results[0] ? results[0].aiScore : 50;
+    var deepguardScore = results[1] ? results[1].aiScore : 50;
+    var metadataScore = results[2] ? results[2].aiScore : 50;
+    var reverseScore = results[3] ? results[3].aiScore : 50;
     
-    // Decision logic based on primary engines only:
-    // if average >= 50%, AI decides it's AI-generated
-    // if average < 50%, content is considered authentic (TRUE)
+    // Weighted scoring: Deepfake API has highest weight (60%)
+    var finalScore = Math.round(
+        deepfakeScore * 0.60 +
+        deepguardScore * 0.25 +
+        metadataScore * 0.08 +
+        reverseScore * 0.07
+    );
+    
+    // Decision logic: deepfake detection drives the verdict
+    // If deepfake API says AI (>= 50%), final verdict is AI regardless of others
+    // If deepfake API says real (< 50%), check if weighted score still >= 50%
     var consensus;
-    if (finalScore >= 50) {
+    if (deepfakeScore >= 50) {
+        consensus = 'ai';
+    } else if (finalScore >= 50) {
         consensus = 'ai';
     } else {
         consensus = 'real';
@@ -604,12 +650,23 @@ async function compareResults(results) {
     results.forEach(function(r) { verdicts[r.verdict]++; });
     var agreeing = Math.max(verdicts.ai, verdicts.real, verdicts.uncertain);
 
+    // Determine media-specific insight for the explanatory paragraph
+    var fileType = currentFile ? getFileType(currentFile) : 'unknown';
+    var mediaLabel = fileType === 'video' ? 'video' : fileType === 'audio' ? 'audio' : 'image';
+    var deepfakeDetected = deepfakeScore >= 50;
+    var otherReportsClean = (metadataScore < 40 && reverseScore < 40);
+
     return {
         finalScore: finalScore,
         naturalScore: 100 - finalScore,
         verdict: consensus,
         agreeing: agreeing,
         total: results.length,
+        deepfakeScore: deepfakeScore,
+        deepguardScore: deepguardScore,
+        mediaLabel: mediaLabel,
+        deepfakeDetected: deepfakeDetected,
+        otherReportsClean: otherReportsClean,
         breakdown: results.map(function(r) {
             return { engine: r.engine, score: r.aiScore, verdict: r.verdict, confidence: r.confidence };
         })
@@ -749,6 +806,40 @@ function displayResults(comparison, allResults) {
         t('verdict_' + comparison.verdict) + '</strong></p>';
     compBody.innerHTML = compHTML;
     
+    // Add deepfake insight paragraph
+    var insightBox = document.getElementById('deepfakeInsightBox');
+    if (insightBox) {
+        var insightHTML = '';
+        if (comparison.deepfakeDetected) {
+            // Deepfake detected: media is AI but news might be real
+            insightHTML = '<div class="insight-alert insight-warning">' +
+                '<i class="fas fa-exclamation-triangle"></i> ' +
+                '<div class="insight-text">' +
+                '<strong>' + t('insight_deepfake_title') + '</strong>' +
+                '<p>' + t('insight_deepfake_media_ai').replace('{media}', t('media_' + comparison.mediaLabel)) +
+                ' ' + t('insight_deepfake_news_note') + '</p>' +
+                '</div></div>';
+        } else if (comparison.verdict === 'real') {
+            // Everything looks authentic
+            insightHTML = '<div class="insight-alert insight-success">' +
+                '<i class="fas fa-check-circle"></i> ' +
+                '<div class="insight-text">' +
+                '<strong>' + t('insight_authentic_title') + '</strong>' +
+                '<p>' + t('insight_authentic_desc').replace('{media}', t('media_' + comparison.mediaLabel)) + '</p>' +
+                '</div></div>';
+        } else {
+            // Uncertain
+            insightHTML = '<div class="insight-alert insight-uncertain">' +
+                '<i class="fas fa-question-circle"></i> ' +
+                '<div class="insight-text">' +
+                '<strong>' + t('insight_uncertain_title') + '</strong>' +
+                '<p>' + t('insight_uncertain_desc').replace('{media}', t('media_' + comparison.mediaLabel)) + '</p>' +
+                '</div></div>';
+        }
+        insightBox.innerHTML = insightHTML;
+        insightBox.style.display = 'block';
+    }
+    
     resultsSection.style.display = 'block';
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -839,7 +930,20 @@ function generateReportText() {
     lines.push('VERDICT: ' + t('verdict_' + r.comparison.verdict).toUpperCase());
     lines.push('AI Probability: ' + r.comparison.finalScore + '%');
     lines.push('Consensus: ' + r.comparison.agreeing + '/4 engines agree');
+    lines.push('Deepfake Score (Primary): ' + (r.comparison.deepfakeScore || 'N/A') + '%');
     lines.push('───────────────────────────────────────');
+    lines.push('');
+    
+    // Deepfake insight paragraph
+    if (r.comparison.deepfakeDetected) {
+        lines.push('>>> DEEPFAKE ALERT: The ' + r.comparison.mediaLabel + ' appears to be AI-generated.');
+        lines.push('    However, the news content itself may still be accurate.');
+        lines.push('    Always verify the source independently.');
+    } else if (r.comparison.verdict === 'real') {
+        lines.push('>>> AUTHENTIC: The ' + r.comparison.mediaLabel + ' appears authentic. No deepfake detected.');
+    } else {
+        lines.push('>>> INCONCLUSIVE: Manual verification recommended for this ' + r.comparison.mediaLabel + '.');
+    }
     lines.push('');
     
     r.allResults.forEach(function(result) {
@@ -951,7 +1055,27 @@ function downloadReport() {
     doc.setFontSize(10);
     doc.text('AI Probability: ' + r.comparison.finalScore + '%', margin, y); y += lineH;
     doc.text('Consensus: ' + r.comparison.agreeing + '/4 engines agree', margin, y); y += lineH;
-    doc.text('Primary engines (Deepfake + DeepGuard) determine the final verdict.', margin, y); y += lineH + 2;
+    doc.text('Deepfake detection is the primary basis for the verdict (60% weight).', margin, y); y += lineH;
+    doc.text('Deepfake Score: ' + (r.comparison.deepfakeScore || 'N/A') + '%', margin, y); y += lineH + 2;
+
+    // Deepfake insight paragraph in PDF
+    checkPage(20);
+    if (r.comparison.deepfakeDetected) {
+        doc.setFillColor(245, 158, 11);
+        doc.roundedRect(margin, y - 3, pageWidth - 2 * margin, 16, 3, 3, 'F');
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(10);
+        doc.text('ALERT: The ' + (r.comparison.mediaLabel || 'media') + ' is AI-generated. The news may still be accurate.', margin + 4, y + 6);
+        y += 22;
+    } else if (r.comparison.verdict === 'real') {
+        doc.setFillColor(34, 197, 94);
+        doc.roundedRect(margin, y - 3, pageWidth - 2 * margin, 14, 3, 3, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.text('AUTHENTIC: The ' + (r.comparison.mediaLabel || 'media') + ' appears genuine. No deepfake detected.', margin + 4, y + 5);
+        y += 20;
+    }
+    doc.setTextColor(60, 60, 60);
 
     // Engine details
     r.allResults.forEach(function(result) {
@@ -997,7 +1121,27 @@ function downloadReport() {
     doc.setFontSize(10);
     doc.text('Probabilite IA: ' + r.comparison.finalScore + '%', margin, y); y += lineH;
     doc.text('Consensus: ' + r.comparison.agreeing + '/4 moteurs sont d\'accord', margin, y); y += lineH;
-    doc.text('Les moteurs principaux (Deepfake + DeepGuard) determinent le verdict final.', margin, y); y += lineH + 2;
+    doc.text('La detection deepfake est la base principale du verdict (poids 60%).', margin, y); y += lineH;
+    doc.text('Score Deepfake: ' + (r.comparison.deepfakeScore || 'N/A') + '%', margin, y); y += lineH + 2;
+
+    // Deepfake insight in French
+    checkPage(20);
+    if (r.comparison.deepfakeDetected) {
+        doc.setFillColor(245, 158, 11);
+        doc.roundedRect(margin, y - 3, pageWidth - 2 * margin, 16, 3, 3, 'F');
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(10);
+        doc.text('ALERTE: Le ' + (r.comparison.mediaLabel || 'media') + ' est genere par IA. L\'info peut etre exacte.', margin + 4, y + 6);
+        y += 22;
+    } else if (r.comparison.verdict === 'real') {
+        doc.setFillColor(34, 197, 94);
+        doc.roundedRect(margin, y - 3, pageWidth - 2 * margin, 14, 3, 3, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.text('AUTHENTIQUE: Le ' + (r.comparison.mediaLabel || 'media') + ' semble authentique.', margin + 4, y + 5);
+        y += 20;
+    }
+    doc.setTextColor(60, 60, 60);
 
     r.allResults.forEach(function(result) {
         checkPage(25);
@@ -1035,7 +1179,27 @@ function downloadReport() {
     doc.setFontSize(10);
     doc.text('Ihtimal AI: ' + r.comparison.finalScore + '%', margin, y); y += lineH;
     doc.text('Ijmaa: ' + r.comparison.agreeing + '/4 muharrikat muttafiqah', margin, y); y += lineH;
-    doc.text('Al-muharrikat al-raissiya (Deepfake + DeepGuard) tuhaddid al-natija al-nihaiya.', margin, y); y += lineH + 2;
+    doc.text('Kashf al-tazyyif al-amiq huwa al-asas al-raisi lil-natija (wazn 60%).', margin, y); y += lineH;
+    doc.text('Darajat Deepfake: ' + (r.comparison.deepfakeScore || 'N/A') + '%', margin, y); y += lineH + 2;
+
+    // Deepfake insight in Arabic
+    checkPage(20);
+    if (r.comparison.deepfakeDetected) {
+        doc.setFillColor(245, 158, 11);
+        doc.roundedRect(margin, y - 3, pageWidth - 2 * margin, 16, 3, 3, 'F');
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(10);
+        doc.text('TANBIH: ' + (r.comparison.mediaLabel || 'media') + ' muwallad bi AI. Al-khabar qad yakun sahih.', margin + 4, y + 6);
+        y += 22;
+    } else if (r.comparison.verdict === 'real') {
+        doc.setFillColor(34, 197, 94);
+        doc.roundedRect(margin, y - 3, pageWidth - 2 * margin, 14, 3, 3, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.text('ASLI: ' + (r.comparison.mediaLabel || 'media') + ' yabdu asliyan. La tazyyif.', margin + 4, y + 5);
+        y += 20;
+    }
+    doc.setTextColor(60, 60, 60);
 
     r.allResults.forEach(function(result) {
         checkPage(25);
