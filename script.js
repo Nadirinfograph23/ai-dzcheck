@@ -766,7 +766,18 @@ async function compareResults(results) {
     } else if (finalScore <= 38) {
         consensus = 'real';
     } else {
-        consensus = 'uncertain';
+        // Inconclusive zone: use Cross-Analysis Summary highest average
+        // Calculate the average AI score across all engines
+        var totalAiScore = deepfakeScore + deepguardScore + metadataScore + reverseScore;
+        var avgAiScore = totalAiScore / 4;
+        // Determine frame result based on which side dominates
+        if (avgAiScore >= 55) {
+            consensus = 'ai';
+        } else if (avgAiScore <= 45) {
+            consensus = 'real';
+        } else {
+            consensus = 'uncertain';
+        }
     }
 
     // Additional consensus check: count how many engines agree
@@ -873,9 +884,11 @@ function displayResults(comparison, allResults) {
     // Set verdict
     verdictBox.className = 'verdict-box ' + comparison.verdict;
     
-    // Blinking verdict icon: AI or TRUE
+    // Blinking verdict icon: AI, TRUE, or mixed
     if (comparison.verdict === 'ai') {
         verdictIcon.innerHTML = '<span class="verdict-badge blink-ai"><i class="fas fa-robot"></i> AI</span>';
+    } else if (comparison.verdict === 'uncertain') {
+        verdictIcon.innerHTML = '<span class="verdict-badge blink-mixed"><i class="fas fa-question-circle"></i> mixed</span>';
     } else {
         verdictIcon.innerHTML = '<span class="verdict-badge blink-true"><i class="fas fa-check-circle"></i> TRUE</span>';
     }

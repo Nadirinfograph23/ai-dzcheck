@@ -852,6 +852,13 @@ body.pwa-banner-visible .hero {
     animation: blink-true-anim 1s ease-in-out infinite;
 }
 
+.verdict-badge.blink-mixed {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 2px solid #f59e0b;
+    animation: blink-mixed-anim 1s ease-in-out infinite;
+}
+
 @keyframes blink-ai-anim {
     0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
     50% { opacity: 0.4; box-shadow: 0 0 24px rgba(239, 68, 68, 0.8); }
@@ -860,6 +867,11 @@ body.pwa-banner-visible .hero {
 @keyframes blink-true-anim {
     0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(34, 197, 94, 0.4); }
     50% { opacity: 0.4; box-shadow: 0 0 24px rgba(34, 197, 94, 0.8); }
+}
+
+@keyframes blink-mixed-anim {
+    0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
+    50% { opacity: 0.4; box-shadow: 0 0 24px rgba(245, 158, 11, 0.8); }
 }
 
 .verdict-title {
