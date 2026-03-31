@@ -865,6 +865,21 @@ function generateReportText() {
 function downloadReport() {
     if (!analysisResults || !analysisResults.comparison) return;
     var r = analysisResults;
+    // Fallback to text if jsPDF is not loaded
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        var text = generateReportText();
+        if (!text) return;
+        var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        var blobUrl = URL.createObjectURL(blob);
+        var link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = 'AI_DZ_CHECK_Report_' + new Date().toISOString().slice(0, 10) + '.txt';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+        return;
+    }
     var jsPDF = window.jspdf.jsPDF;
     var doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     var pageWidth = doc.internal.pageSize.getWidth();
