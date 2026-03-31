@@ -529,32 +529,122 @@ async function analyzeDeepGuard(file, prevResult) {
     };
 }
 
-// Step 3: Metadata Inspection
+// Step 3: Metadata Inspection (with real EXIF reading via exifr)
 async function analyzeMetadata(file) {
-    await delay(800 + Math.random() * 600);
     var fileType = getFileType(file);
-    var hasExif = file.size > 100000;
-    var suspiciousName = /ai|gen|dalle|midjourney|stable|diffusion|deepfake/i.test(file.name);
-    var aiScore = suspiciousName ? 80 : hasExif ? 20 : 45;
-    
-    var software = 'Unknown';
-    var aiMarkers = 'None detected';
-    if (suspiciousName) {
-        software = 'AI Generation Tool';
+    var suspiciousName = /ai[-_]?gen|dalle|midjourney|stable[-_]?diffusion|deepfake|comfyui|novelai|niji/i.test(file.name);
+
+    // AI software signatures to look for in EXIF Software/ProcessingSoftware fields
+    var AI_SOFTWARE_PATTERNS = /midjourney|dall[\-\s]?e|stable[\-\s]?diffusion|comfyui|novelai|adobe[\-\s]?firefly|bing[\-\s]?image|ideogram|leonardo\.ai|playground[\-\s]?ai|craiyon|deepai/i;
+
+    var exifData = null;
+    var cameraFound = false;
+    var gpsFound = false;
+    var dateTimeFound = false;
+    var lensFound = false;
+    var exposureFound = false;
+    var softwareField = '';
+    var aiSoftwareDetected = false;
+    var cameraMake = '';
+    var cameraModel = '';
+    var exifReadSuccess = false;
+
+    // Attempt real EXIF reading for images
+    if (fileType === 'image' && typeof exifr !== 'undefined') {
+        try {
+            exifData = await exifr.parse(file, {
+                tiff: true,
+                exif: true,
+                gps: true,
+                ifd0: true,
+                ifd1: true,
+                interop: true,
+                translateValues: true,
+                mergeOutput: true
+            });
+            exifReadSuccess = true;
+
+            if (exifData) {
+                cameraMake = exifData.Make || '';
+                cameraModel = exifData.Model || '';
+                cameraFound = !!(cameraMake || cameraModel);
+                gpsFound = !!(exifData.latitude || exifData.longitude || exifData.GPSLatitude || exifData.GPSLongitude);
+                dateTimeFound = !!(exifData.DateTimeOriginal || exifData.CreateDate || exifData.DateTime);
+                lensFound = !!(exifData.LensModel || exifData.LensMake || exifData.LensInfo);
+                exposureFound = !!(exifData.ExposureTime || exifData.FNumber || exifData.ISO || exifData.ISOSpeedRatings || exifData.ShutterSpeedValue);
+                softwareField = exifData.Software || exifData.ProcessingSoftware || '';
+                if (softwareField && AI_SOFTWARE_PATTERNS.test(softwareField)) {
+                    aiSoftwareDetected = true;
+                }
+            }
+        } catch (e) {
+            console.warn('EXIF reading failed:', e.message);
+            exifReadSuccess = false;
+        }
+    }
+
+    // Calculate AI score based on real metadata evidence
+    var aiScore;
+    var confidence;
+    var software;
+    var aiMarkers;
+
+    if (aiSoftwareDetected) {
+        // Software field explicitly names an AI tool
+        aiScore = 90;
+        confidence = 95;
+        software = softwareField;
+        aiMarkers = 'AI generation software detected in EXIF: ' + softwareField;
+    } else if (suspiciousName) {
+        aiScore = 70;
+        confidence = 65;
+        software = 'Suspicious filename';
         aiMarkers = 'Filename contains AI-related keywords';
-    } else if (!hasExif && fileType === 'image') {
-        software = 'Stripped / No metadata';
-        aiMarkers = 'Missing EXIF data (common in AI-generated images)';
+    } else if (exifReadSuccess && cameraFound) {
+        // Real camera metadata found - strong evidence of real photo
+        var realSignals = 0;
+        if (cameraFound) realSignals += 2;
+        if (gpsFound) realSignals += 2;
+        if (dateTimeFound) realSignals += 1;
+        if (lensFound) realSignals += 1;
+        if (exposureFound) realSignals += 1;
+        // More real signals = lower AI score
+        // 7 signals max → aiScore as low as 5
+        aiScore = Math.max(5, 40 - (realSignals * 5));
+        confidence = 70 + Math.min(25, realSignals * 4);
+        software = (cameraMake + ' ' + cameraModel).trim() || 'Camera detected';
+        var markers = [];
+        if (cameraFound) markers.push('Camera: ' + (cameraMake + ' ' + cameraModel).trim());
+        if (gpsFound) markers.push('GPS data present');
+        if (dateTimeFound) markers.push('Original date/time found');
+        if (lensFound) markers.push('Lens info found');
+        if (exposureFound) markers.push('Exposure settings found');
+        aiMarkers = markers.join(' | ');
+    } else if (exifReadSuccess && !cameraFound && exifData) {
+        // EXIF exists but no camera info - could be edited or stripped
+        aiScore = 45;
+        confidence = 55;
+        software = softwareField || 'No camera info in EXIF';
+        aiMarkers = 'EXIF present but no camera identification found';
+    } else if (exifReadSuccess && !exifData) {
+        // No EXIF at all - slightly suspicious for images
+        aiScore = 55;
+        confidence = 50;
+        software = 'No EXIF metadata';
+        aiMarkers = 'No EXIF data found (common in AI-generated and web images)';
     } else {
-        software = 'Standard Camera/Editor';
-        aiMarkers = 'None detected';
+        // Non-image file or EXIF reader not available
+        aiScore = 50;
+        confidence = 40;
+        software = 'N/A';
+        aiMarkers = fileType !== 'image' ? 'EXIF analysis is for images only' : 'EXIF reader unavailable';
     }
 
     return {
         engine: 'Metadata Inspector',
         aiScore: aiScore,
-        confidence: 60 + Math.round(Math.random() * 20),
-        verdict: aiScore > 65 ? 'ai' : aiScore > 35 ? 'uncertain' : 'real',
+        confidence: confidence,
+        verdict: aiScore >= 65 ? 'ai' : aiScore <= 30 ? 'real' : 'uncertain',
         details: {
             filename: file.name,
             filesize: formatFileSize(file.size),
@@ -562,7 +652,18 @@ async function analyzeMetadata(file) {
             modified: file.lastModified ? new Date(file.lastModified).toLocaleDateString() : 'N/A',
             software: software,
             aiMarkers: aiMarkers,
-            exifPresent: hasExif ? 'Yes' : 'No'
+            exifPresent: exifReadSuccess && exifData ? 'Yes' : 'No',
+            cameraDetected: cameraFound ? (cameraMake + ' ' + cameraModel).trim() : 'None',
+            gpsData: gpsFound ? 'Present' : 'Not found'
+        },
+        _exifSignals: {
+            cameraFound: cameraFound,
+            gpsFound: gpsFound,
+            dateTimeFound: dateTimeFound,
+            lensFound: lensFound,
+            exposureFound: exposureFound,
+            aiSoftwareDetected: aiSoftwareDetected,
+            exifReadSuccess: exifReadSuccess
         }
     };
 }
@@ -615,45 +716,77 @@ async function analyzeReverseSearch(file, prevResults) {
     };
 }
 
-// Step 5: Compare Results - Deepfake detection is the PRIMARY basis for the final result
-// Weight: Deepfake API = 60%, DeepGuard = 25%, Metadata + Reverse = 15%
+// Step 5: Compare Results - Balanced multi-engine comparison with EXIF-aware weighting
+// Dynamic weights based on metadata quality:
+//   Strong camera EXIF → metadata gets high weight to counterbalance model false positives
+//   No EXIF → models get full weight
 async function compareResults(results) {
     await delay(600 + Math.random() * 400);
     
-    // Deepfake detection is the PRIMARY basis for the final score
     var deepfakeScore = results[0] ? results[0].aiScore : 50;
     var deepguardScore = results[1] ? results[1].aiScore : 50;
     var metadataScore = results[2] ? results[2].aiScore : 50;
     var reverseScore = results[3] ? results[3].aiScore : 50;
-    
-    // Weighted scoring: Deepfake API has highest weight (60%)
-    var finalScore = Math.round(
-        deepfakeScore * 0.60 +
-        deepguardScore * 0.25 +
-        metadataScore * 0.08 +
-        reverseScore * 0.07
-    );
-    
-    // Decision logic: deepfake detection drives the verdict
-    // If deepfake API says AI (>= 50%), final verdict is AI regardless of others
-    // If deepfake API says real (< 50%), check if weighted score still >= 50%
-    var consensus;
-    if (deepfakeScore >= 50) {
-        consensus = 'ai';
-    } else if (finalScore >= 50) {
-        consensus = 'ai';
+
+    // Check EXIF signals from metadata analysis for dynamic weighting
+    var exifSignals = (results[2] && results[2]._exifSignals) ? results[2]._exifSignals : {};
+    var strongCameraExif = exifSignals.cameraFound && (exifSignals.gpsFound || exifSignals.exposureFound || exifSignals.dateTimeFound);
+    var aiSoftwareInExif = exifSignals.aiSoftwareDetected;
+
+    // Dynamic weight calculation
+    var w1, w2, w3, w4;
+    if (aiSoftwareInExif) {
+        // AI software found in EXIF - metadata is very reliable
+        w1 = 0.20; w2 = 0.10; w3 = 0.60; w4 = 0.10;
+    } else if (strongCameraExif) {
+        // Strong camera EXIF found - metadata is very reliable counter-signal
+        w1 = 0.25; w2 = 0.15; w3 = 0.50; w4 = 0.10;
+    } else if (exifSignals.cameraFound) {
+        // Camera found but limited EXIF
+        w1 = 0.30; w2 = 0.20; w3 = 0.35; w4 = 0.15;
     } else {
-        consensus = 'real';
+        // No camera EXIF - rely more on AI models
+        w1 = 0.40; w2 = 0.25; w3 = 0.15; w4 = 0.20;
     }
 
+    var finalScore = Math.round(
+        deepfakeScore * w1 +
+        deepguardScore * w2 +
+        metadataScore * w3 +
+        reverseScore * w4
+    );
+    
+    // Balanced decision logic with wider uncertain zone
+    // AI verdict requires >= 60% (was 50%)
+    // Real verdict requires <= 38%
+    // 39-59% = uncertain / inconclusive
+    var consensus;
+    if (finalScore >= 60) {
+        consensus = 'ai';
+    } else if (finalScore <= 38) {
+        consensus = 'real';
+    } else {
+        consensus = 'uncertain';
+    }
+
+    // Additional consensus check: count how many engines agree
     var verdicts = { ai: 0, real: 0, uncertain: 0 };
     results.forEach(function(r) { verdicts[r.verdict]++; });
     var agreeing = Math.max(verdicts.ai, verdicts.real, verdicts.uncertain);
 
+    // Override: if 3+ engines say real but weighted score is borderline, trust consensus
+    if (verdicts.real >= 3 && finalScore < 65) {
+        consensus = 'real';
+    }
+    // Override: if 3+ engines say AI, reinforce AI verdict
+    if (verdicts.ai >= 3 && finalScore >= 45) {
+        consensus = 'ai';
+    }
+
     // Determine media-specific insight for the explanatory paragraph
     var fileType = currentFile ? getFileType(currentFile) : 'unknown';
     var mediaLabel = fileType === 'video' ? 'video' : fileType === 'audio' ? 'audio' : 'image';
-    var deepfakeDetected = deepfakeScore >= 50;
+    var deepfakeDetected = (consensus === 'ai') && (deepfakeScore >= 55 || deepguardScore >= 55);
     var otherReportsClean = (metadataScore < 40 && reverseScore < 40);
 
     return {
@@ -667,6 +800,8 @@ async function compareResults(results) {
         mediaLabel: mediaLabel,
         deepfakeDetected: deepfakeDetected,
         otherReportsClean: otherReportsClean,
+        weightsUsed: { model1: w1, model2: w2, metadata: w3, model3: w4 },
+        exifInfluence: strongCameraExif ? 'high' : exifSignals.cameraFound ? 'moderate' : 'low',
         breakdown: results.map(function(r) {
             return { engine: r.engine, score: r.aiScore, verdict: r.verdict, confidence: r.confidence };
         })
@@ -930,7 +1065,8 @@ function generateReportText() {
     lines.push('VERDICT: ' + t('verdict_' + r.comparison.verdict).toUpperCase());
     lines.push('AI Probability: ' + r.comparison.finalScore + '%');
     lines.push('Consensus: ' + r.comparison.agreeing + '/4 engines agree');
-    lines.push('Deepfake Score (Primary): ' + (r.comparison.deepfakeScore || 'N/A') + '%');
+    lines.push('Deepfake Score: ' + (r.comparison.deepfakeScore || 'N/A') + '%');
+    lines.push('EXIF Influence: ' + (r.comparison.exifInfluence || 'N/A'));
     lines.push('───────────────────────────────────────');
     lines.push('');
     
