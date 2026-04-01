@@ -364,7 +364,8 @@ function getFileType(file) {
 var HF_MODELS = [
     { id: 'umm-maybe/AI-image-detector', name: 'AI Image Detector', labelMap: { 'artificial': 'ai', 'human': 'real' } },
     { id: 'Organika/sdxl-detector', name: 'SDXL Detector', labelMap: { 'artificial': 'ai', 'real': 'real', 'human': 'real' } },
-    { id: 'cmckinle/sdxl-flux-detector', name: 'SDXL-Flux Detector', labelMap: { 'AI': 'ai', 'Real': 'real', 'artificial': 'ai', 'human': 'real' } }
+    { id: 'cmckinle/sdxl-flux-detector', name: 'SDXL-Flux Detector', labelMap: { 'AI': 'ai', 'Real': 'real', 'artificial': 'ai', 'human': 'real' } },
+    { id: 'dima806/ai_vs_real_image_detection', name: 'CvT AI Image Detector', labelMap: { 'FAKE': 'ai', 'REAL': 'real', 'fake': 'ai', 'real': 'real' } }
 ];
 
 async function callHuggingFaceAPI(file, modelInfo) {
@@ -475,7 +476,8 @@ async function analyzeDeepfakeAPI(file) {
     };
 }
 
-// Step 2: Secondary AI Detection (Hugging Face - SDXL Detector)
+// Step 2: Secondary AI Detection (Hugging Face - SDXL Detector + CvT AI Image Detector)
+// Combines SDXL Detector with CvT-based AI Image Detector (inspired by github.com/guyfloki/ai-image-detector)
 async function analyzeDeepGuard(file, prevResult) {
     var fileType = getFileType(file);
     if (fileType !== 'image') {
@@ -496,35 +498,60 @@ async function analyzeDeepGuard(file, prevResult) {
             }
         };
     }
-    // Use real Hugging Face API for images (second model)
-    var result = await callHuggingFaceAPI(file, HF_MODELS[1]);
-    if (result.success) {
+    // Use real Hugging Face API for images (SDXL Detector + CvT AI Image Detector)
+    var sdxlResult = await callHuggingFaceAPI(file, HF_MODELS[1]);
+    var cvtResult = await callHuggingFaceAPI(file, HF_MODELS[3]);
+
+    // Combine results from both models
+    var combinedAiScore, combinedConfidence, combinedElapsed, engineName, modelDesc;
+    if (sdxlResult.success && cvtResult.success) {
+        combinedAiScore = Math.round((sdxlResult.aiScore * 0.5) + (cvtResult.aiScore * 0.5));
+        combinedConfidence = Math.round((sdxlResult.confidence + cvtResult.confidence) / 2);
+        combinedElapsed = (parseFloat(sdxlResult.elapsed) + parseFloat(cvtResult.elapsed)).toFixed(1);
+        engineName = 'DeepGuard (SDXL + CvT)';
+        modelDesc = HF_MODELS[1].id + ' + ' + HF_MODELS[3].id;
+    } else if (sdxlResult.success) {
+        combinedAiScore = sdxlResult.aiScore;
+        combinedConfidence = sdxlResult.confidence;
+        combinedElapsed = sdxlResult.elapsed;
+        engineName = 'SDXL Detector';
+        modelDesc = HF_MODELS[1].id;
+    } else if (cvtResult.success) {
+        combinedAiScore = cvtResult.aiScore;
+        combinedConfidence = cvtResult.confidence;
+        combinedElapsed = cvtResult.elapsed;
+        engineName = 'CvT AI Image Detector';
+        modelDesc = HF_MODELS[3].id;
+    } else {
+        // Both failed - fallback
+        await delay(800);
+        var baseScore = prevResult ? prevResult.aiScore : 50;
+        var variation = -10 + Math.round(Math.random() * 20);
         return {
-            engine: 'SDXL Detector',
-            aiScore: result.aiScore,
-            confidence: result.confidence,
-            verdict: result.aiScore > 50 ? 'ai' : 'real',
+            engine: 'DeepGuard',
+            aiScore: Math.max(0, Math.min(100, baseScore + variation)),
+            confidence: 40,
+            verdict: 'uncertain',
             details: {
-                model: HF_MODELS[1].id,
-                analysisTime: result.elapsed + 's',
-                consistency: result.aiScore > 50 ? 'SDXL/Diffusion patterns detected' : 'No diffusion model signatures',
-                noiseAnalysis: result.aiScore > 55 ? 'Unnatural noise pattern detected' : 'Natural noise pattern'
+                model: HF_MODELS[1].id + ' + ' + HF_MODELS[3].id,
+                analysisTime: '0s',
+                note: 'APIs unavailable - using fallback'
             }
         };
     }
-    // Fallback
-    await delay(800);
-    var baseScore = prevResult ? prevResult.aiScore : 50;
-    var variation = -10 + Math.round(Math.random() * 20);
+
     return {
-        engine: 'SDXL Detector',
-        aiScore: Math.max(0, Math.min(100, baseScore + variation)),
-        confidence: 40,
-        verdict: 'uncertain',
+        engine: engineName,
+        aiScore: combinedAiScore,
+        confidence: combinedConfidence,
+        verdict: combinedAiScore > 50 ? 'ai' : 'real',
         details: {
-            model: HF_MODELS[1].id,
-            analysisTime: result.elapsed + 's',
-            note: 'API unavailable - using fallback (' + result.error + ')'
+            model: modelDesc,
+            analysisTime: combinedElapsed + 's',
+            consistency: combinedAiScore > 50 ? 'SDXL/CvT patterns detected' : 'No diffusion model signatures',
+            noiseAnalysis: combinedAiScore > 55 ? 'Unnatural noise pattern detected' : 'Natural noise pattern',
+            sdxlScore: sdxlResult.success ? sdxlResult.aiScore + '%' : 'N/A',
+            cvtScore: cvtResult.success ? cvtResult.aiScore + '%' : 'N/A'
         }
     };
 }
