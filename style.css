@@ -772,6 +772,82 @@ body.pwa-banner-visible .hero {
     color: var(--warning);
 }
 
+/* Video-only essential steps (ScreenApp & OverChat) */
+.video-step {
+    display: none;
+}
+
+.video-step.visible {
+    display: flex;
+}
+
+.video-step.visible {
+    border-color: var(--info);
+    background: rgba(59, 130, 246, 0.04);
+}
+
+.video-step.visible.active {
+    border-color: var(--accent);
+    background: rgba(200, 255, 0, 0.03);
+}
+
+.video-step.visible.completed {
+    border-color: var(--success);
+    background: rgba(34, 197, 94, 0.04);
+}
+
+.essential-icon {
+    color: var(--info);
+    font-size: 10px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+.video-step.visible .step-content h4 {
+    color: var(--info);
+}
+
+.video-step.visible.active .step-content h4 {
+    color: var(--accent);
+}
+
+.video-step.visible.completed .step-content h4 {
+    color: var(--success);
+}
+
+/* Audio-only essential steps (Deepfake Voice, Free AI Detector, AI Voice Detector, AI Video Detector Audio) */
+.audio-step {
+    display: none;
+}
+
+.audio-step.visible {
+    display: flex;
+    border-color: var(--warning);
+    background: rgba(234, 179, 8, 0.04);
+}
+
+.audio-step.visible.active {
+    border-color: var(--accent);
+    background: rgba(200, 255, 0, 0.03);
+}
+
+.audio-step.visible.completed {
+    border-color: var(--success);
+    background: rgba(34, 197, 94, 0.04);
+}
+
+.audio-step.visible .step-content h4 {
+    color: var(--warning);
+}
+
+.audio-step.visible.active .step-content h4 {
+    color: var(--accent);
+}
+
+.audio-step.visible.completed .step-content h4 {
+    color: var(--success);
+}
+
 /* ============================================
    Results Section
    ============================================ */
