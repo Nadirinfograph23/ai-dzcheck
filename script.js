@@ -104,6 +104,10 @@ var TRANSLATIONS = {
         report_illuminarty: 'Illuminarty',
         report_screenapp: 'ScreenApp',
         report_overchat: 'OverChat',
+        step_screenapp_video_title: 'ScreenApp Video Detection',
+        step_screenapp_video_desc: 'Essential video verification with ScreenApp AI detector',
+        step_overchat_video_title: 'OverChat Video Detection',
+        step_overchat_video_desc: 'Essential video verification with OverChat AI detector',
     },
     ar: {
         nav_features: '\u0627\u0644\u0645\u0645\u064a\u0632\u0627\u062a',
@@ -202,6 +206,10 @@ var TRANSLATIONS = {
         report_illuminarty: 'Illuminarty',
         report_screenapp: 'ScreenApp',
         report_overchat: 'OverChat',
+        step_screenapp_video_title: '\u062a\u062d\u0642\u0642 ScreenApp \u0644\u0644\u0641\u064a\u062f\u064a\u0648',
+        step_screenapp_video_desc: '\u062a\u062d\u0642\u0642 \u0623\u0633\u0627\u0633\u064a \u0645\u0646 \u0627\u0644\u0641\u064a\u062f\u064a\u0648 \u0628\u0645\u062d\u0631\u0643 ScreenApp',
+        step_overchat_video_title: '\u062a\u062d\u0642\u0642 OverChat \u0644\u0644\u0641\u064a\u062f\u064a\u0648',
+        step_overchat_video_desc: '\u062a\u062d\u0642\u0642 \u0623\u0633\u0627\u0633\u064a \u0645\u0646 \u0627\u0644\u0641\u064a\u062f\u064a\u0648 \u0628\u0645\u062d\u0631\u0643 OverChat',
     },
     fr: {
         nav_features: 'Fonctionnalit\u00e9s',
@@ -300,6 +308,10 @@ var TRANSLATIONS = {
         report_illuminarty: 'Illuminarty',
         report_screenapp: 'ScreenApp',
         report_overchat: 'OverChat',
+        step_screenapp_video_title: 'D\u00e9tection Vid\u00e9o ScreenApp',
+        step_screenapp_video_desc: 'V\u00e9rification vid\u00e9o essentielle avec ScreenApp',
+        step_overchat_video_title: 'D\u00e9tection Vid\u00e9o OverChat',
+        step_overchat_video_desc: 'V\u00e9rification vid\u00e9o essentielle avec OverChat',
     }
 };
 
@@ -1294,7 +1306,15 @@ async function compareResults(results) {
     // Dynamic weight calculation for 9 engines
     // w1=Deepfake API, w2=DeepGuard, w3=DeepAI, w4=AIorNot, w5=Illuminarty, w6=ScreenApp, w7=OverChat, w8=Metadata, w9=Reverse
     var w1, w2, w3, w4, w5, w6, w7, w8, w9;
-    if (aiSoftwareInExif) {
+
+    // Detect if file is video - ScreenApp & OverChat are essential for video
+    var fileType = currentFile ? getFileType(currentFile) : 'unknown';
+    var isVideoFile = fileType === 'video';
+
+    if (isVideoFile) {
+        // VIDEO: ScreenApp & OverChat are essential/primary engines with highest weights
+        w1 = 0.08; w2 = 0.06; w3 = 0.05; w4 = 0.05; w5 = 0.05; w6 = 0.25; w7 = 0.25; w8 = 0.10; w9 = 0.11;
+    } else if (aiSoftwareInExif) {
         // AI software found in EXIF - metadata is very reliable
         w1 = 0.08; w2 = 0.06; w3 = 0.06; w4 = 0.06; w5 = 0.06; w6 = 0.05; w7 = 0.05; w8 = 0.50; w9 = 0.08;
     } else if (strongCameraExif) {
@@ -1357,7 +1377,6 @@ async function compareResults(results) {
     }
 
     // Determine media-specific insight for the explanatory paragraph
-    var fileType = currentFile ? getFileType(currentFile) : 'unknown';
     var mediaLabel = fileType === 'video' ? 'video' : fileType === 'audio' ? 'audio' : 'image';
     var deepfakeDetected = (consensus === 'ai') && (deepfakeScore >= 55 || deepguardScore >= 55 || deepaiScore >= 55 || aiornotScore >= 55 || illuminartyScore >= 55 || screenappScore >= 55 || overchatScore >= 55);
     var otherReportsClean = (metadataScore < 40 && reverseScore < 40);
@@ -1406,6 +1425,32 @@ function updateStepUI(stepNum, status, resultText, resultClass) {
         var resultEl = document.getElementById('step' + stepNum + 'Result');
         resultEl.textContent = resultText;
         resultEl.className = 'step-result ' + (resultClass || '');
+    }
+}
+
+// Update step UI for named steps (ScreenApp, OverChat video steps)
+function updateNamedStepUI(stepId, status, resultText, resultClass) {
+    var stepEl = document.getElementById(stepId);
+    if (!stepEl) return;
+
+    // Preserve the video-step and visible classes
+    stepEl.className = 'step-item video-step visible ' + status;
+    var statusIcon = stepEl.querySelector('.step-status i');
+
+    if (status === 'active') {
+        statusIcon.className = 'fas fa-circle-notch fa-spin';
+    } else if (status === 'completed') {
+        statusIcon.className = 'fas fa-check-circle';
+    } else if (status === 'error') {
+        statusIcon.className = 'fas fa-times-circle';
+    }
+
+    if (resultText) {
+        var resultEl = document.getElementById(stepId + 'Result');
+        if (resultEl) {
+            resultEl.textContent = resultText;
+            resultEl.className = 'step-result ' + (resultClass || '');
+        }
     }
 }
 
@@ -1571,6 +1616,8 @@ async function runAnalysis(file) {
     showFilePreview(file);
     showToast(t('toast_uploading'), 'info');
     
+    var isVideo = getFileType(file) === 'video';
+
     // Reset steps
     for (var i = 1; i <= 8; i++) {
         updateStepUI(i, '', '', '');
@@ -1582,6 +1629,25 @@ async function runAnalysis(file) {
             var icon = stepEl.querySelector('.step-status i');
             if (icon) icon.className = 'fas fa-hourglass';
         }
+    }
+
+    // Show/hide video-only essential steps (ScreenApp & OverChat)
+    var screenappStep = document.getElementById('stepScreenapp');
+    var overchatStep = document.getElementById('stepOverchat');
+    if (isVideo) {
+        if (screenappStep) { screenappStep.classList.add('visible'); screenappStep.className = 'step-item video-step visible'; }
+        if (overchatStep) { overchatStep.classList.add('visible'); overchatStep.className = 'step-item video-step visible'; }
+        // Reset their result elements
+        var scrRes = document.getElementById('stepScreenappResult');
+        var ovrRes = document.getElementById('stepOverchatResult');
+        if (scrRes) { scrRes.textContent = ''; scrRes.className = 'step-result'; }
+        if (ovrRes) { ovrRes.textContent = ''; ovrRes.className = 'step-result'; }
+        // Reset icons
+        if (screenappStep) { var si = screenappStep.querySelector('.step-status i'); if (si) si.className = 'fas fa-hourglass'; }
+        if (overchatStep) { var oi = overchatStep.querySelector('.step-status i'); if (oi) oi.className = 'fas fa-hourglass'; }
+    } else {
+        if (screenappStep) screenappStep.classList.remove('visible');
+        if (overchatStep) overchatStep.classList.remove('visible');
     }
     
     var allResults = [];
@@ -1617,13 +1683,25 @@ async function runAnalysis(file) {
         allResults.push(result5);
         updateStepUI(5, 'completed', result5.aiScore + '% AI', result5.verdict);
         
-        // Silent Step: ScreenApp AI Detector (no UI step, results in report only)
-        var resultScreenapp = await analyzeScreenApp(file, allResults);
-        allResults.push(resultScreenapp);
-        
-        // Silent Step: OverChat AI Detector (no UI step, results in report only)
-        var resultOverchat = await analyzeOverchat(file, allResults);
-        allResults.push(resultOverchat);
+        if (isVideo) {
+            // ESSENTIAL Video Steps: ScreenApp & OverChat shown as visible analysis steps
+            updateNamedStepUI('stepScreenapp', 'active');
+            var resultScreenapp = await analyzeScreenApp(file, allResults);
+            allResults.push(resultScreenapp);
+            updateNamedStepUI('stepScreenapp', 'completed', resultScreenapp.aiScore + '% AI', resultScreenapp.verdict);
+
+            updateNamedStepUI('stepOverchat', 'active');
+            var resultOverchat = await analyzeOverchat(file, allResults);
+            allResults.push(resultOverchat);
+            updateNamedStepUI('stepOverchat', 'completed', resultOverchat.aiScore + '% AI', resultOverchat.verdict);
+        } else {
+            // Non-video: ScreenApp & OverChat run silently (results in report only)
+            var resultScreenapp = await analyzeScreenApp(file, allResults);
+            allResults.push(resultScreenapp);
+
+            var resultOverchat = await analyzeOverchat(file, allResults);
+            allResults.push(resultOverchat);
+        }
         
         // Step 6: Metadata
         updateStepUI(6, 'active');
@@ -1979,6 +2057,11 @@ function resetAnalysis() {
     document.getElementById('analysisSection').style.display = 'none';
     document.getElementById('resultsSection').style.display = 'none';
     document.getElementById('scoreFill').style.strokeDashoffset = 326.73;
+    // Hide video-only essential steps
+    var screenappStep = document.getElementById('stepScreenapp');
+    var overchatStep = document.getElementById('stepOverchat');
+    if (screenappStep) screenappStep.classList.remove('visible');
+    if (overchatStep) overchatStep.classList.remove('visible');
     currentFile = null;
     analysisResults = {};
     window.scrollTo({ top: 0, behavior: 'smooth' });
