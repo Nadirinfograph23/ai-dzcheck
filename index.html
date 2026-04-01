@@ -174,26 +174,50 @@
                 <div class="step-item" id="step3" data-step="3">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_meta_title">Metadata Inspection</h4>
-                        <p data-i18n="step_meta_desc">Checking file metadata for AI generation signatures</p>
+                        <h4 data-i18n="step_deepai_title">DeepAI Analysis</h4>
+                        <p data-i18n="step_deepai_desc">Verifying with DeepAI image detection engine</p>
                     </div>
                     <div class="step-result" id="step3Result"></div>
                 </div>
                 <div class="step-item" id="step4" data-step="4">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_reverse_title">Reverse Search</h4>
-                        <p data-i18n="step_reverse_desc">Searching for original sources online</p>
+                        <h4 data-i18n="step_aiornot_title">AIorNot Analysis</h4>
+                        <p data-i18n="step_aiornot_desc">Cross-checking with AIorNot detection engine</p>
                     </div>
                     <div class="step-result" id="step4Result"></div>
                 </div>
                 <div class="step-item" id="step5" data-step="5">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
+                        <h4 data-i18n="step_illuminarty_title">Illuminarty Analysis</h4>
+                        <p data-i18n="step_illuminarty_desc">Scanning with Illuminarty content detector</p>
+                    </div>
+                    <div class="step-result" id="step5Result"></div>
+                </div>
+                <div class="step-item" id="step6" data-step="6">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_meta_title">Metadata Inspection</h4>
+                        <p data-i18n="step_meta_desc">Checking file metadata for AI generation signatures</p>
+                    </div>
+                    <div class="step-result" id="step6Result"></div>
+                </div>
+                <div class="step-item" id="step7" data-step="7">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_reverse_title">Reverse Search</h4>
+                        <p data-i18n="step_reverse_desc">Searching for original sources online</p>
+                    </div>
+                    <div class="step-result" id="step7Result"></div>
+                </div>
+                <div class="step-item" id="step8" data-step="8">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
                         <h4 data-i18n="step_compare_title">Results Comparison</h4>
                         <p data-i18n="step_compare_desc">Cross-referencing all analysis results</p>
                     </div>
-                    <div class="step-result" id="step5Result"></div>
+                    <div class="step-result" id="step8Result"></div>
                 </div>
             </div>
         </div>
@@ -258,6 +282,33 @@
                             <span data-i18n="report_reverse">Reverse Search</span>
                         </div>
                         <div class="report-item-body" id="reportReverseBody"></div>
+                    </div>
+
+                    <!-- DeepAI Result -->
+                    <div class="report-item" id="reportDeepai">
+                        <div class="report-item-header">
+                            <i class="fas fa-eye"></i>
+                            <span data-i18n="report_deepai">DeepAI</span>
+                        </div>
+                        <div class="report-item-body" id="reportDeepaiBody"></div>
+                    </div>
+
+                    <!-- AIorNot Result -->
+                    <div class="report-item" id="reportAiornot">
+                        <div class="report-item-header">
+                            <i class="fas fa-robot"></i>
+                            <span data-i18n="report_aiornot">AIorNot</span>
+                        </div>
+                        <div class="report-item-body" id="reportAiornotBody"></div>
+                    </div>
+
+                    <!-- Illuminarty Result -->
+                    <div class="report-item" id="reportIlluminarty">
+                        <div class="report-item-header">
+                            <i class="fas fa-lightbulb"></i>
+                            <span data-i18n="report_illuminarty">Illuminarty</span>
+                        </div>
+                        <div class="report-item-body" id="reportIlluminartyBody"></div>
                     </div>
                 </div>
 
