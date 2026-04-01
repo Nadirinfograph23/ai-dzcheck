@@ -1294,18 +1294,32 @@ async function compareResults(results) {
     // Dynamic weight calculation for 9 engines
     // w1=Deepfake API, w2=DeepGuard, w3=DeepAI, w4=AIorNot, w5=Illuminarty, w6=ScreenApp, w7=OverChat, w8=Metadata, w9=Reverse
     var w1, w2, w3, w4, w5, w6, w7, w8, w9;
-    if (aiSoftwareInExif) {
-        // AI software found in EXIF - metadata is very reliable
-        w1 = 0.08; w2 = 0.06; w3 = 0.06; w4 = 0.06; w5 = 0.06; w6 = 0.05; w7 = 0.05; w8 = 0.50; w9 = 0.08;
-    } else if (strongCameraExif) {
-        // Strong camera EXIF found - metadata is very reliable counter-signal
-        w1 = 0.10; w2 = 0.08; w3 = 0.07; w4 = 0.07; w5 = 0.07; w6 = 0.06; w7 = 0.06; w8 = 0.41; w9 = 0.08;
-    } else if (exifSignals.cameraFound) {
-        // Camera found but limited EXIF
-        w1 = 0.15; w2 = 0.11; w3 = 0.09; w4 = 0.09; w5 = 0.09; w6 = 0.07; w7 = 0.07; w8 = 0.23; w9 = 0.10;
+    var fileType = currentFile ? getFileType(currentFile) : 'unknown';
+
+    if (fileType === 'video') {
+        // VIDEO MODE: ScreenApp and OverChat are PRIMARY engines for video detection
+        // They specialize in AI video detection (screenapp.io + overchat.ai)
+        if (aiSoftwareInExif) {
+            w1 = 0.05; w2 = 0.04; w3 = 0.04; w4 = 0.04; w5 = 0.04; w6 = 0.15; w7 = 0.15; w8 = 0.41; w9 = 0.08;
+        } else if (strongCameraExif) {
+            w1 = 0.06; w2 = 0.05; w3 = 0.05; w4 = 0.05; w5 = 0.05; w6 = 0.14; w7 = 0.14; w8 = 0.33; w9 = 0.07;
+        } else if (exifSignals.cameraFound) {
+            w1 = 0.08; w2 = 0.06; w3 = 0.06; w4 = 0.06; w5 = 0.06; w6 = 0.20; w7 = 0.20; w8 = 0.18; w9 = 0.10;
+        } else {
+            // No camera EXIF - ScreenApp & OverChat dominate video analysis
+            w1 = 0.08; w2 = 0.06; w3 = 0.06; w4 = 0.06; w5 = 0.06; w6 = 0.22; w7 = 0.22; w8 = 0.10; w9 = 0.14;
+        }
     } else {
-        // No camera EXIF - rely more on AI models
-        w1 = 0.18; w2 = 0.12; w3 = 0.10; w4 = 0.10; w5 = 0.10; w6 = 0.08; w7 = 0.08; w8 = 0.10; w9 = 0.14;
+        // IMAGE/AUDIO MODE: Standard weighting
+        if (aiSoftwareInExif) {
+            w1 = 0.08; w2 = 0.06; w3 = 0.06; w4 = 0.06; w5 = 0.06; w6 = 0.05; w7 = 0.05; w8 = 0.50; w9 = 0.08;
+        } else if (strongCameraExif) {
+            w1 = 0.10; w2 = 0.08; w3 = 0.07; w4 = 0.07; w5 = 0.07; w6 = 0.06; w7 = 0.06; w8 = 0.41; w9 = 0.08;
+        } else if (exifSignals.cameraFound) {
+            w1 = 0.15; w2 = 0.11; w3 = 0.09; w4 = 0.09; w5 = 0.09; w6 = 0.07; w7 = 0.07; w8 = 0.23; w9 = 0.10;
+        } else {
+            w1 = 0.18; w2 = 0.12; w3 = 0.10; w4 = 0.10; w5 = 0.10; w6 = 0.08; w7 = 0.08; w8 = 0.10; w9 = 0.14;
+        }
     }
 
     var finalScore = Math.round(
@@ -1356,8 +1370,12 @@ async function compareResults(results) {
         consensus = 'ai';
     }
 
+    // VIDEO OVERRIDE: If ScreenApp and OverChat both say AI, trust them as primary video detectors
+    if (fileType === 'video' && screenappScore >= 55 && overchatScore >= 55 && finalScore >= 40) {
+        consensus = 'ai';
+    }
+
     // Determine media-specific insight for the explanatory paragraph
-    var fileType = currentFile ? getFileType(currentFile) : 'unknown';
     var mediaLabel = fileType === 'video' ? 'video' : fileType === 'audio' ? 'audio' : 'image';
     var deepfakeDetected = (consensus === 'ai') && (deepfakeScore >= 55 || deepguardScore >= 55 || deepaiScore >= 55 || aiornotScore >= 55 || illuminartyScore >= 55 || screenappScore >= 55 || overchatScore >= 55);
     var otherReportsClean = (metadataScore < 40 && reverseScore < 40);
