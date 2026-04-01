@@ -771,9 +771,9 @@ async function compareResults(results) {
         var totalAiScore = deepfakeScore + deepguardScore + metadataScore + reverseScore;
         var avgAiScore = totalAiScore / 4;
         // Determine frame result based on which side dominates
-        if (avgAiScore >= 55) {
+        if (avgAiScore >= 45) {
             consensus = 'ai';
-        } else if (avgAiScore <= 45) {
+        } else if (avgAiScore <= 35) {
             consensus = 'real';
         } else {
             consensus = 'uncertain';
