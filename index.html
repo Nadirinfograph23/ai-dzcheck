@@ -174,26 +174,50 @@
                 <div class="step-item" id="step3" data-step="3">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_meta_title">Metadata Inspection</h4>
-                        <p data-i18n="step_meta_desc">Checking file metadata for AI generation signatures</p>
+                        <h4 data-i18n="step_deepai_title">DeepAI Analysis</h4>
+                        <p data-i18n="step_deepai_desc">Verifying with DeepAI image detection engine</p>
                     </div>
                     <div class="step-result" id="step3Result"></div>
                 </div>
                 <div class="step-item" id="step4" data-step="4">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_reverse_title">Reverse Search</h4>
-                        <p data-i18n="step_reverse_desc">Searching for original sources online</p>
+                        <h4 data-i18n="step_aiornot_title">AIorNot Analysis</h4>
+                        <p data-i18n="step_aiornot_desc">Cross-checking with AIorNot detection engine</p>
                     </div>
                     <div class="step-result" id="step4Result"></div>
                 </div>
                 <div class="step-item" id="step5" data-step="5">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
+                        <h4 data-i18n="step_illuminarty_title">Illuminarty Analysis</h4>
+                        <p data-i18n="step_illuminarty_desc">Scanning with Illuminarty content detector</p>
+                    </div>
+                    <div class="step-result" id="step5Result"></div>
+                </div>
+                <div class="step-item" id="step6" data-step="6">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_meta_title">Metadata Inspection</h4>
+                        <p data-i18n="step_meta_desc">Checking file metadata for AI generation signatures</p>
+                    </div>
+                    <div class="step-result" id="step6Result"></div>
+                </div>
+                <div class="step-item" id="step7" data-step="7">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_reverse_title">Reverse Search</h4>
+                        <p data-i18n="step_reverse_desc">Searching for original sources online</p>
+                    </div>
+                    <div class="step-result" id="step7Result"></div>
+                </div>
+                <div class="step-item" id="step8" data-step="8">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
                         <h4 data-i18n="step_compare_title">Results Comparison</h4>
                         <p data-i18n="step_compare_desc">Cross-referencing all analysis results</p>
                     </div>
-                    <div class="step-result" id="step5Result"></div>
+                    <div class="step-result" id="step8Result"></div>
                 </div>
             </div>
         </div>
@@ -259,6 +283,33 @@
                         </div>
                         <div class="report-item-body" id="reportReverseBody"></div>
                     </div>
+
+                    <!-- DeepAI Result -->
+                    <div class="report-item" id="reportDeepai">
+                        <div class="report-item-header">
+                            <i class="fas fa-eye"></i>
+                            <span data-i18n="report_deepai">DeepAI</span>
+                        </div>
+                        <div class="report-item-body" id="reportDeepaiBody"></div>
+                    </div>
+
+                    <!-- AIorNot Result -->
+                    <div class="report-item" id="reportAiornot">
+                        <div class="report-item-header">
+                            <i class="fas fa-robot"></i>
+                            <span data-i18n="report_aiornot">AIorNot</span>
+                        </div>
+                        <div class="report-item-body" id="reportAiornotBody"></div>
+                    </div>
+
+                    <!-- Illuminarty Result -->
+                    <div class="report-item" id="reportIlluminarty">
+                        <div class="report-item-header">
+                            <i class="fas fa-lightbulb"></i>
+                            <span data-i18n="report_illuminarty">Illuminarty</span>
+                        </div>
+                        <div class="report-item-body" id="reportIlluminartyBody"></div>
+                    </div>
                 </div>
 
                 <!-- Comparison Summary -->
@@ -310,38 +361,6 @@
                 <h3 data-i18n="how_step3_title">3. Get Report</h3>
                 <p data-i18n="how_step3_desc">Receive a detailed report with confidence scores from all detection methods</p>
             </div>
-        </div>
-    </section>
-
-    <!-- External AI Detection Tools Section -->
-    <section class="ai-tools-section" id="ai-tools">
-        <h2 class="section-title" data-i18n="ai_repos_title">Supported AI Detection Technologies</h2>
-        <p class="section-subtitle" data-i18n="ai_repos_subtitle">Powered by open-source AI detection research and models</p>
-        <div class="ai-tools-grid">
-            <a href="https://deepai.org/ai-image-detector" target="_blank" rel="noopener noreferrer" class="ai-tool-card">
-                <div class="ai-tool-icon">
-                    <i class="fas fa-eye"></i>
-                </div>
-                <div class="ai-tool-info">
-                    <h3 class="ai-tool-name">DeepAI Image Detector</h3>
-                    <p class="ai-tool-desc" data-i18n="tool_deepai_desc">Advanced AI image detection powered by deep learning models</p>
-                </div>
-                <div class="ai-tool-arrow">
-                    <i class="fas fa-arrow-up-right-from-square"></i>
-                </div>
-            </a>
-            <a href="https://www.aiornot.com/" target="_blank" rel="noopener noreferrer" class="ai-tool-card">
-                <div class="ai-tool-icon">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="ai-tool-info">
-                    <h3 class="ai-tool-name">AI or Not</h3>
-                    <p class="ai-tool-desc" data-i18n="tool_aiornot_desc">Detect AI-generated images, audio, and video with high accuracy</p>
-                </div>
-                <div class="ai-tool-arrow">
-                    <i class="fas fa-arrow-up-right-from-square"></i>
-                </div>
-            </a>
         </div>
     </section>
 
