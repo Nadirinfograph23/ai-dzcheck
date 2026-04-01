@@ -851,6 +851,39 @@ body.pwa-banner-visible .hero {
     color: var(--success);
 }
 
+/* Image-only essential steps (8 core image tools) */
+.image-step {
+    display: none;
+}
+
+.image-step.visible {
+    display: flex;
+    border-color: var(--info);
+    background: rgba(59, 130, 246, 0.04);
+}
+
+.image-step.visible.active {
+    border-color: var(--accent);
+    background: rgba(200, 255, 0, 0.03);
+}
+
+.image-step.visible.completed {
+    border-color: var(--success);
+    background: rgba(34, 197, 94, 0.04);
+}
+
+.image-step.visible .step-content h4 {
+    color: var(--info);
+}
+
+.image-step.visible.active .step-content h4 {
+    color: var(--accent);
+}
+
+.image-step.visible.completed .step-content h4 {
+    color: var(--success);
+}
+
 /* ============================================
    Results Section
    ============================================ */
