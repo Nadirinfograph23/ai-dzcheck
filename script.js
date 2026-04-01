@@ -408,8 +408,6 @@ function analyzeVideoHeuristics(file) {
     var name = file.name.toLowerCase();
     var size = file.size;
     var signals = [];
-    var totalScore = 0;
-    var signalCount = 0;
 
     // 1. Filename-based AI indicators (common AI video generator naming patterns)
     var aiNamePatterns = /sora|runway|pika|kling|gen[-_]?2|gen[-_]?3|luma|dream[-_]?machine|stable[-_]?video|svd|animate[-_]?diff|wan|cogvideo|hailuo|minimax|veo|mora|make[-_]?a[-_]?video|video[-_]?gen|ai[-_]?gen|deepfake|synthetic/i;
@@ -1015,8 +1013,7 @@ async function analyzeScreenApp(file, prevResults) {
             analysisTime: (0.7 + Math.random() * 1.1).toFixed(1) + 's',
             detection: aiScore > 50 ? 'AI generation signatures detected' : 'Content appears naturally created',
             mediaType: fileType,
-            reference: 'screenapp.io/features/ai-video-detector',
-            method: fileType === 'video' ? 'VIDGUARD-R1 temporal artifacts + DeMamba spatial-temporal' : undefined
+            reference: 'screenapp.io/features/ai-video-detector'
         }
     };
 }
@@ -1081,8 +1078,7 @@ async function analyzeOverchat(file, prevResults) {
             analysisTime: (0.6 + Math.random() * 1.0).toFixed(1) + 's',
             detection: aiScore > 50 ? 'AI manipulation indicators found' : 'No AI manipulation detected',
             mediaType: fileType,
-            reference: 'overchat.ai/video/ai-video-detector',
-            method: fileType === 'video' ? 'Optical Flow Residual + D3 second-order features' : undefined
+            reference: 'overchat.ai/video/ai-video-detector'
         }
     };
 }
