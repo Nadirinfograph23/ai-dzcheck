@@ -93,6 +93,8 @@ var TRANSLATIONS = {
         media_audio: 'audio',
         ai_repos_title: 'Supported AI Detection Technologies',
         ai_repos_subtitle: 'Powered by open-source AI detection research and models',
+        tool_deepai_desc: 'Advanced AI image detection powered by deep learning models',
+        tool_aiornot_desc: 'Detect AI-generated images, audio, and video with high accuracy',
     },
     ar: {
         nav_features: '\u0627\u0644\u0645\u0645\u064a\u0632\u0627\u062a',
@@ -180,6 +182,8 @@ var TRANSLATIONS = {
         media_audio: '\u0627\u0644\u0635\u0648\u062a',
         ai_repos_title: '\u062a\u0642\u0646\u064a\u0627\u062a \u0643\u0634\u0641 \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0627\u0644\u0645\u062f\u0639\u0648\u0645\u0629',
         ai_repos_subtitle: '\u0645\u062f\u0639\u0648\u0645 \u0628\u0623\u0628\u062d\u0627\u062b \u0648\u0646\u0645\u0627\u0630\u062c \u0643\u0634\u0641 \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0645\u0641\u062a\u0648\u062d\u0629 \u0627\u0644\u0645\u0635\u062f\u0631',
+        tool_deepai_desc: '\u0643\u0634\u0641 \u0627\u0644\u0635\u0648\u0631 \u0627\u0644\u0645\u0648\u0644\u062f\u0629 \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0628\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0646\u0645\u0627\u0630\u062c \u0627\u0644\u062a\u0639\u0644\u0645 \u0627\u0644\u0639\u0645\u064a\u0642',
+        tool_aiornot_desc: '\u0643\u0634\u0641 \u0627\u0644\u0635\u0648\u0631 \u0648\u0627\u0644\u0635\u0648\u062a \u0648\u0627\u0644\u0641\u064a\u062f\u064a\u0648 \u0627\u0644\u0645\u0648\u0644\u062f \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0628\u062f\u0642\u0629 \u0639\u0627\u0644\u064a\u0629',
     },
     fr: {
         nav_features: 'Fonctionnalit\u00e9s',
@@ -267,6 +271,8 @@ var TRANSLATIONS = {
         media_audio: 'audio',
         ai_repos_title: 'Technologies de D\u00e9tection IA Support\u00e9es',
         ai_repos_subtitle: 'Aliment\u00e9 par la recherche et les mod\u00e8les de d\u00e9tection IA open-source',
+        tool_deepai_desc: 'D\u00e9tection avanc\u00e9e d\'images IA par des mod\u00e8les d\'apprentissage profond',
+        tool_aiornot_desc: 'D\u00e9tectez les images, l\'audio et la vid\u00e9o g\u00e9n\u00e9r\u00e9s par l\'IA avec une grande pr\u00e9cision',
     }
 };
 
