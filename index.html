@@ -211,6 +211,38 @@
                     </div>
                     <div class="step-result" id="stepOverchatResult"></div>
                 </div>
+                <div class="step-item audio-step" id="stepDeepfakeVoice">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_deepfake_voice_title"><i class="fas fa-star essential-icon"></i> Deepfake Voice Detection</h4>
+                        <p data-i18n="step_deepfake_voice_desc">Essential audio verification with Deepfake Voice detector</p>
+                    </div>
+                    <div class="step-result" id="stepDeepfakeVoiceResult"></div>
+                </div>
+                <div class="step-item audio-step" id="stepFreeAIDetector">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_free_ai_detector_title"><i class="fas fa-star essential-icon"></i> Free AI Detector</h4>
+                        <p data-i18n="step_free_ai_detector_desc">Essential audio verification with Free AI Detector</p>
+                    </div>
+                    <div class="step-result" id="stepFreeAIDetectorResult"></div>
+                </div>
+                <div class="step-item audio-step" id="stepAIVoiceDetector">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_ai_voice_detector_title"><i class="fas fa-star essential-icon"></i> AI Voice Detector</h4>
+                        <p data-i18n="step_ai_voice_detector_desc">Essential audio verification with AI Voice Detector</p>
+                    </div>
+                    <div class="step-result" id="stepAIVoiceDetectorResult"></div>
+                </div>
+                <div class="step-item audio-step" id="stepAIVideoDetectorAudio">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_ai_video_detector_audio_title"><i class="fas fa-star essential-icon"></i> AI Video Detector (Audio Scan)</h4>
+                        <p data-i18n="step_ai_video_detector_audio_desc">Essential audio verification with AI Video Detector</p>
+                    </div>
+                    <div class="step-result" id="stepAIVideoDetectorAudioResult"></div>
+                </div>
                 <div class="step-item" id="step6" data-step="6">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
@@ -343,6 +375,42 @@
                             <span data-i18n="report_overchat">OverChat</span>
                         </div>
                         <div class="report-item-body" id="reportOverchatBody"></div>
+                    </div>
+
+                    <!-- Deepfake Voice Result -->
+                    <div class="report-item" id="reportDeepfakeVoice">
+                        <div class="report-item-header">
+                            <i class="fas fa-microphone"></i>
+                            <span data-i18n="report_deepfake_voice">Deepfake Voice</span>
+                        </div>
+                        <div class="report-item-body" id="reportDeepfakeVoiceBody"></div>
+                    </div>
+
+                    <!-- Free AI Detector Result -->
+                    <div class="report-item" id="reportFreeAIDetector">
+                        <div class="report-item-header">
+                            <i class="fas fa-wand-magic-sparkles"></i>
+                            <span data-i18n="report_free_ai_detector">Free AI Detector</span>
+                        </div>
+                        <div class="report-item-body" id="reportFreeAIDetectorBody"></div>
+                    </div>
+
+                    <!-- AI Voice Detector Result -->
+                    <div class="report-item" id="reportAIVoiceDetector">
+                        <div class="report-item-header">
+                            <i class="fas fa-headphones"></i>
+                            <span data-i18n="report_ai_voice_detector">AI Voice Detector</span>
+                        </div>
+                        <div class="report-item-body" id="reportAIVoiceDetectorBody"></div>
+                    </div>
+
+                    <!-- AI Video Detector Audio Result -->
+                    <div class="report-item" id="reportAIVideoDetectorAudio">
+                        <div class="report-item-header">
+                            <i class="fas fa-volume-high"></i>
+                            <span data-i18n="report_ai_video_detector_audio">AI Video Detector (Audio)</span>
+                        </div>
+                        <div class="report-item-body" id="reportAIVideoDetectorAudioBody"></div>
                     </div>
                 </div>
 
