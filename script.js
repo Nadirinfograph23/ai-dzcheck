@@ -1542,23 +1542,41 @@ async function analyzeReverseSearch(file, prevResults) {
 //   No EXIF → models get full weight
 async function compareResults(results) {
     await delay(600 + Math.random() * 400);
+
+    // Helper to find a result by engine name (avoids index mismatch when audio engines are inserted)
+    function findByEngine(name) {
+        for (var i = 0; i < results.length; i++) {
+            if (results[i] && results[i].engine === name) return results[i];
+        }
+        return null;
+    }
     
-    var deepfakeScore = results[0] ? results[0].aiScore : 50;
-    var deepguardScore = results[1] ? results[1].aiScore : 50;
-    var deepaiScore = results[2] ? results[2].aiScore : 50;
-    var aiornotScore = results[3] ? results[3].aiScore : 50;
-    var illuminartyScore = results[4] ? results[4].aiScore : 50;
-    var screenappScore = results[5] ? results[5].aiScore : 50;
-    var overchatScore = results[6] ? results[6].aiScore : 50;
-    var metadataScore = results[7] ? results[7].aiScore : 50;
-    var reverseScore = results[8] ? results[8].aiScore : 50;
+    var deepfakeResult = findByEngine('Deepfake Detection API') || results[0];
+    var deepguardResult = findByEngine('DeepGuard') || results[1];
+    var deepaiResult = findByEngine('DeepAI') || results[2];
+    var aiornotResult = findByEngine('AIorNot') || results[3];
+    var illuminartyResult = findByEngine('Illuminarty') || results[4];
+    var screenappResult = findByEngine('ScreenApp AI Detector') || results[5];
+    var overchatResult = findByEngine('OverChat AI Detector') || results[6];
+    var metadataResult = findByEngine('Metadata Inspector');
+    var reverseResult = findByEngine('Reverse Search');
+
+    var deepfakeScore = deepfakeResult ? deepfakeResult.aiScore : 50;
+    var deepguardScore = deepguardResult ? deepguardResult.aiScore : 50;
+    var deepaiScore = deepaiResult ? deepaiResult.aiScore : 50;
+    var aiornotScore = aiornotResult ? aiornotResult.aiScore : 50;
+    var illuminartyScore = illuminartyResult ? illuminartyResult.aiScore : 50;
+    var screenappScore = screenappResult ? screenappResult.aiScore : 50;
+    var overchatScore = overchatResult ? overchatResult.aiScore : 50;
+    var metadataScore = metadataResult ? metadataResult.aiScore : 50;
+    var reverseScore = reverseResult ? reverseResult.aiScore : 50;
 
     // Check EXIF signals from metadata analysis for dynamic weighting
-    var exifSignals = (results[7] && results[7]._exifSignals) ? results[7]._exifSignals : {};
+    var exifSignals = (metadataResult && metadataResult._exifSignals) ? metadataResult._exifSignals : {};
     var strongCameraExif = exifSignals.cameraFound && (exifSignals.gpsFound || exifSignals.exposureFound || exifSignals.dateTimeFound);
     var aiSoftwareInExif = exifSignals.aiSoftwareDetected;
 
-    // Dynamic weight calculation for 9 engines
+    // Dynamic weight calculation for 9 base engines
     // w1=Deepfake API, w2=DeepGuard, w3=DeepAI, w4=AIorNot, w5=Illuminarty, w6=ScreenApp, w7=OverChat, w8=Metadata, w9=Reverse
     var w1, w2, w3, w4, w5, w6, w7, w8, w9;
 
@@ -1567,17 +1585,16 @@ async function compareResults(results) {
     var isVideoFile = fileType === 'video';
     var isAudioFile = fileType === 'audio';
 
-    // Audio-specific engine scores (indices 9-12 in results array for audio files)
-    var deepfakeVoiceScore = 50;
-    var freeAIDetectorScore = 50;
-    var aiVoiceDetectorScore = 50;
-    var aiVideoDetectorAudioScore = 50;
-    if (isAudioFile) {
-        deepfakeVoiceScore = results[9] ? results[9].aiScore : 50;
-        freeAIDetectorScore = results[10] ? results[10].aiScore : 50;
-        aiVoiceDetectorScore = results[11] ? results[11].aiScore : 50;
-        aiVideoDetectorAudioScore = results[12] ? results[12].aiScore : 50;
-    }
+    // Audio-specific engine scores (found by engine name, not index)
+    var dfVoiceResult = findByEngine('Deepfake Voice Detector');
+    var freeAIResult = findByEngine('Free AI Detector');
+    var aiVoiceResult = findByEngine('AI Voice Detector');
+    var aiVidAudioResult = findByEngine('AI Video Detector (Audio)');
+
+    var deepfakeVoiceScore = dfVoiceResult ? dfVoiceResult.aiScore : 50;
+    var freeAIDetectorScore = freeAIResult ? freeAIResult.aiScore : 50;
+    var aiVoiceDetectorScore = aiVoiceResult ? aiVoiceResult.aiScore : 50;
+    var aiVideoDetectorAudioScore = aiVidAudioResult ? aiVidAudioResult.aiScore : 50;
 
     if (isVideoFile) {
         // VIDEO: ScreenApp & OverChat are essential/primary engines with highest weights
@@ -1852,7 +1869,7 @@ function displayResults(comparison, allResults) {
             '</div>';
     });
     compHTML += '<p style="margin-top:12px;font-size:13px;color:var(--text-muted);">' +
-        '<i class="fas fa-info-circle"></i> ' + comparison.agreeing + '/9 ' + t('engines_agree') + ' — ' +
+        '<i class="fas fa-info-circle"></i> ' + comparison.agreeing + '/' + comparison.total + ' ' + t('engines_agree') + ' — ' +
         t('consensus') + ': <strong style="color:var(--' + (comparison.verdict === 'ai' ? 'danger' : comparison.verdict === 'real' ? 'success' : 'warning') + ')">' +
         t('verdict_' + comparison.verdict) + '</strong></p>';
     compBody.innerHTML = compHTML;
