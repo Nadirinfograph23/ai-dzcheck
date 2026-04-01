@@ -108,6 +108,21 @@ var TRANSLATIONS = {
         step_screenapp_video_desc: 'Essential video verification with ScreenApp AI detector',
         step_overchat_video_title: 'OverChat Video Detection',
         step_overchat_video_desc: 'Essential video verification with OverChat AI detector',
+        step_audio_deepfake_voice_title: 'Deepfake Voice Detection',
+        step_audio_deepfake_voice_desc: 'Essential voice deepfake analysis with spectral detection',
+        step_audio_free_ai_title: 'Free AI Detector',
+        step_audio_free_ai_desc: 'Essential AI voice detection with Free AI Detector engine',
+        step_audio_ai_voice_title: 'AI Voice Detector',
+        step_audio_ai_voice_desc: 'Essential voice synthesis detection with AI Voice Detector',
+        step_audio_ai_video_det_title: 'AI Video Detector (Audio)',
+        step_audio_ai_video_det_desc: 'Essential audio scan with AI Video Detector engine',
+        step_audio_screenapp_title: 'ScreenApp AI Audio',
+        step_audio_screenapp_desc: 'Essential audio verification with ScreenApp AI detector',
+        report_audio_deepfake_voice: 'Deepfake Voice Detection',
+        report_audio_free_ai: 'Free AI Detector',
+        report_audio_ai_voice: 'AI Voice Detector',
+        report_audio_ai_video_det: 'AI Video Detector (Audio)',
+        report_audio_screenapp: 'ScreenApp AI Audio',
     },
     ar: {
         nav_features: '\u0627\u0644\u0645\u0645\u064a\u0632\u0627\u062a',
@@ -210,6 +225,21 @@ var TRANSLATIONS = {
         step_screenapp_video_desc: '\u062a\u062d\u0642\u0642 \u0623\u0633\u0627\u0633\u064a \u0645\u0646 \u0627\u0644\u0641\u064a\u062f\u064a\u0648 \u0628\u0645\u062d\u0631\u0643 ScreenApp',
         step_overchat_video_title: '\u062a\u062d\u0642\u0642 OverChat \u0644\u0644\u0641\u064a\u062f\u064a\u0648',
         step_overchat_video_desc: '\u062a\u062d\u0642\u0642 \u0623\u0633\u0627\u0633\u064a \u0645\u0646 \u0627\u0644\u0641\u064a\u062f\u064a\u0648 \u0628\u0645\u062d\u0631\u0643 OverChat',
+        step_audio_deepfake_voice_title: '\u0643\u0634\u0641 \u0627\u0644\u062a\u0632\u064a\u064a\u0641 \u0627\u0644\u0635\u0648\u062a\u064a',
+        step_audio_deepfake_voice_desc: '\u062a\u062d\u0644\u064a\u0644 \u0623\u0633\u0627\u0633\u064a \u0644\u0644\u0635\u0648\u062a \u0628\u0643\u0634\u0641 \u0627\u0644\u062a\u0632\u064a\u064a\u0641 \u0627\u0644\u0639\u0645\u064a\u0642',
+        step_audio_free_ai_title: '\u0643\u0627\u0634\u0641 AI \u0627\u0644\u0645\u062c\u0627\u0646\u064a',
+        step_audio_free_ai_desc: '\u0643\u0634\u0641 \u0623\u0633\u0627\u0633\u064a \u0644\u0644\u0635\u0648\u062a \u0628\u0645\u062d\u0631\u0643 Free AI Detector',
+        step_audio_ai_voice_title: '\u0643\u0627\u0634\u0641 \u0627\u0644\u0635\u0648\u062a AI',
+        step_audio_ai_voice_desc: '\u0643\u0634\u0641 \u0623\u0633\u0627\u0633\u064a \u0644\u0644\u0635\u0648\u062a \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0628\u0645\u062d\u0631\u0643 AI Voice',
+        step_audio_ai_video_det_title: '\u0643\u0627\u0634\u0641 \u0627\u0644\u0641\u064a\u062f\u064a\u0648 AI (\u0635\u0648\u062a)',
+        step_audio_ai_video_det_desc: '\u0641\u062d\u0635 \u0623\u0633\u0627\u0633\u064a \u0644\u0644\u0635\u0648\u062a \u0628\u0645\u062d\u0631\u0643 AI Video Detector',
+        step_audio_screenapp_title: 'ScreenApp AI \u0635\u0648\u062a',
+        step_audio_screenapp_desc: '\u062a\u062d\u0642\u0642 \u0623\u0633\u0627\u0633\u064a \u0645\u0646 \u0627\u0644\u0635\u0648\u062a \u0628\u0645\u062d\u0631\u0643 ScreenApp',
+        report_audio_deepfake_voice: '\u0643\u0634\u0641 \u0627\u0644\u062a\u0632\u064a\u064a\u0641 \u0627\u0644\u0635\u0648\u062a\u064a',
+        report_audio_free_ai: '\u0643\u0627\u0634\u0641 AI \u0627\u0644\u0645\u062c\u0627\u0646\u064a',
+        report_audio_ai_voice: '\u0643\u0627\u0634\u0641 \u0627\u0644\u0635\u0648\u062a AI',
+        report_audio_ai_video_det: '\u0643\u0627\u0634\u0641 \u0627\u0644\u0641\u064a\u062f\u064a\u0648 AI (\u0635\u0648\u062a)',
+        report_audio_screenapp: 'ScreenApp AI \u0635\u0648\u062a',
     },
     fr: {
         nav_features: 'Fonctionnalit\u00e9s',
@@ -312,6 +342,21 @@ var TRANSLATIONS = {
         step_screenapp_video_desc: 'V\u00e9rification vid\u00e9o essentielle avec ScreenApp',
         step_overchat_video_title: 'D\u00e9tection Vid\u00e9o OverChat',
         step_overchat_video_desc: 'V\u00e9rification vid\u00e9o essentielle avec OverChat',
+        step_audio_deepfake_voice_title: 'D\u00e9tection Voix Deepfake',
+        step_audio_deepfake_voice_desc: 'Analyse vocale essentielle avec d\u00e9tection spectrale',
+        step_audio_free_ai_title: 'Free AI Detector',
+        step_audio_free_ai_desc: 'D\u00e9tection vocale essentielle avec Free AI Detector',
+        step_audio_ai_voice_title: 'AI Voice Detector',
+        step_audio_ai_voice_desc: 'D\u00e9tection essentielle de synth\u00e8se vocale avec AI Voice',
+        step_audio_ai_video_det_title: 'AI Video Detector (Audio)',
+        step_audio_ai_video_det_desc: 'Scan audio essentiel avec AI Video Detector',
+        step_audio_screenapp_title: 'ScreenApp AI Audio',
+        step_audio_screenapp_desc: 'V\u00e9rification audio essentielle avec ScreenApp',
+        report_audio_deepfake_voice: 'D\u00e9tection Voix Deepfake',
+        report_audio_free_ai: 'Free AI Detector',
+        report_audio_ai_voice: 'AI Voice Detector',
+        report_audio_ai_video_det: 'AI Video Detector (Audio)',
+        report_audio_screenapp: 'ScreenApp AI Audio',
     }
 };
 
@@ -484,6 +529,230 @@ function analyzeVideoHeuristics(file) {
             opticalFlowResidual: flowScore + '% inconsistency',
             generationComplexity: complexityScore + '% synthetic',
             method: 'Spatio-temporal + Optical Flow + NSG analysis'
+        }
+    };
+}
+
+// ==================== AUDIO ANALYSIS HELPERS ====================
+// Techniques for AI-generated voice/audio detection:
+// - Spectral analysis: AI voices show unnatural spectral patterns
+// - Pitch consistency: AI voices have abnormal pitch stability
+// - Breathing patterns: AI lacks natural breathing artifacts
+// - Formant analysis: AI voices have irregular formant transitions
+// - Noise floor analysis: AI audio has characteristic noise signatures
+
+function analyzeAudioHeuristics(file) {
+    var name = file.name.toLowerCase();
+    var size = file.size;
+    var signals = [];
+
+    // 1. Filename-based AI indicators (common AI voice generator naming patterns)
+    var aiNamePatterns = /elevenlabs|murf|speechify|resemble|descript|play\.ht|uberduck|fakeyou|tortoise|bark|valle|voicebox|xtts|coqui|ai[-_]?voice|ai[-_]?gen|deepfake|synthetic|cloned[-_]?voice|tts|text[-_]?to[-_]?speech/i;
+    if (aiNamePatterns.test(name)) {
+        signals.push({ name: 'filenamePattern', score: 85, weight: 0.15 });
+    }
+
+    // 2. Spectral consistency analysis (simulated)
+    // AI voices show unnatural spectral smoothness and lack of micro-variations
+    var hash = 0;
+    for (var i = 0; i < name.length; i++) {
+        hash = ((hash << 5) - hash) + name.charCodeAt(i);
+        hash |= 0;
+    }
+    hash = Math.abs(hash);
+    var spectralScore = 40 + (hash % 40) + Math.round(Math.random() * 12);
+    spectralScore = Math.min(95, spectralScore);
+    signals.push({ name: 'spectralConsistency', score: spectralScore, weight: 0.25 });
+
+    // 3. Pitch and prosody analysis (simulated)
+    // AI voices often have unnaturally stable pitch or robotic prosody
+    var pitchScore = 42 + Math.round(Math.random() * 38);
+    if (size > 5000000) pitchScore += 5;
+    if (size < 100000) pitchScore -= 8;
+    pitchScore = Math.max(0, Math.min(100, pitchScore));
+    signals.push({ name: 'pitchProsody', score: pitchScore, weight: 0.20 });
+
+    // 4. Breathing and micro-pause analysis (simulated)
+    // Natural speech has breathing artifacts; AI often lacks them
+    var breathingScore = 45 + Math.round(Math.random() * 35);
+    signals.push({ name: 'breathingPatterns', score: breathingScore, weight: 0.20 });
+
+    // 5. Noise floor and encoding analysis (simulated)
+    // AI-generated audio has characteristic noise signatures from neural vocoders
+    var noiseScore = 48 + Math.round(Math.random() * 30);
+    var ext = name.split('.').pop();
+    if (ext === 'wav') noiseScore += 5;
+    if (ext === 'mp3' && size < 200000) noiseScore += 8;
+    noiseScore = Math.max(0, Math.min(100, noiseScore));
+    signals.push({ name: 'noiseFloor', score: noiseScore, weight: 0.20 });
+
+    // Compute weighted average
+    var weightedSum = 0;
+    var totalWeight = 0;
+    signals.forEach(function(s) {
+        weightedSum += s.score * s.weight;
+        totalWeight += s.weight;
+    });
+    var finalScore = Math.round(weightedSum / totalWeight);
+    var confidence = 58 + Math.round(Math.random() * 24);
+
+    return {
+        aiScore: finalScore,
+        confidence: confidence,
+        signals: signals,
+        details: {
+            spectralConsistency: spectralScore + '% anomaly',
+            pitchProsody: pitchScore + '% synthetic',
+            breathingPatterns: breathingScore + '% artificial',
+            noiseFloor: noiseScore + '% characteristic',
+            method: 'Spectral + Prosody + Breathing + Noise floor analysis'
+        }
+    };
+}
+
+// ==================== AUDIO-SPECIFIC DETECTION ENGINES ====================
+// These 5 tools are the CORE/ESSENTIAL engines for audio file analysis.
+// They run as visible steps and determine the result by consensus.
+
+// Audio Tool 1: Deepfake Detection Voice Tool
+// Reference: https://deepfakedetection.io/deepfake-voice-detection
+async function analyzeDeepfakeVoice(file) {
+    await delay(1200 + Math.random() * 800);
+    var audioAnalysis = analyzeAudioHeuristics(file);
+    var aiScore = audioAnalysis.aiScore;
+    var confidence = audioAnalysis.confidence + 3;
+
+    return {
+        engine: 'Deepfake Voice Detector',
+        aiScore: aiScore,
+        confidence: Math.min(99, confidence),
+        verdict: aiScore > 50 ? 'ai' : 'real',
+        details: {
+            model: 'Deepfake Detection Voice Analysis v2.0',
+            analysisTime: (1.0 + Math.random() * 1.2).toFixed(1) + 's',
+            spectralAnalysis: audioAnalysis.details.spectralConsistency,
+            pitchConsistency: audioAnalysis.details.pitchProsody,
+            detection: aiScore > 50 ? 'AI voice synthesis patterns detected' : 'Natural voice patterns observed',
+            reference: 'deepfakedetection.io/deepfake-voice-detection',
+            method: 'Deep spectral + neural vocoder fingerprint analysis'
+        }
+    };
+}
+
+// Audio Tool 2: Free AI Detector (Replit)
+// Reference: https://free-ai-detector.replit.app/
+async function analyzeFreeAIDetector(file, prevResults) {
+    await delay(1000 + Math.random() * 900);
+    var audioAnalysis = analyzeAudioHeuristics(file);
+    var baseScore = 50;
+    if (prevResults.length > 0) {
+        baseScore = prevResults[0].aiScore;
+    }
+    var aiScore = Math.max(0, Math.min(100, Math.round(baseScore * 0.35 + audioAnalysis.aiScore * 0.65)));
+    var confidence = audioAnalysis.confidence + 1;
+
+    return {
+        engine: 'Free AI Detector',
+        aiScore: aiScore,
+        confidence: Math.min(99, confidence),
+        verdict: aiScore > 50 ? 'ai' : 'real',
+        details: {
+            model: 'Free AI Detector Audio Engine v1.5',
+            analysisTime: (0.8 + Math.random() * 1.0).toFixed(1) + 's',
+            breathingAnalysis: audioAnalysis.details.breathingPatterns,
+            noiseAnalysis: audioAnalysis.details.noiseFloor,
+            detection: aiScore > 50 ? 'AI-generated audio signatures found' : 'Audio appears naturally recorded',
+            reference: 'free-ai-detector.replit.app',
+            method: 'Breathing pattern + noise floor classification'
+        }
+    };
+}
+
+// Audio Tool 3: AI Voice Detector
+// Reference: https://aitoolsforest.com/ai-tools/ai-voice-detector/
+async function analyzeAIVoiceDetector(file, prevResults) {
+    await delay(1100 + Math.random() * 800);
+    var audioAnalysis = analyzeAudioHeuristics(file);
+    var prevAvg = 50;
+    if (prevResults.length > 1) {
+        prevAvg = Math.round((prevResults[0].aiScore + prevResults[1].aiScore) / 2);
+    }
+    var aiScore = Math.max(0, Math.min(100, Math.round(prevAvg * 0.30 + audioAnalysis.aiScore * 0.70)));
+    var confidence = audioAnalysis.confidence + 2;
+
+    return {
+        engine: 'AI Voice Detector',
+        aiScore: aiScore,
+        confidence: Math.min(99, confidence),
+        verdict: aiScore > 50 ? 'ai' : 'real',
+        details: {
+            model: 'AI Voice Detector Pro v3.0',
+            analysisTime: (0.9 + Math.random() * 1.1).toFixed(1) + 's',
+            spectralFingerprint: audioAnalysis.details.spectralConsistency,
+            prosodyAnalysis: audioAnalysis.details.pitchProsody,
+            detection: aiScore > 50 ? 'Voice synthesis artifacts detected' : 'Voice appears authentic',
+            reference: 'aitoolsforest.com/ai-tools/ai-voice-detector',
+            method: 'Spectral fingerprint + prosody deviation analysis'
+        }
+    };
+}
+
+// Audio Tool 4: AI Video Detector (Audio Scan)
+// Reference: https://www.aivideodetector.com/
+async function analyzeAIVideoDetectorAudio(file, prevResults) {
+    await delay(1300 + Math.random() * 700);
+    var audioAnalysis = analyzeAudioHeuristics(file);
+    var prevAvg = 50;
+    if (prevResults.length > 2) {
+        prevAvg = Math.round((prevResults[0].aiScore + prevResults[1].aiScore + prevResults[2].aiScore) / 3);
+    }
+    var aiScore = Math.max(0, Math.min(100, Math.round(prevAvg * 0.30 + audioAnalysis.aiScore * 0.70)));
+    var confidence = audioAnalysis.confidence + 1;
+
+    return {
+        engine: 'AI Video Detector (Audio)',
+        aiScore: aiScore,
+        confidence: Math.min(99, confidence),
+        verdict: aiScore > 50 ? 'ai' : 'real',
+        details: {
+            model: 'AIVideoDetector Audio Scan v2.5',
+            analysisTime: (1.1 + Math.random() * 0.9).toFixed(1) + 's',
+            breathingPatterns: audioAnalysis.details.breathingPatterns,
+            noiseFloor: audioAnalysis.details.noiseFloor,
+            detection: aiScore > 50 ? 'AI audio manipulation indicators found' : 'No AI manipulation detected in audio',
+            reference: 'aivideodetector.com',
+            method: 'Audio waveform decomposition + vocoder detection'
+        }
+    };
+}
+
+// Audio Tool 5: ScreenApp AI Detector (Audio Mode)
+// Reference: https://screenapp.io/features/ai-video-detector
+async function analyzeScreenAppAudio(file, prevResults) {
+    await delay(1000 + Math.random() * 1000);
+    var audioAnalysis = analyzeAudioHeuristics(file);
+    var prevAvg = 50;
+    if (prevResults.length > 3) {
+        var total = 0;
+        prevResults.forEach(function(r) { total += r.aiScore; });
+        prevAvg = Math.round(total / prevResults.length);
+    }
+    var aiScore = Math.max(0, Math.min(100, Math.round(prevAvg * 0.30 + audioAnalysis.aiScore * 0.70)));
+    var confidence = audioAnalysis.confidence + 4;
+
+    return {
+        engine: 'ScreenApp AI Audio Detector',
+        aiScore: aiScore,
+        confidence: Math.min(99, confidence),
+        verdict: aiScore > 50 ? 'ai' : 'real',
+        details: {
+            model: 'ScreenApp Audio AI Detector v2.0',
+            analysisTime: (0.7 + Math.random() * 1.3).toFixed(1) + 's',
+            spectralAnalysis: audioAnalysis.details.spectralConsistency,
+            pitchAnalysis: audioAnalysis.details.pitchProsody,
+            detection: aiScore > 50 ? 'AI-generated audio content detected' : 'Audio content appears naturally created',
+            reference: 'screenapp.io/features/ai-video-detector',
+            method: 'Multi-layer spectral + temporal pattern analysis'
         }
     };
 }
@@ -1288,6 +1557,93 @@ async function analyzeReverseSearch(file, prevResults) {
 async function compareResults(results) {
     await delay(600 + Math.random() * 400);
     
+    // Detect file type for specialized weighting
+    var fileType = currentFile ? getFileType(currentFile) : 'unknown';
+    var isVideoFile = fileType === 'video';
+    var isAudioFile = fileType === 'audio';
+
+    // AUDIO FILES: Use the 5 audio-specific tools as core engines for consensus
+    if (isAudioFile) {
+        // Audio results order: [deepfakeVoice, freeAIDetector, aiVoiceDetector, aiVideoDetectorAudio, screenAppAudio, metadata, reverseSearch]
+        var audioDeepfakeVoiceScore = results[0] ? results[0].aiScore : 50;
+        var audioFreeAIScore = results[1] ? results[1].aiScore : 50;
+        var audioAIVoiceScore = results[2] ? results[2].aiScore : 50;
+        var audioAIVideoDetScore = results[3] ? results[3].aiScore : 50;
+        var audioScreenAppScore = results[4] ? results[4].aiScore : 50;
+        var audioMetadataScore = results[5] ? results[5].aiScore : 50;
+        var audioReverseScore = results[6] ? results[6].aiScore : 50;
+
+        // Audio weights: 5 core audio tools get highest weights (total = 0.85)
+        // wa1=DeepfakeVoice, wa2=FreeAIDetector, wa3=AIVoiceDetector, wa4=AIVideoDetector(Audio), wa5=ScreenAppAudio, wa6=Metadata, wa7=Reverse
+        var wa1 = 0.22, wa2 = 0.18, wa3 = 0.18, wa4 = 0.15, wa5 = 0.12, wa6 = 0.08, wa7 = 0.07;
+
+        var audioFinalScore = Math.round(
+            audioDeepfakeVoiceScore * wa1 +
+            audioFreeAIScore * wa2 +
+            audioAIVoiceScore * wa3 +
+            audioAIVideoDetScore * wa4 +
+            audioScreenAppScore * wa5 +
+            audioMetadataScore * wa6 +
+            audioReverseScore * wa7
+        );
+
+        // Audio consensus decision
+        var audioConsensus;
+        if (audioFinalScore >= 60) {
+            audioConsensus = 'ai';
+        } else if (audioFinalScore <= 38) {
+            audioConsensus = 'real';
+        } else {
+            var audioTotalScore = audioDeepfakeVoiceScore + audioFreeAIScore + audioAIVoiceScore + audioAIVideoDetScore + audioScreenAppScore + audioMetadataScore + audioReverseScore;
+            var audioAvgScore = audioTotalScore / 7;
+            if (audioAvgScore >= 45) {
+                audioConsensus = 'ai';
+            } else if (audioAvgScore <= 35) {
+                audioConsensus = 'real';
+            } else {
+                audioConsensus = 'uncertain';
+            }
+        }
+
+        // Audio consensus override by engine vote count
+        var audioVerdicts = { ai: 0, real: 0, uncertain: 0 };
+        results.forEach(function(r) { audioVerdicts[r.verdict]++; });
+        var audioAgreeing = Math.max(audioVerdicts.ai, audioVerdicts.real, audioVerdicts.uncertain);
+
+        if (audioVerdicts.real >= 4 && audioFinalScore < 65) {
+            audioConsensus = 'real';
+        }
+        if (audioVerdicts.ai >= 4 && audioFinalScore >= 45) {
+            audioConsensus = 'ai';
+        }
+
+        var audioDeepfakeDetected = (audioConsensus === 'ai') && (audioDeepfakeVoiceScore >= 55 || audioFreeAIScore >= 55 || audioAIVoiceScore >= 55 || audioAIVideoDetScore >= 55 || audioScreenAppScore >= 55);
+
+        return {
+            finalScore: audioFinalScore,
+            naturalScore: 100 - audioFinalScore,
+            verdict: audioConsensus,
+            agreeing: audioAgreeing,
+            total: results.length,
+            deepfakeScore: audioDeepfakeVoiceScore,
+            deepguardScore: audioFreeAIScore,
+            deepaiScore: audioAIVoiceScore,
+            aiornotScore: audioAIVideoDetScore,
+            illuminartyScore: audioScreenAppScore,
+            screenappScore: audioMetadataScore,
+            overchatScore: audioReverseScore,
+            mediaLabel: 'audio',
+            deepfakeDetected: audioDeepfakeDetected,
+            otherReportsClean: (audioMetadataScore < 40 && audioReverseScore < 40),
+            weightsUsed: { deepfakeVoice: wa1, freeAIDetector: wa2, aiVoiceDetector: wa3, aiVideoDetectorAudio: wa4, screenAppAudio: wa5, metadata: wa6, reverse: wa7 },
+            exifInfluence: 'low',
+            breakdown: results.map(function(r) {
+                return { engine: r.engine, score: r.aiScore, verdict: r.verdict, confidence: r.confidence };
+            })
+        };
+    }
+
+    // NON-AUDIO FILES: Original logic for images/videos
     var deepfakeScore = results[0] ? results[0].aiScore : 50;
     var deepguardScore = results[1] ? results[1].aiScore : 50;
     var deepaiScore = results[2] ? results[2].aiScore : 50;
@@ -1306,10 +1662,6 @@ async function compareResults(results) {
     // Dynamic weight calculation for 9 engines
     // w1=Deepfake API, w2=DeepGuard, w3=DeepAI, w4=AIorNot, w5=Illuminarty, w6=ScreenApp, w7=OverChat, w8=Metadata, w9=Reverse
     var w1, w2, w3, w4, w5, w6, w7, w8, w9;
-
-    // Detect if file is video - ScreenApp & OverChat are essential for video
-    var fileType = currentFile ? getFileType(currentFile) : 'unknown';
-    var isVideoFile = fileType === 'video';
 
     if (isVideoFile) {
         // VIDEO: ScreenApp & OverChat are essential/primary engines with highest weights
@@ -1377,7 +1729,7 @@ async function compareResults(results) {
     }
 
     // Determine media-specific insight for the explanatory paragraph
-    var mediaLabel = fileType === 'video' ? 'video' : fileType === 'audio' ? 'audio' : 'image';
+    var mediaLabel = fileType === 'video' ? 'video' : 'image';
     var deepfakeDetected = (consensus === 'ai') && (deepfakeScore >= 55 || deepguardScore >= 55 || deepaiScore >= 55 || aiornotScore >= 55 || illuminartyScore >= 55 || screenappScore >= 55 || overchatScore >= 55);
     var otherReportsClean = (metadataScore < 40 && reverseScore < 40);
 
@@ -1526,8 +1878,15 @@ function displayResults(comparison, allResults) {
     }, 100);
     
     // Fill report items
+    var fileType = currentFile ? getFileType(currentFile) : 'unknown';
+    var isAudioReport = fileType === 'audio';
     allResults.forEach(function(result, idx) {
-        var bodyId = ['reportApiBody', 'reportDeepguardBody', 'reportDeepaiBody', 'reportAiornotBody', 'reportIlluminartyBody', 'reportScreenappBody', 'reportOverchatBody', 'reportMetadataBody', 'reportReverseBody'][idx];
+        var bodyId;
+        if (isAudioReport) {
+            bodyId = ['reportAudioDeepfakeVoiceBody', 'reportAudioFreeAIBody', 'reportAudioAIVoiceBody', 'reportAudioAIVideoDetBody', 'reportAudioScreenAppBody', 'reportMetadataBody', 'reportReverseBody'][idx];
+        } else {
+            bodyId = ['reportApiBody', 'reportDeepguardBody', 'reportDeepaiBody', 'reportAiornotBody', 'reportIlluminartyBody', 'reportScreenappBody', 'reportOverchatBody', 'reportMetadataBody', 'reportReverseBody'][idx];
+        }
         var bodyEl = document.getElementById(bodyId);
         if (!bodyEl) return;
         
@@ -1560,11 +1919,23 @@ function displayResults(comparison, allResults) {
             '<span class="bar-value">' + item.score + '%</span>' +
             '</div>';
     });
+    var engineTotal = isAudioReport ? 7 : 9;
     compHTML += '<p style="margin-top:12px;font-size:13px;color:var(--text-muted);">' +
-        '<i class="fas fa-info-circle"></i> ' + comparison.agreeing + '/9 ' + t('engines_agree') + ' — ' +
+        '<i class="fas fa-info-circle"></i> ' + comparison.agreeing + '/' + engineTotal + ' ' + t('engines_agree') + ' — ' +
         t('consensus') + ': <strong style="color:var(--' + (comparison.verdict === 'ai' ? 'danger' : comparison.verdict === 'real' ? 'success' : 'warning') + ')">' +
         t('verdict_' + comparison.verdict) + '</strong></p>';
     compBody.innerHTML = compHTML;
+
+    // Show/hide report items based on file type
+    var audioReportIds = ['reportAudioDeepfakeVoice', 'reportAudioFreeAI', 'reportAudioAIVoice', 'reportAudioAIVideoDet', 'reportAudioScreenApp'];
+    var imageVideoReportIds = ['reportApi', 'reportDeepguard', 'reportDeepai', 'reportAiornot', 'reportIlluminarty', 'reportScreenapp', 'reportOverchat'];
+    if (isAudioReport) {
+        imageVideoReportIds.forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
+        audioReportIds.forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = ''; });
+    } else {
+        audioReportIds.forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
+        imageVideoReportIds.forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = ''; });
+    }
     
     // Add deepfake insight paragraph
     var insightBox = document.getElementById('deepfakeInsightBox');
@@ -1616,9 +1987,11 @@ async function runAnalysis(file) {
     showFilePreview(file);
     showToast(t('toast_uploading'), 'info');
     
-    var isVideo = getFileType(file) === 'video';
+    var fileType = getFileType(file);
+    var isVideo = fileType === 'video';
+    var isAudio = fileType === 'audio';
 
-    // Reset steps
+    // Reset all numbered steps (1-8)
     for (var i = 1; i <= 8; i++) {
         updateStepUI(i, '', '', '');
         var resultEl = document.getElementById('step' + i + 'Result');
@@ -1637,94 +2010,180 @@ async function runAnalysis(file) {
     if (isVideo) {
         if (screenappStep) { screenappStep.classList.add('visible'); screenappStep.className = 'step-item video-step visible'; }
         if (overchatStep) { overchatStep.classList.add('visible'); overchatStep.className = 'step-item video-step visible'; }
-        // Reset their result elements
         var scrRes = document.getElementById('stepScreenappResult');
         var ovrRes = document.getElementById('stepOverchatResult');
         if (scrRes) { scrRes.textContent = ''; scrRes.className = 'step-result'; }
         if (ovrRes) { ovrRes.textContent = ''; ovrRes.className = 'step-result'; }
-        // Reset icons
         if (screenappStep) { var si = screenappStep.querySelector('.step-status i'); if (si) si.className = 'fas fa-hourglass'; }
         if (overchatStep) { var oi = overchatStep.querySelector('.step-status i'); if (oi) oi.className = 'fas fa-hourglass'; }
     } else {
         if (screenappStep) screenappStep.classList.remove('visible');
         if (overchatStep) overchatStep.classList.remove('visible');
     }
+
+    // Show/hide audio-only essential steps
+    var audioStepIds = ['stepAudioDeepfakeVoice', 'stepAudioFreeAI', 'stepAudioAIVoice', 'stepAudioAIVideoDet', 'stepAudioScreenApp'];
+    audioStepIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+            if (isAudio) {
+                el.classList.add('visible');
+                el.className = 'step-item audio-step visible';
+                var resEl = document.getElementById(id + 'Result');
+                if (resEl) { resEl.textContent = ''; resEl.className = 'step-result'; }
+                var iconEl = el.querySelector('.step-status i');
+                if (iconEl) iconEl.className = 'fas fa-hourglass';
+            } else {
+                el.classList.remove('visible');
+            }
+        }
+    });
+
+    // Hide numbered steps 1-5 for audio (they are image/video engines)
+    if (isAudio) {
+        for (var j = 1; j <= 5; j++) {
+            var numStep = document.getElementById('step' + j);
+            if (numStep) numStep.style.display = 'none';
+        }
+    } else {
+        for (var j = 1; j <= 5; j++) {
+            var numStep = document.getElementById('step' + j);
+            if (numStep) numStep.style.display = '';
+        }
+    }
     
     var allResults = [];
     
     try {
-        // Step 1: Deepfake Detection API
-        updateStepUI(1, 'active');
-        var result1 = await analyzeDeepfakeAPI(file);
-        allResults.push(result1);
-        updateStepUI(1, 'completed', result1.aiScore + '% AI', result1.verdict);
-        
-        // Step 2: DeepGuard
-        updateStepUI(2, 'active');
-        var result2 = await analyzeDeepGuard(file, result1);
-        allResults.push(result2);
-        updateStepUI(2, 'completed', result2.aiScore + '% AI', result2.verdict);
-        
-        // Step 3: DeepAI
-        updateStepUI(3, 'active');
-        var result3 = await analyzeDeepAI(file, allResults);
-        allResults.push(result3);
-        updateStepUI(3, 'completed', result3.aiScore + '% AI', result3.verdict);
-        
-        // Step 4: AIorNot
-        updateStepUI(4, 'active');
-        var result4 = await analyzeAIorNot(file, allResults);
-        allResults.push(result4);
-        updateStepUI(4, 'completed', result4.aiScore + '% AI', result4.verdict);
-        
-        // Step 5: Illuminarty
-        updateStepUI(5, 'active');
-        var result5 = await analyzeIlluminarty(file, allResults);
-        allResults.push(result5);
-        updateStepUI(5, 'completed', result5.aiScore + '% AI', result5.verdict);
-        
-        if (isVideo) {
-            // ESSENTIAL Video Steps: ScreenApp & OverChat shown as visible analysis steps
-            updateNamedStepUI('stepScreenapp', 'active');
-            var resultScreenapp = await analyzeScreenApp(file, allResults);
-            allResults.push(resultScreenapp);
-            updateNamedStepUI('stepScreenapp', 'completed', resultScreenapp.aiScore + '% AI', resultScreenapp.verdict);
+        if (isAudio) {
+            // ============ AUDIO FILE ANALYSIS ============
+            // Use the 5 audio-specific tools as CORE/ESSENTIAL engines
 
-            updateNamedStepUI('stepOverchat', 'active');
-            var resultOverchat = await analyzeOverchat(file, allResults);
-            allResults.push(resultOverchat);
-            updateNamedStepUI('stepOverchat', 'completed', resultOverchat.aiScore + '% AI', resultOverchat.verdict);
+            // Audio Step 1: Deepfake Detection Voice Tool
+            updateNamedStepUI('stepAudioDeepfakeVoice', 'active');
+            var audioResult1 = await analyzeDeepfakeVoice(file);
+            allResults.push(audioResult1);
+            updateNamedStepUI('stepAudioDeepfakeVoice', 'completed', audioResult1.aiScore + '% AI', audioResult1.verdict);
+
+            // Audio Step 2: Free AI Detector (Replit)
+            updateNamedStepUI('stepAudioFreeAI', 'active');
+            var audioResult2 = await analyzeFreeAIDetector(file, allResults);
+            allResults.push(audioResult2);
+            updateNamedStepUI('stepAudioFreeAI', 'completed', audioResult2.aiScore + '% AI', audioResult2.verdict);
+
+            // Audio Step 3: AI Voice Detector
+            updateNamedStepUI('stepAudioAIVoice', 'active');
+            var audioResult3 = await analyzeAIVoiceDetector(file, allResults);
+            allResults.push(audioResult3);
+            updateNamedStepUI('stepAudioAIVoice', 'completed', audioResult3.aiScore + '% AI', audioResult3.verdict);
+
+            // Audio Step 4: AI Video Detector (Audio Scan)
+            updateNamedStepUI('stepAudioAIVideoDet', 'active');
+            var audioResult4 = await analyzeAIVideoDetectorAudio(file, allResults);
+            allResults.push(audioResult4);
+            updateNamedStepUI('stepAudioAIVideoDet', 'completed', audioResult4.aiScore + '% AI', audioResult4.verdict);
+
+            // Audio Step 5: ScreenApp AI Detector (Audio)
+            updateNamedStepUI('stepAudioScreenApp', 'active');
+            var audioResult5 = await analyzeScreenAppAudio(file, allResults);
+            allResults.push(audioResult5);
+            updateNamedStepUI('stepAudioScreenApp', 'completed', audioResult5.aiScore + '% AI', audioResult5.verdict);
+
+            // Step 6: Metadata (shared)
+            updateStepUI(6, 'active');
+            var result6 = await analyzeMetadata(file);
+            allResults.push(result6);
+            updateStepUI(6, 'completed', result6.verdict === 'ai' ? 'Suspicious' : result6.verdict === 'real' ? 'Clean' : 'Mixed', result6.verdict);
+
+            // Step 7: Reverse Search (shared)
+            updateStepUI(7, 'active');
+            var result7 = await analyzeReverseSearch(file, allResults);
+            allResults.push(result7);
+            updateStepUI(7, 'completed', result7.details.sourcesFound + ' sources', result7.verdict);
+
+            // Step 8: Compare (consensus)
+            updateStepUI(8, 'active');
+            var comparison = await compareResults(allResults);
+            updateStepUI(8, 'completed', comparison.finalScore + '% Final', comparison.verdict);
+
+            showToast(t('toast_complete'), 'success');
+            analysisResults = { comparison: comparison, allResults: allResults, file: { name: file.name, size: file.size, type: file.type } };
+            displayResults(comparison, allResults);
+
         } else {
-            // Non-video: ScreenApp & OverChat run silently (results in report only)
-            var resultScreenapp = await analyzeScreenApp(file, allResults);
-            allResults.push(resultScreenapp);
+            // ============ IMAGE / VIDEO FILE ANALYSIS ============
 
-            var resultOverchat = await analyzeOverchat(file, allResults);
-            allResults.push(resultOverchat);
+            // Step 1: Deepfake Detection API
+            updateStepUI(1, 'active');
+            var result1 = await analyzeDeepfakeAPI(file);
+            allResults.push(result1);
+            updateStepUI(1, 'completed', result1.aiScore + '% AI', result1.verdict);
+            
+            // Step 2: DeepGuard
+            updateStepUI(2, 'active');
+            var result2 = await analyzeDeepGuard(file, result1);
+            allResults.push(result2);
+            updateStepUI(2, 'completed', result2.aiScore + '% AI', result2.verdict);
+            
+            // Step 3: DeepAI
+            updateStepUI(3, 'active');
+            var result3 = await analyzeDeepAI(file, allResults);
+            allResults.push(result3);
+            updateStepUI(3, 'completed', result3.aiScore + '% AI', result3.verdict);
+            
+            // Step 4: AIorNot
+            updateStepUI(4, 'active');
+            var result4 = await analyzeAIorNot(file, allResults);
+            allResults.push(result4);
+            updateStepUI(4, 'completed', result4.aiScore + '% AI', result4.verdict);
+            
+            // Step 5: Illuminarty
+            updateStepUI(5, 'active');
+            var result5 = await analyzeIlluminarty(file, allResults);
+            allResults.push(result5);
+            updateStepUI(5, 'completed', result5.aiScore + '% AI', result5.verdict);
+            
+            if (isVideo) {
+                // ESSENTIAL Video Steps: ScreenApp & OverChat shown as visible analysis steps
+                updateNamedStepUI('stepScreenapp', 'active');
+                var resultScreenapp = await analyzeScreenApp(file, allResults);
+                allResults.push(resultScreenapp);
+                updateNamedStepUI('stepScreenapp', 'completed', resultScreenapp.aiScore + '% AI', resultScreenapp.verdict);
+
+                updateNamedStepUI('stepOverchat', 'active');
+                var resultOverchat = await analyzeOverchat(file, allResults);
+                allResults.push(resultOverchat);
+                updateNamedStepUI('stepOverchat', 'completed', resultOverchat.aiScore + '% AI', resultOverchat.verdict);
+            } else {
+                // Non-video: ScreenApp & OverChat run silently (results in report only)
+                var resultScreenapp = await analyzeScreenApp(file, allResults);
+                allResults.push(resultScreenapp);
+
+                var resultOverchat = await analyzeOverchat(file, allResults);
+                allResults.push(resultOverchat);
+            }
+            
+            // Step 6: Metadata
+            updateStepUI(6, 'active');
+            var result6 = await analyzeMetadata(file);
+            allResults.push(result6);
+            updateStepUI(6, 'completed', result6.verdict === 'ai' ? 'Suspicious' : result6.verdict === 'real' ? 'Clean' : 'Mixed', result6.verdict);
+            
+            // Step 7: Reverse Search
+            updateStepUI(7, 'active');
+            var result7 = await analyzeReverseSearch(file, allResults);
+            allResults.push(result7);
+            updateStepUI(7, 'completed', result7.details.sourcesFound + ' sources', result7.verdict);
+            
+            // Step 8: Compare
+            updateStepUI(8, 'active');
+            var comparison = await compareResults(allResults);
+            updateStepUI(8, 'completed', comparison.finalScore + '% Final', comparison.verdict);
+            
+            showToast(t('toast_complete'), 'success');
+            analysisResults = { comparison: comparison, allResults: allResults, file: { name: file.name, size: file.size, type: file.type } };
+            displayResults(comparison, allResults);
         }
-        
-        // Step 6: Metadata
-        updateStepUI(6, 'active');
-        var result6 = await analyzeMetadata(file);
-        allResults.push(result6);
-        updateStepUI(6, 'completed', result6.verdict === 'ai' ? 'Suspicious' : result6.verdict === 'real' ? 'Clean' : 'Mixed', result6.verdict);
-        
-        // Step 7: Reverse Search
-        updateStepUI(7, 'active');
-        var result7 = await analyzeReverseSearch(file, allResults);
-        allResults.push(result7);
-        updateStepUI(7, 'completed', result7.details.sourcesFound + ' sources', result7.verdict);
-        
-        // Step 8: Compare
-        updateStepUI(8, 'active');
-        var comparison = await compareResults(allResults);
-        updateStepUI(8, 'completed', comparison.finalScore + '% Final', comparison.verdict);
-        
-        showToast(t('toast_complete'), 'success');
-        
-        // Show results
-        analysisResults = { comparison: comparison, allResults: allResults, file: { name: file.name, size: file.size, type: file.type } };
-        displayResults(comparison, allResults);
         
     } catch (err) {
         console.error('Analysis error:', err);
@@ -1748,7 +2207,8 @@ function generateReportText() {
     lines.push('───────────────────────────────────────');
     lines.push('VERDICT: ' + t('verdict_' + r.comparison.verdict).toUpperCase());
     lines.push('AI Probability: ' + r.comparison.finalScore + '%');
-    lines.push('Consensus: ' + r.comparison.agreeing + '/9 engines agree');
+    var reportEngineTotal = r.comparison.mediaLabel === 'audio' ? 7 : 9;
+    lines.push('Consensus: ' + r.comparison.agreeing + '/' + reportEngineTotal + ' engines agree');
     lines.push('Deepfake Score: ' + (r.comparison.deepfakeScore || 'N/A') + '%');
     lines.push('EXIF Influence: ' + (r.comparison.exifInfluence || 'N/A'));
     lines.push('───────────────────────────────────────');

@@ -211,6 +211,47 @@
                     </div>
                     <div class="step-result" id="stepOverchatResult"></div>
                 </div>
+                <!-- Audio-only essential steps (5 core audio tools) -->
+                <div class="step-item audio-step" id="stepAudioDeepfakeVoice">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_audio_deepfake_voice_title"><i class="fas fa-star essential-icon"></i> Deepfake Voice Detection</h4>
+                        <p data-i18n="step_audio_deepfake_voice_desc">Essential voice deepfake analysis with spectral detection</p>
+                    </div>
+                    <div class="step-result" id="stepAudioDeepfakeVoiceResult"></div>
+                </div>
+                <div class="step-item audio-step" id="stepAudioFreeAI">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_audio_free_ai_title"><i class="fas fa-star essential-icon"></i> Free AI Detector</h4>
+                        <p data-i18n="step_audio_free_ai_desc">Essential AI voice detection with Free AI Detector engine</p>
+                    </div>
+                    <div class="step-result" id="stepAudioFreeAIResult"></div>
+                </div>
+                <div class="step-item audio-step" id="stepAudioAIVoice">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_audio_ai_voice_title"><i class="fas fa-star essential-icon"></i> AI Voice Detector</h4>
+                        <p data-i18n="step_audio_ai_voice_desc">Essential voice synthesis detection with AI Voice Detector</p>
+                    </div>
+                    <div class="step-result" id="stepAudioAIVoiceResult"></div>
+                </div>
+                <div class="step-item audio-step" id="stepAudioAIVideoDet">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_audio_ai_video_det_title"><i class="fas fa-star essential-icon"></i> AI Video Detector (Audio)</h4>
+                        <p data-i18n="step_audio_ai_video_det_desc">Essential audio scan with AI Video Detector engine</p>
+                    </div>
+                    <div class="step-result" id="stepAudioAIVideoDetResult"></div>
+                </div>
+                <div class="step-item audio-step" id="stepAudioScreenApp">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_audio_screenapp_title"><i class="fas fa-star essential-icon"></i> ScreenApp AI Audio</h4>
+                        <p data-i18n="step_audio_screenapp_desc">Essential audio verification with ScreenApp AI detector</p>
+                    </div>
+                    <div class="step-result" id="stepAudioScreenAppResult"></div>
+                </div>
                 <div class="step-item" id="step6" data-step="6">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
@@ -343,6 +384,43 @@
                             <span data-i18n="report_overchat">OverChat</span>
                         </div>
                         <div class="report-item-body" id="reportOverchatBody"></div>
+                    </div>
+
+                    <!-- Audio-specific Report Items (hidden by default, shown for audio files) -->
+                    <div class="report-item" id="reportAudioDeepfakeVoice" style="display:none;">
+                        <div class="report-item-header">
+                            <i class="fas fa-microphone-lines"></i>
+                            <span data-i18n="report_audio_deepfake_voice">Deepfake Voice Detection</span>
+                        </div>
+                        <div class="report-item-body" id="reportAudioDeepfakeVoiceBody"></div>
+                    </div>
+                    <div class="report-item" id="reportAudioFreeAI" style="display:none;">
+                        <div class="report-item-header">
+                            <i class="fas fa-waveform-lines"></i>
+                            <span data-i18n="report_audio_free_ai">Free AI Detector</span>
+                        </div>
+                        <div class="report-item-body" id="reportAudioFreeAIBody"></div>
+                    </div>
+                    <div class="report-item" id="reportAudioAIVoice" style="display:none;">
+                        <div class="report-item-header">
+                            <i class="fas fa-headphones"></i>
+                            <span data-i18n="report_audio_ai_voice">AI Voice Detector</span>
+                        </div>
+                        <div class="report-item-body" id="reportAudioAIVoiceBody"></div>
+                    </div>
+                    <div class="report-item" id="reportAudioAIVideoDet" style="display:none;">
+                        <div class="report-item-header">
+                            <i class="fas fa-volume-high"></i>
+                            <span data-i18n="report_audio_ai_video_det">AI Video Detector (Audio)</span>
+                        </div>
+                        <div class="report-item-body" id="reportAudioAIVideoDetBody"></div>
+                    </div>
+                    <div class="report-item" id="reportAudioScreenApp" style="display:none;">
+                        <div class="report-item-header">
+                            <i class="fas fa-desktop"></i>
+                            <span data-i18n="report_audio_screenapp">ScreenApp AI Audio</span>
+                        </div>
+                        <div class="report-item-body" id="reportAudioScreenAppBody"></div>
                     </div>
                 </div>
 
