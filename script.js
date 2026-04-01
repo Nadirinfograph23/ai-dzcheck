@@ -365,7 +365,8 @@ var HF_MODELS = [
     { id: 'umm-maybe/AI-image-detector', name: 'AI Image Detector', labelMap: { 'artificial': 'ai', 'human': 'real' } },
     { id: 'Organika/sdxl-detector', name: 'SDXL Detector', labelMap: { 'artificial': 'ai', 'real': 'real', 'human': 'real' } },
     { id: 'cmckinle/sdxl-flux-detector', name: 'SDXL-Flux Detector', labelMap: { 'AI': 'ai', 'Real': 'real', 'artificial': 'ai', 'human': 'real' } },
-    { id: 'dima806/ai_vs_real_image_detection', name: 'CvT AI Image Detector', labelMap: { 'FAKE': 'ai', 'REAL': 'real', 'fake': 'ai', 'real': 'real' } }
+    { id: 'dima806/ai_vs_real_image_detection', name: 'CvT AI Image Detector', labelMap: { 'FAKE': 'ai', 'REAL': 'real', 'fake': 'ai', 'real': 'real' } },
+    { id: 'dima806/deepfake_vs_real_image_detection', name: 'Deepfake Face Detector', labelMap: { 'Fake': 'ai', 'Real': 'real', 'fake': 'ai', 'real': 'real' } }
 ];
 
 async function callHuggingFaceAPI(file, modelInfo) {
@@ -416,7 +417,8 @@ async function callHuggingFaceAPI(file, modelInfo) {
     }
 }
 
-// Step 1: Primary AI Detection (Hugging Face - AI Image Detector)
+// Step 1: Primary AI Detection (Hugging Face - AI Image Detector + Deepfake Face Detector)
+// Combines AI Image Detector with Deepfake Face Detector (inspired by github.com/nogibjj/Detecting-AI-Generated-Fake-Images)
 async function analyzeDeepfakeAPI(file) {
     var fileType = getFileType(file);
     if (fileType !== 'image') {
@@ -445,33 +447,58 @@ async function analyzeDeepfakeAPI(file) {
             }
         };
     }
-    // Use real Hugging Face API for images
-    var result = await callHuggingFaceAPI(file, HF_MODELS[0]);
-    if (result.success) {
+    // Use real Hugging Face API for images (AI Image Detector + Deepfake Face Detector)
+    var primaryResult = await callHuggingFaceAPI(file, HF_MODELS[0]);
+    var deepfakeResult = await callHuggingFaceAPI(file, HF_MODELS[4]);
+
+    // Combine results from both models
+    var combinedAiScore, combinedConfidence, combinedElapsed, engineName, modelDesc;
+    if (primaryResult.success && deepfakeResult.success) {
+        combinedAiScore = Math.round((primaryResult.aiScore * 0.5) + (deepfakeResult.aiScore * 0.5));
+        combinedConfidence = Math.round((primaryResult.confidence + deepfakeResult.confidence) / 2);
+        combinedElapsed = (parseFloat(primaryResult.elapsed) + parseFloat(deepfakeResult.elapsed)).toFixed(1);
+        engineName = 'AI Detector + Deepfake Detector';
+        modelDesc = HF_MODELS[0].id + ' + ' + HF_MODELS[4].id;
+    } else if (primaryResult.success) {
+        combinedAiScore = primaryResult.aiScore;
+        combinedConfidence = primaryResult.confidence;
+        combinedElapsed = primaryResult.elapsed;
+        engineName = 'AI Image Detector';
+        modelDesc = HF_MODELS[0].id;
+    } else if (deepfakeResult.success) {
+        combinedAiScore = deepfakeResult.aiScore;
+        combinedConfidence = deepfakeResult.confidence;
+        combinedElapsed = deepfakeResult.elapsed;
+        engineName = 'Deepfake Face Detector';
+        modelDesc = HF_MODELS[4].id;
+    } else {
+        // Both failed - fallback
+        await delay(1000);
         return {
             engine: 'AI Image Detector',
-            aiScore: result.aiScore,
-            confidence: result.confidence,
-            verdict: result.aiScore > 50 ? 'ai' : 'real',
+            aiScore: 50,
+            confidence: 40,
+            verdict: 'uncertain',
             details: {
-                model: HF_MODELS[0].id,
-                analysisTime: result.elapsed + 's',
-                patterns: result.aiScore > 50 ? 'Synthetic patterns detected' : 'Natural patterns observed',
-                artifacts: result.aiScore > 60 ? 'AI generation signatures found' : 'No significant AI artifacts'
+                model: HF_MODELS[0].id + ' + ' + HF_MODELS[4].id,
+                analysisTime: '0s',
+                note: 'APIs unavailable - using fallback'
             }
         };
     }
-    // Fallback if API fails
-    await delay(1000);
+
     return {
-        engine: 'AI Image Detector',
-        aiScore: 50,
-        confidence: 40,
-        verdict: 'uncertain',
+        engine: engineName,
+        aiScore: combinedAiScore,
+        confidence: combinedConfidence,
+        verdict: combinedAiScore > 50 ? 'ai' : 'real',
         details: {
-            model: HF_MODELS[0].id,
-            analysisTime: result.elapsed + 's',
-            note: 'API unavailable - using fallback (' + result.error + ')'
+            model: modelDesc,
+            analysisTime: combinedElapsed + 's',
+            patterns: combinedAiScore > 50 ? 'Synthetic patterns detected' : 'Natural patterns observed',
+            artifacts: combinedAiScore > 60 ? 'AI generation signatures found' : 'No significant AI artifacts',
+            primaryScore: primaryResult.success ? primaryResult.aiScore + '%' : 'N/A',
+            deepfakeScore: deepfakeResult.success ? deepfakeResult.aiScore + '%' : 'N/A'
         }
     };
 }
