@@ -195,6 +195,63 @@
                     </div>
                     <div class="step-result" id="step5Result"></div>
                 </div>
+                <!-- Image-only essential steps (7 new image detection tools) -->
+                <div class="step-item image-step" id="stepFauxlens">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_fauxlens_title"><i class="fas fa-star essential-icon"></i> FauxLens Analysis</h4>
+                        <p data-i18n="step_fauxlens_desc">Verification with FauxLens image detector</p>
+                    </div>
+                    <div class="step-result" id="stepFauxlensResult"></div>
+                </div>
+                <div class="step-item image-step" id="stepDeepfakedetection">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_deepfakedetection_title"><i class="fas fa-star essential-icon"></i> Deepfake Detection IO</h4>
+                        <p data-i18n="step_deepfakedetection_desc">Analysis with Deepfake Detection image tool</p>
+                    </div>
+                    <div class="step-result" id="stepDeepfakedetectionResult"></div>
+                </div>
+                <div class="step-item image-step" id="stepAideepfake">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_aideepfake_title"><i class="fas fa-star essential-icon"></i> AI DeepFake Detector</h4>
+                        <p data-i18n="step_aideepfake_desc">Scanning with AI DeepFake detection engine</p>
+                    </div>
+                    <div class="step-result" id="stepAideepfakeResult"></div>
+                </div>
+                <div class="step-item image-step" id="stepAidetectlab">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_aidetectlab_title"><i class="fas fa-star essential-icon"></i> AI Detect Lab</h4>
+                        <p data-i18n="step_aidetectlab_desc">Verification with AI Detect Lab engine</p>
+                    </div>
+                    <div class="step-result" id="stepAidetectlabResult"></div>
+                </div>
+                <div class="step-item image-step" id="stepHivemoderation">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_hivemoderation_title"><i class="fas fa-star essential-icon"></i> Hive Moderation</h4>
+                        <p data-i18n="step_hivemoderation_desc">AI detection with Hive Moderation engine</p>
+                    </div>
+                    <div class="step-result" id="stepHivemoderationResult"></div>
+                </div>
+                <div class="step-item image-step" id="stepSightengine">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_sightengine_title"><i class="fas fa-star essential-icon"></i> Sightengine</h4>
+                        <p data-i18n="step_sightengine_desc">Image analysis with Sightengine AI detector</p>
+                    </div>
+                    <div class="step-result" id="stepSightengineResult"></div>
+                </div>
+                <div class="step-item image-step" id="stepIsitai">
+                    <div class="step-status"><i class="fas fa-hourglass"></i></div>
+                    <div class="step-content">
+                        <h4 data-i18n="step_isitai_title"><i class="fas fa-star essential-icon"></i> Is It AI</h4>
+                        <p data-i18n="step_isitai_desc">Verification with Is It AI image detector</p>
+                    </div>
+                    <div class="step-result" id="stepIsitaiResult"></div>
+                </div>
                 <div class="step-item video-step" id="stepScreenapp">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
@@ -384,6 +441,57 @@
                             <span data-i18n="report_overchat">OverChat</span>
                         </div>
                         <div class="report-item-body" id="reportOverchatBody"></div>
+                    </div>
+
+                    <!-- New Image Detection Tools Report Items -->
+                    <div class="report-item" id="reportFauxlens">
+                        <div class="report-item-header">
+                            <i class="fas fa-camera-retro"></i>
+                            <span data-i18n="report_fauxlens">FauxLens</span>
+                        </div>
+                        <div class="report-item-body" id="reportFauxlensBody"></div>
+                    </div>
+                    <div class="report-item" id="reportDeepfakedetection">
+                        <div class="report-item-header">
+                            <i class="fas fa-user-secret"></i>
+                            <span data-i18n="report_deepfakedetection">Deepfake Detection IO</span>
+                        </div>
+                        <div class="report-item-body" id="reportDeepfakedetectionBody"></div>
+                    </div>
+                    <div class="report-item" id="reportAideepfake">
+                        <div class="report-item-header">
+                            <i class="fas fa-mask"></i>
+                            <span data-i18n="report_aideepfake">AI DeepFake Detector</span>
+                        </div>
+                        <div class="report-item-body" id="reportAideepfakeBody"></div>
+                    </div>
+                    <div class="report-item" id="reportAidetectlab">
+                        <div class="report-item-header">
+                            <i class="fas fa-flask"></i>
+                            <span data-i18n="report_aidetectlab">AI Detect Lab</span>
+                        </div>
+                        <div class="report-item-body" id="reportAidetectlabBody"></div>
+                    </div>
+                    <div class="report-item" id="reportHivemoderation">
+                        <div class="report-item-header">
+                            <i class="fas fa-hive"></i>
+                            <span data-i18n="report_hivemoderation">Hive Moderation</span>
+                        </div>
+                        <div class="report-item-body" id="reportHivemoderationBody"></div>
+                    </div>
+                    <div class="report-item" id="reportSightengine">
+                        <div class="report-item-header">
+                            <i class="fas fa-binoculars"></i>
+                            <span data-i18n="report_sightengine">Sightengine</span>
+                        </div>
+                        <div class="report-item-body" id="reportSightengineBody"></div>
+                    </div>
+                    <div class="report-item" id="reportIsitai">
+                        <div class="report-item-header">
+                            <i class="fas fa-search-plus"></i>
+                            <span data-i18n="report_isitai">Is It AI</span>
+                        </div>
+                        <div class="report-item-body" id="reportIsitaiBody"></div>
                     </div>
 
                     <!-- Audio-specific Report Items (hidden by default, shown for audio files) -->
