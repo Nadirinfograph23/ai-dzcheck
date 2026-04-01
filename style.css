@@ -815,6 +815,42 @@ body.pwa-banner-visible .hero {
     color: var(--success);
 }
 
+/* Audio-only essential steps (5 core audio tools) */
+.audio-step {
+    display: none;
+}
+
+.audio-step.visible {
+    display: flex;
+}
+
+.audio-step.visible {
+    border-color: var(--info);
+    background: rgba(59, 130, 246, 0.04);
+}
+
+.audio-step.visible.active {
+    border-color: var(--accent);
+    background: rgba(200, 255, 0, 0.03);
+}
+
+.audio-step.visible.completed {
+    border-color: var(--success);
+    background: rgba(34, 197, 94, 0.04);
+}
+
+.audio-step.visible .step-content h4 {
+    color: var(--info);
+}
+
+.audio-step.visible.active .step-content h4 {
+    color: var(--accent);
+}
+
+.audio-step.visible.completed .step-content h4 {
+    color: var(--success);
+}
+
 /* ============================================
    Results Section
    ============================================ */
