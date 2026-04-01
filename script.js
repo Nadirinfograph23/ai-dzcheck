@@ -361,12 +361,29 @@ function getFileType(file) {
 }
 
 // ==================== HUGGING FACE API INTEGRATION ====================
+// Models curated from research across multiple deepfake/AI-detection projects:
+// - Awesome-Deepfakes-Detection (github.com/Daisy-Zhang/Awesome-Deepfakes-Detection)
+// - Awesome-Face-Forgery-Generation-and-Detection (github.com/clpeng/Awesome-Face-Forgery-Generation-and-Detection)
+// - DIRE: Diffusion Reconstruction Error (github.com/ZhendongWang6/DIRE)
+// - selimsef/dfdc_deepfake_challenge (DFDC prize-winning solution)
+// - guyfloki/ai-image-detector (CvT-13 based)
+// - nogibjj/Detecting-AI-Generated-Fake-Images (MobileNetV2/ResNet50)
+// - PicIntel, Image-Deepfake-Detection, and various ViT/SigLIP-based detectors
+// Only models available via HuggingFace Inference API are included below.
 var HF_MODELS = [
+    // Primary general AI image detectors
     { id: 'umm-maybe/AI-image-detector', name: 'AI Image Detector', labelMap: { 'artificial': 'ai', 'human': 'real' } },
+    // Diffusion model specific detectors (inspired by DIRE/SDXL research)
     { id: 'Organika/sdxl-detector', name: 'SDXL Detector', labelMap: { 'artificial': 'ai', 'real': 'real', 'human': 'real' } },
     { id: 'cmckinle/sdxl-flux-detector', name: 'SDXL-Flux Detector', labelMap: { 'AI': 'ai', 'Real': 'real', 'artificial': 'ai', 'human': 'real' } },
-    { id: 'dima806/ai_vs_real_image_detection', name: 'CvT AI Image Detector', labelMap: { 'FAKE': 'ai', 'REAL': 'real', 'fake': 'ai', 'real': 'real' } },
-    { id: 'dima806/deepfake_vs_real_image_detection', name: 'Deepfake Face Detector', labelMap: { 'Fake': 'ai', 'Real': 'real', 'fake': 'ai', 'real': 'real' } }
+    // CvT/ViT-based detectors (inspired by guyfloki/ai-image-detector)
+    { id: 'dima806/ai_vs_real_image_detection', name: 'CvT AI Detector', labelMap: { 'FAKE': 'ai', 'REAL': 'real', 'fake': 'ai', 'real': 'real' } },
+    // Deepfake face detectors (inspired by nogibjj/Detecting-AI-Generated-Fake-Images, selimsef/dfdc)
+    { id: 'dima806/deepfake_vs_real_image_detection', name: 'Deepfake Face Detector', labelMap: { 'Fake': 'ai', 'Real': 'real', 'fake': 'ai', 'real': 'real' } },
+    // Advanced ViT deepfake classifier (inspired by Awesome-Deepfakes-Detection research)
+    { id: 'prithivMLmods/Deepfake-Detection-Exp-02-21', name: 'ViT Deepfake Expert', labelMap: { 'Deepfake': 'ai', 'Real': 'real', 'deepfake': 'ai', 'real': 'real' } },
+    // OpenForensics-trained detector (inspired by face-forgery detection research)
+    { id: 'hamzenium/ViT-Deepfake-Classifier', name: 'OpenForensics Classifier', labelMap: { 'fake': 'ai', 'real': 'real', 'Fake': 'ai', 'Real': 'real' } }
 ];
 
 async function callHuggingFaceAPI(file, modelInfo) {
@@ -417,8 +434,58 @@ async function callHuggingFaceAPI(file, modelInfo) {
     }
 }
 
-// Step 1: Primary AI Detection (Hugging Face - AI Image Detector + Deepfake Face Detector)
-// Combines AI Image Detector with Deepfake Face Detector (inspired by github.com/nogibjj/Detecting-AI-Generated-Fake-Images)
+// Helper: run multiple HF models in parallel and combine results with weighted average
+async function runMultiModelDetection(file, modelConfigs) {
+    var promises = modelConfigs.map(function(cfg) {
+        return callHuggingFaceAPI(file, HF_MODELS[cfg.index]);
+    });
+    var results = await Promise.all(promises);
+    var successResults = [];
+    var scoreDetails = {};
+    var totalElapsed = 0;
+    var totalWeight = 0;
+    var weightedScore = 0;
+    var totalConfidence = 0;
+    var modelNames = [];
+
+    results.forEach(function(r, i) {
+        var cfg = modelConfigs[i];
+        scoreDetails[cfg.key] = r.success ? r.aiScore + '%' : 'N/A';
+        if (r.success) {
+            successResults.push(r);
+            weightedScore += r.aiScore * cfg.weight;
+            totalWeight += cfg.weight;
+            totalConfidence += r.confidence;
+            totalElapsed += parseFloat(r.elapsed) || 0;
+            modelNames.push(HF_MODELS[cfg.index].name);
+        }
+    });
+
+    if (successResults.length === 0) return null;
+
+    // Normalize weights if some models failed
+    var combinedAiScore = Math.round(weightedScore / totalWeight);
+    var combinedConfidence = Math.round(totalConfidence / successResults.length);
+    var combinedElapsed = totalElapsed.toFixed(1);
+    var engineName = modelNames.join(' + ');
+    var modelDesc = modelNames.length > 2 ? modelNames.length + ' models combined' : engineName;
+
+    return {
+        aiScore: combinedAiScore,
+        confidence: combinedConfidence,
+        elapsed: combinedElapsed,
+        engineName: engineName,
+        modelDesc: modelDesc,
+        modelCount: successResults.length,
+        totalModels: modelConfigs.length,
+        scoreDetails: scoreDetails
+    };
+}
+
+// Step 1: Primary AI Detection (Multi-Model Ensemble)
+// Combines AI Image Detector + Deepfake Face Detector + ViT Deepfake Expert
+// Inspired by: nogibjj/Detecting-AI-Generated-Fake-Images, selimsef/dfdc_deepfake_challenge,
+//              Awesome-Deepfakes-Detection curated list
 async function analyzeDeepfakeAPI(file) {
     var fileType = getFileType(file);
     if (fileType !== 'image') {
@@ -447,64 +514,50 @@ async function analyzeDeepfakeAPI(file) {
             }
         };
     }
-    // Use real Hugging Face API for images (AI Image Detector + Deepfake Face Detector)
-    var primaryResult = await callHuggingFaceAPI(file, HF_MODELS[0]);
-    var deepfakeResult = await callHuggingFaceAPI(file, HF_MODELS[4]);
+    // Run 3 models in parallel: AI Image Detector, Deepfake Face Detector, ViT Deepfake Expert
+    var combined = await runMultiModelDetection(file, [
+        { index: 0, weight: 0.40, key: 'primaryScore' },
+        { index: 4, weight: 0.35, key: 'deepfakeScore' },
+        { index: 5, weight: 0.25, key: 'vitExpertScore' }
+    ]);
 
-    // Combine results from both models
-    var combinedAiScore, combinedConfidence, combinedElapsed, engineName, modelDesc;
-    if (primaryResult.success && deepfakeResult.success) {
-        combinedAiScore = Math.round((primaryResult.aiScore * 0.5) + (deepfakeResult.aiScore * 0.5));
-        combinedConfidence = Math.round((primaryResult.confidence + deepfakeResult.confidence) / 2);
-        combinedElapsed = (parseFloat(primaryResult.elapsed) + parseFloat(deepfakeResult.elapsed)).toFixed(1);
-        engineName = 'AI Detector + Deepfake Detector';
-        modelDesc = HF_MODELS[0].id + ' + ' + HF_MODELS[4].id;
-    } else if (primaryResult.success) {
-        combinedAiScore = primaryResult.aiScore;
-        combinedConfidence = primaryResult.confidence;
-        combinedElapsed = primaryResult.elapsed;
-        engineName = 'AI Image Detector';
-        modelDesc = HF_MODELS[0].id;
-    } else if (deepfakeResult.success) {
-        combinedAiScore = deepfakeResult.aiScore;
-        combinedConfidence = deepfakeResult.confidence;
-        combinedElapsed = deepfakeResult.elapsed;
-        engineName = 'Deepfake Face Detector';
-        modelDesc = HF_MODELS[4].id;
-    } else {
-        // Both failed - fallback
-        await delay(1000);
+    if (combined) {
+        var details = {
+            model: combined.modelDesc,
+            analysisTime: combined.elapsed + 's',
+            modelsUsed: combined.modelCount + '/' + combined.totalModels,
+            patterns: combined.aiScore > 50 ? 'Synthetic patterns detected' : 'Natural patterns observed',
+            artifacts: combined.aiScore > 60 ? 'AI generation signatures found' : 'No significant AI artifacts'
+        };
+        Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
         return {
-            engine: 'AI Image Detector',
-            aiScore: 50,
-            confidence: 40,
-            verdict: 'uncertain',
-            details: {
-                model: HF_MODELS[0].id + ' + ' + HF_MODELS[4].id,
-                analysisTime: '0s',
-                note: 'APIs unavailable - using fallback'
-            }
+            engine: combined.engineName,
+            aiScore: combined.aiScore,
+            confidence: combined.confidence,
+            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            details: details
         };
     }
 
+    // All models failed - fallback
+    await delay(1000);
     return {
-        engine: engineName,
-        aiScore: combinedAiScore,
-        confidence: combinedConfidence,
-        verdict: combinedAiScore > 50 ? 'ai' : 'real',
+        engine: 'AI Image Detector',
+        aiScore: 50,
+        confidence: 40,
+        verdict: 'uncertain',
         details: {
-            model: modelDesc,
-            analysisTime: combinedElapsed + 's',
-            patterns: combinedAiScore > 50 ? 'Synthetic patterns detected' : 'Natural patterns observed',
-            artifacts: combinedAiScore > 60 ? 'AI generation signatures found' : 'No significant AI artifacts',
-            primaryScore: primaryResult.success ? primaryResult.aiScore + '%' : 'N/A',
-            deepfakeScore: deepfakeResult.success ? deepfakeResult.aiScore + '%' : 'N/A'
+            model: 'Multi-model ensemble',
+            analysisTime: '0s',
+            note: 'APIs unavailable - using fallback'
         }
     };
 }
 
-// Step 2: Secondary AI Detection (Hugging Face - SDXL Detector + CvT AI Image Detector)
-// Combines SDXL Detector with CvT-based AI Image Detector (inspired by github.com/guyfloki/ai-image-detector)
+// Step 2: DeepGuard Multi-Model Verification
+// Combines SDXL Detector + CvT AI Detector + SDXL-Flux Detector + OpenForensics Classifier
+// Inspired by: guyfloki/ai-image-detector, DIRE (ZhendongWang6/DIRE),
+//              Awesome-Face-Forgery-Generation-and-Detection, CLIPping-the-Deception
 async function analyzeDeepGuard(file, prevResult) {
     var fileType = getFileType(file);
     if (fileType !== 'image') {
@@ -525,60 +578,45 @@ async function analyzeDeepGuard(file, prevResult) {
             }
         };
     }
-    // Use real Hugging Face API for images (SDXL Detector + CvT AI Image Detector)
-    var sdxlResult = await callHuggingFaceAPI(file, HF_MODELS[1]);
-    var cvtResult = await callHuggingFaceAPI(file, HF_MODELS[3]);
+    // Run 4 models in parallel: SDXL, CvT, SDXL-Flux, OpenForensics
+    var combined = await runMultiModelDetection(file, [
+        { index: 1, weight: 0.30, key: 'sdxlScore' },
+        { index: 3, weight: 0.30, key: 'cvtScore' },
+        { index: 2, weight: 0.20, key: 'sdxlFluxScore' },
+        { index: 6, weight: 0.20, key: 'forensicsScore' }
+    ]);
 
-    // Combine results from both models
-    var combinedAiScore, combinedConfidence, combinedElapsed, engineName, modelDesc;
-    if (sdxlResult.success && cvtResult.success) {
-        combinedAiScore = Math.round((sdxlResult.aiScore * 0.5) + (cvtResult.aiScore * 0.5));
-        combinedConfidence = Math.round((sdxlResult.confidence + cvtResult.confidence) / 2);
-        combinedElapsed = (parseFloat(sdxlResult.elapsed) + parseFloat(cvtResult.elapsed)).toFixed(1);
-        engineName = 'DeepGuard (SDXL + CvT)';
-        modelDesc = HF_MODELS[1].id + ' + ' + HF_MODELS[3].id;
-    } else if (sdxlResult.success) {
-        combinedAiScore = sdxlResult.aiScore;
-        combinedConfidence = sdxlResult.confidence;
-        combinedElapsed = sdxlResult.elapsed;
-        engineName = 'SDXL Detector';
-        modelDesc = HF_MODELS[1].id;
-    } else if (cvtResult.success) {
-        combinedAiScore = cvtResult.aiScore;
-        combinedConfidence = cvtResult.confidence;
-        combinedElapsed = cvtResult.elapsed;
-        engineName = 'CvT AI Image Detector';
-        modelDesc = HF_MODELS[3].id;
-    } else {
-        // Both failed - fallback
-        await delay(800);
-        var baseScore = prevResult ? prevResult.aiScore : 50;
-        var variation = -10 + Math.round(Math.random() * 20);
+    if (combined) {
+        var details = {
+            model: combined.modelDesc,
+            analysisTime: combined.elapsed + 's',
+            modelsUsed: combined.modelCount + '/' + combined.totalModels,
+            consistency: combined.aiScore > 50 ? 'Diffusion/GAN patterns detected' : 'No generative model signatures',
+            noiseAnalysis: combined.aiScore > 55 ? 'Unnatural noise pattern detected' : 'Natural noise pattern'
+        };
+        Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
         return {
-            engine: 'DeepGuard',
-            aiScore: Math.max(0, Math.min(100, baseScore + variation)),
-            confidence: 40,
-            verdict: 'uncertain',
-            details: {
-                model: HF_MODELS[1].id + ' + ' + HF_MODELS[3].id,
-                analysisTime: '0s',
-                note: 'APIs unavailable - using fallback'
-            }
+            engine: 'DeepGuard (' + combined.modelCount + ' models)',
+            aiScore: combined.aiScore,
+            confidence: combined.confidence,
+            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            details: details
         };
     }
 
+    // All models failed - fallback
+    await delay(800);
+    var baseScore = prevResult ? prevResult.aiScore : 50;
+    var variation = -10 + Math.round(Math.random() * 20);
     return {
-        engine: engineName,
-        aiScore: combinedAiScore,
-        confidence: combinedConfidence,
-        verdict: combinedAiScore > 50 ? 'ai' : 'real',
+        engine: 'DeepGuard',
+        aiScore: Math.max(0, Math.min(100, baseScore + variation)),
+        confidence: 40,
+        verdict: 'uncertain',
         details: {
-            model: modelDesc,
-            analysisTime: combinedElapsed + 's',
-            consistency: combinedAiScore > 50 ? 'SDXL/CvT patterns detected' : 'No diffusion model signatures',
-            noiseAnalysis: combinedAiScore > 55 ? 'Unnatural noise pattern detected' : 'Natural noise pattern',
-            sdxlScore: sdxlResult.success ? sdxlResult.aiScore + '%' : 'N/A',
-            cvtScore: cvtResult.success ? cvtResult.aiScore + '%' : 'N/A'
+            model: 'Multi-model ensemble',
+            analysisTime: '0s',
+            note: 'APIs unavailable - using fallback'
         }
     };
 }
