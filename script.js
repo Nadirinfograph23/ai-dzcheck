@@ -3289,9 +3289,12 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     });
 
-    document.addEventListener('click', function() {
-        if (langIsOpen) closeLangDropdown();
+    document.addEventListener('click', function(e) {
+        if (langIsOpen && !e.target.closest('#langSwitcher')) closeLangDropdown();
     });
+    document.addEventListener('touchstart', function(e) {
+        if (langIsOpen && !e.target.closest('#langSwitcher')) closeLangDropdown();
+    }, { passive: true });
 
     // File upload
     var uploadArea = document.getElementById('uploadArea');
