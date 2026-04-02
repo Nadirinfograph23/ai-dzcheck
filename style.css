@@ -311,9 +311,9 @@ body.pwa-banner-visible .hero {
 }
 
 .lang-dropdown {
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
+    position: fixed;
+    top: 70px;
+    right: 16px;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -321,7 +321,7 @@ body.pwa-banner-visible .hero {
     min-width: 160px;
     display: none;
     box-shadow: var(--shadow-lg);
-    z-index: 200;
+    z-index: 9999;
 }
 
 .lang-dropdown.show {
@@ -1491,7 +1491,7 @@ html[dir="rtl"] .nav-links {
 
 html[dir="rtl"] .lang-dropdown {
     right: auto;
-    left: 0;
+    left: 16px;
 }
 
 html[dir="rtl"] .developer-credit {

@@ -3218,12 +3218,31 @@ function initPWA() {
         closeBtn.addEventListener('click', function() {
             document.getElementById('pwaInstallBanner').classList.remove('show');
             document.body.classList.remove('pwa-banner-visible');
+            localStorage.setItem('pwa_banner_dismissed', '1');
         });
     }
 
     // Register service worker
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').catch(function(err) {
+        navigator.serviceWorker.register('sw.js').then(function() {
+            // Fallback: show PWA banner on mobile if beforeinstallprompt didn't fire
+            if (isMobileDevice()) {
+                var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                                   window.navigator.standalone === true;
+                var dismissed = localStorage.getItem('pwa_banner_dismissed');
+                if (!isStandalone && !dismissed) {
+                    setTimeout(function() {
+                        if (!deferredPrompt) {
+                            var banner = document.getElementById('pwaInstallBanner');
+                            if (banner) {
+                                banner.classList.add('show');
+                                document.body.classList.add('pwa-banner-visible');
+                            }
+                        }
+                    }, 3000);
+                }
+            }
+        }).catch(function(err) {
             console.log('SW registration failed:', err);
         });
     }
@@ -3239,9 +3258,13 @@ document.addEventListener('DOMContentLoaded', function() {
     var langBtn = document.getElementById('langBtn');
     var langDropdown = document.getElementById('langDropdown');
     
+    var langToggleLock = false;
     function toggleLangDropdown(e) {
         e.stopPropagation();
         e.preventDefault();
+        if (langToggleLock) return;
+        langToggleLock = true;
+        setTimeout(function() { langToggleLock = false; }, 300);
         langDropdown.classList.toggle('show');
     }
     langBtn.addEventListener('click', toggleLangDropdown);
@@ -3250,6 +3273,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.lang-option').forEach(function(opt) {
         function selectLang(e) {
             e.stopPropagation();
+            e.preventDefault();
             setLanguage(opt.getAttribute('data-lang'));
             langDropdown.classList.remove('show');
         }
