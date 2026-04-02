@@ -3187,16 +3187,28 @@ function isMobileDevice() {
            (window.innerWidth <= 768);
 }
 
+function showPWABanner() {
+    var banner = document.getElementById('pwaInstallBanner');
+    if (banner && !banner.classList.contains('show')) {
+        banner.classList.add('show');
+        document.body.classList.add('pwa-banner-visible');
+    }
+}
+
+function hidePWABanner() {
+    var banner = document.getElementById('pwaInstallBanner');
+    if (banner) {
+        banner.classList.remove('show');
+        document.body.classList.remove('pwa-banner-visible');
+    }
+}
+
 function initPWA() {
+    // Listen for browser's native install prompt (fires on mobile Chrome/Edge)
     window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         deferredPrompt = e;
-        if (!isMobileDevice()) return;
-        var banner = document.getElementById('pwaInstallBanner');
-        if (banner) {
-            banner.classList.add('show');
-            document.body.classList.add('pwa-banner-visible');
-        }
+        showPWABanner();
     });
 
     var installBtn = document.getElementById('pwaInstallBtn');
@@ -3206,8 +3218,8 @@ function initPWA() {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then(function() {
                     deferredPrompt = null;
-                    document.getElementById('pwaInstallBanner').classList.remove('show');
-                    document.body.classList.remove('pwa-banner-visible');
+                    hidePWABanner();
+                    localStorage.setItem('pwa_banner_dismissed_v2', '1');
                 });
             }
         });
@@ -3216,35 +3228,30 @@ function initPWA() {
     var closeBtn = document.getElementById('pwaCloseBtn');
     if (closeBtn) {
         closeBtn.addEventListener('click', function() {
-            document.getElementById('pwaInstallBanner').classList.remove('show');
-            document.body.classList.remove('pwa-banner-visible');
-            localStorage.setItem('pwa_banner_dismissed', '1');
+            hidePWABanner();
+            localStorage.setItem('pwa_banner_dismissed_v2', '1');
         });
     }
 
     // Register service worker
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').then(function() {
-            // Fallback: show PWA banner on mobile if beforeinstallprompt didn't fire
-            if (isMobileDevice()) {
-                var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-                                   window.navigator.standalone === true;
-                var dismissed = localStorage.getItem('pwa_banner_dismissed');
-                if (!isStandalone && !dismissed) {
-                    setTimeout(function() {
-                        if (!deferredPrompt) {
-                            var banner = document.getElementById('pwaInstallBanner');
-                            if (banner) {
-                                banner.classList.add('show');
-                                document.body.classList.add('pwa-banner-visible');
-                            }
-                        }
-                    }, 3000);
-                }
-            }
-        }).catch(function(err) {
+        navigator.serviceWorker.register('sw.js').catch(function(err) {
             console.log('SW registration failed:', err);
         });
+    }
+
+    // Fallback: show banner after 2s if not standalone and not dismissed
+    var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                       window.navigator.standalone === true;
+    var dismissed = localStorage.getItem('pwa_banner_dismissed_v2');
+    console.log('[PWA] isStandalone:', isStandalone, '| dismissed:', dismissed);
+    if (!isStandalone && !dismissed) {
+        setTimeout(function() {
+            console.log('[PWA] Timer fired, deferredPrompt:', deferredPrompt);
+            if (!deferredPrompt) {
+                showPWABanner();
+            }
+        }, 2000);
     }
 }
 
@@ -3257,39 +3264,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // Language switcher
     var langBtn = document.getElementById('langBtn');
     var langDropdown = document.getElementById('langDropdown');
-    
-    var langToggleLock = false;
-    function toggleLangDropdown(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        if (langToggleLock) return;
-        langToggleLock = true;
-        setTimeout(function() { langToggleLock = false; }, 300);
-        langDropdown.classList.toggle('show');
+    var langIsOpen = false;
+
+    function openLangDropdown() {
+        langIsOpen = true;
+        langDropdown.style.display = 'block';
     }
-    langBtn.addEventListener('click', toggleLangDropdown);
-    langBtn.addEventListener('touchend', toggleLangDropdown);
+    function closeLangDropdown() {
+        langIsOpen = false;
+        langDropdown.style.display = 'none';
+    }
+
+    langBtn.onclick = function(e) {
+        e.stopPropagation();
+        console.log('[LANG] Button clicked, isOpen:', langIsOpen);
+        if (langIsOpen) { closeLangDropdown(); } else { openLangDropdown(); }
+    };
 
     document.querySelectorAll('.lang-option').forEach(function(opt) {
-        function selectLang(e) {
+        opt.onclick = function(e) {
             e.stopPropagation();
-            e.preventDefault();
             setLanguage(opt.getAttribute('data-lang'));
-            langDropdown.classList.remove('show');
-        }
-        opt.addEventListener('click', selectLang);
-        opt.addEventListener('touchend', selectLang);
+            closeLangDropdown();
+        };
     });
 
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('#langSwitcher')) {
-            langDropdown.classList.remove('show');
-        }
-    });
-    document.addEventListener('touchend', function(e) {
-        if (!e.target.closest('#langSwitcher')) {
-            langDropdown.classList.remove('show');
-        }
+    document.addEventListener('click', function() {
+        if (langIsOpen) closeLangDropdown();
     });
 
     // File upload
