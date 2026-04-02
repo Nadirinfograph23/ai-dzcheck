@@ -263,6 +263,7 @@ body.pwa-banner-visible .hero {
 /* Language Switcher */
 .lang-switcher {
     position: relative;
+    z-index: 1001;
 }
 
 .lang-btn {
@@ -1370,5 +1371,6 @@ html[dir="rtl"] .file-info {
     height: 100%;
     opacity: 0;
     cursor: pointer;
-    z-index: 10;
+    z-index: 1000;
+    -webkit-tap-highlight-color: transparent;
 }
