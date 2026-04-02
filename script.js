@@ -2845,11 +2845,12 @@ function generateReportText() {
     return lines.join('\n');
 }
 
-function downloadReport() {
+async function downloadReport() {
     if (!analysisResults || !analysisResults.comparison) return;
     var r = analysisResults;
-    // Fallback to text if jsPDF is not loaded
-    if (!window.jspdf || !window.jspdf.jsPDF) {
+
+    // Fallback to plain text if neither jsPDF nor html2canvas is available
+    if (!window.jspdf || !window.jspdf.jsPDF || !window.html2canvas) {
         var text = generateReportText();
         if (!text) return;
         var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
@@ -2863,6 +2864,51 @@ function downloadReport() {
         URL.revokeObjectURL(blobUrl);
         return;
     }
+
+    showToast(t('toast_uploading'), 'info');
+
+    try {
+        var element = document.getElementById('resultsSection');
+        var canvas = await window.html2canvas(element, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#0a0a0a',
+            logging: false,
+            scrollX: 0,
+            scrollY: -window.scrollY
+        });
+
+        var imgData = canvas.toDataURL('image/jpeg', 0.92);
+        var imgPxW = canvas.width;
+        var imgPxH = canvas.height;
+
+        var jsPDF = window.jspdf.jsPDF;
+        var pageW = 210;
+        var pageH = 297;
+        var doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+        var ratio = pageW / imgPxW;
+        var scaledH = imgPxH * ratio;
+
+        var heightLeft = scaledH;
+        var pageNum = 0;
+
+        while (heightLeft > 0) {
+            if (pageNum > 0) doc.addPage();
+            doc.addImage(imgData, 'JPEG', 0, -(pageNum * pageH), pageW, scaledH);
+            heightLeft -= pageH;
+            pageNum++;
+        }
+
+        doc.save('AI_DZ_CHECK_Report_' + new Date().toISOString().slice(0, 10) + '.pdf');
+        showToast(t('toast_complete'), 'success');
+        return;
+    } catch (e) {
+        console.warn('html2canvas failed, falling back to legacy PDF:', e);
+    }
+
+    // --- Legacy PDF fallback (Latin only) if html2canvas fails ---
     var jsPDF = window.jspdf.jsPDF;
     var doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     var pageWidth = doc.internal.pageSize.getWidth();
