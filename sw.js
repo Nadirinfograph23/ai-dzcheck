@@ -3,7 +3,7 @@
    Offline support & caching
    ============================================ */
 
-var CACHE_NAME = 'aidzcheck-v12';
+var CACHE_NAME = 'aidzcheck-v13';
 var ASSETS = [
     '/',
     '/index.html',
@@ -15,7 +15,8 @@ var ASSETS = [
     '/apple-touch-icon.png',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
     'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap',
-    'https://cdn.jsdelivr.net/npm/exifr@7.1.3/dist/full.umd.js'
+    'https://cdn.jsdelivr.net/npm/exifr@7.1.3/dist/full.umd.js',
+    'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'
 ];
 
 // Install
