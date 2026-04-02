@@ -3186,35 +3186,39 @@ document.addEventListener('DOMContentLoaded', function() {
     var langBtn = document.getElementById('langBtn');
     var langDropdown = document.getElementById('langDropdown');
     
-    langBtn.addEventListener('click', function(e) {
+    function toggleLangDropdown(e) {
         e.stopPropagation();
+        e.preventDefault();
         langDropdown.classList.toggle('show');
-    });
+    }
+    langBtn.addEventListener('click', toggleLangDropdown);
+    langBtn.addEventListener('touchend', toggleLangDropdown);
 
     document.querySelectorAll('.lang-option').forEach(function(opt) {
-        opt.addEventListener('click', function() {
-            setLanguage(this.getAttribute('data-lang'));
+        function selectLang(e) {
+            e.stopPropagation();
+            setLanguage(opt.getAttribute('data-lang'));
             langDropdown.classList.remove('show');
-        });
+        }
+        opt.addEventListener('click', selectLang);
+        opt.addEventListener('touchend', selectLang);
     });
 
-    document.addEventListener('click', function() {
-        langDropdown.classList.remove('show');
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#langSwitcher')) {
+            langDropdown.classList.remove('show');
+        }
+    });
+    document.addEventListener('touchend', function(e) {
+        if (!e.target.closest('#langSwitcher')) {
+            langDropdown.classList.remove('show');
+        }
     });
 
     // File upload
     var uploadArea = document.getElementById('uploadArea');
     var fileInput = document.getElementById('fileInput');
     var uploadBtn = document.getElementById('uploadBtn');
-
-    uploadBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        fileInput.click();
-    });
-
-    uploadArea.addEventListener('click', function() {
-        fileInput.click();
-    });
 
     uploadArea.addEventListener('dragover', function(e) {
         e.preventDefault();
