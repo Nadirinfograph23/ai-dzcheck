@@ -507,10 +507,17 @@ var analysisResults = {};
 var currentFile = null;
 
 function getFileType(file) {
-    if (file.type.startsWith('image/')) return 'image';
-    if (file.type.startsWith('video/')) return 'video';
-    if (file.type.startsWith('audio/')) return 'audio';
-    return 'unknown';
+    if (file.type && file.type.startsWith('image/')) return 'image';
+    if (file.type && file.type.startsWith('video/')) return 'video';
+    if (file.type && file.type.startsWith('audio/')) return 'audio';
+    var ext = (file.name || '').split('.').pop().toLowerCase();
+    var imageExts = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp', 'svg', 'tiff', 'tif', 'heic', 'heif', 'avif'];
+    var videoExts = ['mp4', 'avi', 'mov', 'mkv', 'webm', 'flv', 'wmv', '3gp', 'm4v', 'ogv'];
+    var audioExts = ['mp3', 'wav', 'ogg', 'aac', 'flac', 'm4a', 'wma', 'opus', 'aiff', 'mid'];
+    if (imageExts.indexOf(ext) !== -1) return 'image';
+    if (videoExts.indexOf(ext) !== -1) return 'video';
+    if (audioExts.indexOf(ext) !== -1) return 'audio';
+    return 'image';
 }
 
 // ==================== VIDEO ANALYSIS HELPERS ====================
@@ -3244,14 +3251,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function handleFile(file) {
-        // Validate file
         var maxSize = 50 * 1024 * 1024;
         if (file.size > maxSize) {
             showToast(t('toast_too_large'), 'error');
             return;
         }
         var validTypes = ['image/', 'video/', 'audio/'];
-        var isValid = validTypes.some(function(type) { return file.type.startsWith(type); });
+        var isValid = validTypes.some(function(type) { return file.type && file.type.startsWith(type); });
+        if (!isValid) {
+            var ext = (file.name || '').split('.').pop().toLowerCase();
+            var allValidExts = ['jpg','jpeg','png','webp','gif','bmp','svg','tiff','tif','heic','heif','avif',
+                                'mp4','avi','mov','mkv','webm','flv','wmv','3gp','m4v','ogv',
+                                'mp3','wav','ogg','aac','flac','m4a','wma','opus','aiff','mid'];
+            isValid = allValidExts.indexOf(ext) !== -1;
+        }
         if (!isValid) {
             showToast(t('toast_invalid'), 'error');
             return;
