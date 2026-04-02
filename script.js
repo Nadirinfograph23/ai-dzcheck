@@ -769,14 +769,18 @@ document.addEventListener('DOMContentLoaded', function() {
     setLanguage(currentLang);
     initPWA();
 
-    // Language switcher
+    // Language switcher - Mobile touch support
     var langBtn = document.getElementById('langBtn');
     var langDropdown = document.getElementById('langDropdown');
     
-    langBtn.addEventListener('click', function(e) {
+    function toggleLangDropdown(e) {
+        e.preventDefault();
         e.stopPropagation();
         langDropdown.classList.toggle('show');
-    });
+    }
+    
+    langBtn.addEventListener('click', toggleLangDropdown);
+    langBtn.addEventListener('touchend', toggleLangDropdown);
 
     document.querySelectorAll('.lang-option').forEach(function(opt) {
         opt.addEventListener('click', function() {
@@ -789,19 +793,22 @@ document.addEventListener('DOMContentLoaded', function() {
         langDropdown.classList.remove('show');
     });
 
-    // File upload
+    // File upload - Mobile touch support
     var uploadArea = document.getElementById('uploadArea');
     var fileInput = document.getElementById('fileInput');
     var uploadBtn = document.getElementById('uploadBtn');
 
-    uploadBtn.addEventListener('click', function(e) {
+    function triggerFilePicker(e) {
+        e.preventDefault();
         e.stopPropagation();
         fileInput.click();
-    });
+    }
 
-    uploadArea.addEventListener('click', function() {
-        fileInput.click();
-    });
+    uploadBtn.addEventListener('click', triggerFilePicker);
+    uploadBtn.addEventListener('touchend', triggerFilePicker);
+
+    uploadArea.addEventListener('click', triggerFilePicker);
+    uploadArea.addEventListener('touchend', triggerFilePicker);
 
     uploadArea.addEventListener('dragover', function(e) {
         e.preventDefault();
