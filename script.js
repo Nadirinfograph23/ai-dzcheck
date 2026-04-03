@@ -3454,10 +3454,21 @@ document.addEventListener('DOMContentLoaded', function() {
           if (langIsOpen && !e.target.closest('#langSwitcher')) closeLangDropdown();
       }, { passive: true });
 
-      // File upload
+      // File upload - Mobile touch support
     var uploadArea = document.getElementById('uploadArea');
     var fileInput = document.getElementById('fileInput');
     var uploadBtn = document.getElementById('uploadBtn');
+
+    function triggerFilePicker(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        fileInput.click();
+    }
+
+    uploadBtn.addEventListener('click', triggerFilePicker);
+    uploadBtn.addEventListener('touchend', triggerFilePicker);
+    uploadArea.addEventListener('click', triggerFilePicker);
+    uploadArea.addEventListener('touchend', triggerFilePicker);
 
     uploadArea.addEventListener('dragover', function(e) {
         e.preventDefault();
