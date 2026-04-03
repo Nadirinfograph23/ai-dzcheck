@@ -1874,7 +1874,7 @@ async function analyzeIsItAI(file, prevResults) {
     };
 }
 
-function analyzeMetadata(file) {
+async function analyzeMetadata(file) {
     var fileType = getFileType(file);
     var suspiciousName = /ai[-_]?gen|dalle|midjourney|stable[-_]?diffusion|deepfake|comfyui|novelai|niji/i.test(file.name);
 
