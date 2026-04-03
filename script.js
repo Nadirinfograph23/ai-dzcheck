@@ -2083,18 +2083,11 @@ async function compareResults(results) {
         var audioMetadataScore = results[5] ? results[5].aiScore : 50;
         var audioReverseScore = results[6] ? results[6].aiScore : 50;
 
-        // Audio weights: 5 core audio tools get highest weights (total = 0.85)
-        // wa1=DeepfakeVoice, wa2=FreeAIDetector, wa3=AIVoiceDetector, wa4=AIVideoDetector(Audio), wa5=ScreenAppAudio, wa6=Metadata, wa7=Reverse
-        var wa1 = 0.22, wa2 = 0.18, wa3 = 0.18, wa4 = 0.15, wa5 = 0.12, wa6 = 0.08, wa7 = 0.07;
-
+        // Simple average of all 7 audio engine scores
         var audioFinalScore = Math.round(
-            audioDeepfakeVoiceScore * wa1 +
-            audioFreeAIScore * wa2 +
-            audioAIVoiceScore * wa3 +
-            audioAIVideoDetScore * wa4 +
-            audioScreenAppScore * wa5 +
-            audioMetadataScore * wa6 +
-            audioReverseScore * wa7
+            (audioDeepfakeVoiceScore + audioFreeAIScore + audioAIVoiceScore +
+             audioAIVideoDetScore + audioScreenAppScore + audioMetadataScore +
+             audioReverseScore) / 7
         );
 
         // Audio consensus decision
@@ -2180,62 +2173,12 @@ async function compareResults(results) {
     var metadataScore = results[14] ? results[14].aiScore : 50;
     var reverseScore = results[15] ? results[15].aiScore : 50;
 
-    // Check EXIF signals from metadata analysis for dynamic weighting
-    var exifSignals = (results[14] && results[14]._exifSignals) ? results[14]._exifSignals : {};
-    var strongCameraExif = exifSignals.cameraFound && (exifSignals.gpsFound || exifSignals.exposureFound || exifSignals.dateTimeFound);
-    var aiSoftwareInExif = exifSignals.aiSoftwareDetected;
-
-    // Dynamic weight calculation for 16 engines
-    // w1=Deepfake API, w2=DeepGuard, w3=DeepAI, w4=AIorNot, w5=Illuminarty,
-    // w6=FauxLens, w7=DeepfakeDetection, w8=AIDeepFake, w9=AIDetectLab,
-    // w10=HiveModeration, w11=Sightengine, w12=IsItAI,
-    // w13=ScreenApp, w14=OverChat, w15=Metadata, w16=Reverse
-    var w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14, w15, w16;
-
-    if (isVideoFile) {
-        // VIDEO: ScreenApp & OverChat are essential/primary engines with highest weights
-        w1 = 0.04; w2 = 0.03; w3 = 0.03; w4 = 0.03; w5 = 0.03;
-        w6 = 0.03; w7 = 0.03; w8 = 0.03; w9 = 0.03; w10 = 0.03; w11 = 0.03; w12 = 0.03;
-        w13 = 0.20; w14 = 0.20; w15 = 0.10; w16 = 0.11;
-    } else if (aiSoftwareInExif) {
-        // AI software found in EXIF - metadata is very reliable
-        w1 = 0.04; w2 = 0.03; w3 = 0.03; w4 = 0.03; w5 = 0.03;
-        w6 = 0.03; w7 = 0.03; w8 = 0.03; w9 = 0.03; w10 = 0.03; w11 = 0.03; w12 = 0.03;
-        w13 = 0.03; w14 = 0.03; w15 = 0.45; w16 = 0.06;
-    } else if (strongCameraExif) {
-        // Strong camera EXIF found
-        w1 = 0.05; w2 = 0.04; w3 = 0.04; w4 = 0.04; w5 = 0.04;
-        w6 = 0.04; w7 = 0.04; w8 = 0.04; w9 = 0.04; w10 = 0.04; w11 = 0.04; w12 = 0.04;
-        w13 = 0.03; w14 = 0.03; w15 = 0.35; w16 = 0.06;
-    } else if (exifSignals.cameraFound) {
-        // Camera found but limited EXIF
-        w1 = 0.06; w2 = 0.05; w3 = 0.05; w4 = 0.05; w5 = 0.05;
-        w6 = 0.05; w7 = 0.05; w8 = 0.05; w9 = 0.05; w10 = 0.05; w11 = 0.05; w12 = 0.05;
-        w13 = 0.04; w14 = 0.04; w15 = 0.16; w16 = 0.06;
-    } else {
-        // No camera EXIF - rely more on AI models
-        w1 = 0.07; w2 = 0.06; w3 = 0.06; w4 = 0.06; w5 = 0.06;
-        w6 = 0.06; w7 = 0.06; w8 = 0.06; w9 = 0.06; w10 = 0.06; w11 = 0.06; w12 = 0.06;
-        w13 = 0.04; w14 = 0.04; w15 = 0.05; w16 = 0.08;
-    }
-
+    // Simple average of all 16 engine scores
     var finalScore = Math.round(
-        deepfakeScore * w1 +
-        deepguardScore * w2 +
-        deepaiScore * w3 +
-        aiornotScore * w4 +
-        illuminartyScore * w5 +
-        fauxlensScore * w6 +
-        dfdetectionScore * w7 +
-        aideepfakeScore * w8 +
-        aidetectlabScore * w9 +
-        hivemoderationScore * w10 +
-        sightengineScore * w11 +
-        isitaiScore * w12 +
-        screenappScore * w13 +
-        overchatScore * w14 +
-        metadataScore * w15 +
-        reverseScore * w16
+        (deepfakeScore + deepguardScore + deepaiScore + aiornotScore + illuminartyScore +
+         fauxlensScore + dfdetectionScore + aideepfakeScore + aidetectlabScore +
+         hivemoderationScore + sightengineScore + isitaiScore +
+         screenappScore + overchatScore + metadataScore + reverseScore) / 16
     );
     
     // Decision logic: >= 50% = AI, <= 38% = real, 39-49% = uncertain
@@ -2245,15 +2188,10 @@ async function compareResults(results) {
     } else if (finalScore <= 38) {
         consensus = 'real';
     } else {
-        // Inconclusive zone: use Cross-Analysis Summary highest average
-        var totalAiScore = deepfakeScore + deepguardScore + deepaiScore + aiornotScore + illuminartyScore +
-            fauxlensScore + dfdetectionScore + aideepfakeScore + aidetectlabScore +
-            hivemoderationScore + sightengineScore + isitaiScore +
-            screenappScore + overchatScore + metadataScore + reverseScore;
-        var avgAiScore = totalAiScore / 16;
-        if (avgAiScore >= 40) {
+        // Inconclusive zone (39-49%): finalScore is already the simple average
+        if (finalScore >= 40) {
             consensus = 'ai';
-        } else if (avgAiScore <= 35) {
+        } else if (finalScore <= 35) {
             consensus = 'real';
         } else {
             consensus = 'uncertain';
