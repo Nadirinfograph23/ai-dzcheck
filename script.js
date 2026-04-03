@@ -1874,7 +1874,7 @@ async function analyzeIsItAI(file, prevResults) {
     };
 }
 
-async function analyzeMetadata(file) {
+function analyzeMetadata(file) {
     var fileType = getFileType(file);
     var suspiciousName = /ai[-_]?gen|dalle|midjourney|stable[-_]?diffusion|deepfake|comfyui|novelai|niji/i.test(file.name);
 
@@ -3386,7 +3386,7 @@ function initPWA() {
                   deferredPrompt.userChoice.then(function() {
                       deferredPrompt = null;
                       hidePWABanner();
-                      localStorage.setItem('pwa_banner_dismissed_v3', '1');
+                      localStorage.setItem('pwa_banner_dismissed_v2', '1');
                   });
               }
           });
@@ -3396,7 +3396,7 @@ function initPWA() {
       if (closeBtn) {
           closeBtn.addEventListener('click', function() {
               hidePWABanner();
-              localStorage.setItem('pwa_banner_dismissed_v3', '1');
+              localStorage.setItem('pwa_banner_dismissed_v2', '1');
           });
       }
 
@@ -3408,7 +3408,7 @@ function initPWA() {
 
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
                          window.navigator.standalone === true;
-      var dismissed = localStorage.getItem('pwa_banner_dismissed_v3');
+      var dismissed = localStorage.getItem('pwa_banner_dismissed_v2');
       if (!isStandalone && !dismissed) {
           setTimeout(function() { showPWABanner(); }, 2000);
       }
@@ -3434,23 +3434,17 @@ document.addEventListener('DOMContentLoaded', function() {
           langDropdown.style.display = 'none';
       }
 
-      function toggleLang(e) {
-          e.preventDefault();
+      langBtn.onclick = function(e) {
           e.stopPropagation();
           if (langIsOpen) { closeLangDropdown(); } else { openLangDropdown(); }
-      }
-      langBtn.addEventListener('click', toggleLang);
-      langBtn.addEventListener('touchend', toggleLang);
+      };
 
       document.querySelectorAll('.lang-option').forEach(function(opt) {
-          function selectLang(e) {
-              e.preventDefault();
+          opt.onclick = function(e) {
               e.stopPropagation();
               setLanguage(opt.getAttribute('data-lang'));
               closeLangDropdown();
-          }
-          opt.addEventListener('click', selectLang);
-          opt.addEventListener('touchend', selectLang);
+          };
       });
 
       document.addEventListener('click', function(e) {
@@ -3460,21 +3454,10 @@ document.addEventListener('DOMContentLoaded', function() {
           if (langIsOpen && !e.target.closest('#langSwitcher')) closeLangDropdown();
       }, { passive: true });
 
-      // File upload - Mobile touch support
+      // File upload
     var uploadArea = document.getElementById('uploadArea');
     var fileInput = document.getElementById('fileInput');
     var uploadBtn = document.getElementById('uploadBtn');
-
-    function triggerFilePicker(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        fileInput.click();
-    }
-
-    uploadBtn.addEventListener('click', triggerFilePicker);
-    uploadBtn.addEventListener('touchend', triggerFilePicker);
-    uploadArea.addEventListener('click', triggerFilePicker);
-    uploadArea.addEventListener('touchend', triggerFilePicker);
 
     uploadArea.addEventListener('dragover', function(e) {
         e.preventDefault();
