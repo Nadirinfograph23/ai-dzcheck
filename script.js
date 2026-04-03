@@ -3341,18 +3341,14 @@ function isMobileDevice() {
 }
 
 function showPWABanner() {
-    var dismissed = localStorage.getItem('pwa_banner_dismissed');
-    var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-                       window.navigator.standalone === true;
-    if (dismissed || isStandalone) return;
-    var banner = document.getElementById('pwaInstallBanner');
-    if (banner) {
-        banner.classList.add('show');
-        document.body.classList.add('pwa-banner-visible');
-    }
-}
+      var banner = document.getElementById('pwaInstallBanner');
+      if (banner && !banner.classList.contains('show')) {
+          banner.classList.add('show');
+          document.body.classList.add('pwa-banner-visible');
+      }
+  }
 
-function hidePWABanner() {
+  function hidePWABanner() {
     var banner = document.getElementById('pwaInstallBanner');
     if (banner) {
         banner.classList.remove('show');
@@ -3361,50 +3357,53 @@ function hidePWABanner() {
 }
 
 function initPWA() {
-    window.addEventListener('beforeinstallprompt', function(e) {
-        e.preventDefault();
-        deferredPrompt = e;
-        showPWABanner();
-    });
+      // Listen for browser's native install prompt (fires on mobile Chrome/Edge)
+      window.addEventListener('beforeinstallprompt', function(e) {
+          e.preventDefault();
+          deferredPrompt = e;
+          showPWABanner();
+      });
 
-    var installBtn = document.getElementById('pwaInstallBtn');
-    if (installBtn) {
-        installBtn.addEventListener('click', function() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(function() {
-                    deferredPrompt = null;
-                    hidePWABanner();
-                });
-            } else {
-                hidePWABanner();
-            }
-        });
-    }
+      var installBtn = document.getElementById('pwaInstallBtn');
+      if (installBtn) {
+          installBtn.addEventListener('click', function() {
+              if (deferredPrompt) {
+                  deferredPrompt.prompt();
+                  deferredPrompt.userChoice.then(function() {
+                      deferredPrompt = null;
+                      hidePWABanner();
+                      localStorage.setItem('pwa_banner_dismissed_v2', '1');
+                  });
+              }
+          });
+      }
 
-    var closeBtn = document.getElementById('pwaCloseBtn');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
-            hidePWABanner();
-            localStorage.setItem('pwa_banner_dismissed', '1');
-        });
-    }
+      var closeBtn = document.getElementById('pwaCloseBtn');
+      if (closeBtn) {
+          closeBtn.addEventListener('click', function() {
+              hidePWABanner();
+              localStorage.setItem('pwa_banner_dismissed_v2', '1');
+          });
+      }
 
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').catch(function(err) {
-            console.log('SW registration failed:', err);
-        });
-    }
+      // Register service worker
+      if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('sw.js').catch(function(err) {
+              console.log('SW registration failed:', err);
+          });
+      }
 
-    // Show PWA banner on mobile after a delay (covers iOS Safari and all mobile browsers)
-    if (isMobileDevice()) {
-        setTimeout(function() {
-            showPWABanner();
-        }, 2000);
-    }
-}
-
+      // Show banner after 2s on mobile if not already standalone or dismissed
+      var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                         window.navigator.standalone === true;
+      var dismissed = localStorage.getItem('pwa_banner_dismissed_v2');
+      if (!isStandalone && !dismissed) {
+          setTimeout(function() {
+              showPWABanner();
+          }, 2000);
+      }
+  }
+  
 // ==================== EVENT LISTENERS ====================
 document.addEventListener('DOMContentLoaded', function() {
     createParticles();
