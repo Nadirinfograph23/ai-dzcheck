@@ -1685,3 +1685,119 @@ input, button, a, [role="button"] {
     -webkit-user-select: auto !important;
     user-select: auto !important;
 }
+
+/* ==================== WEB REVERSE SEARCH SECTION ==================== */
+.web-search-section {
+    margin-top: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+}
+
+.web-search-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 0 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.web-search-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 0 0 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.web-search-hint::before {
+    content: '\f05a';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: var(--accent);
+    opacity: 0.7;
+}
+
+.web-search-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+@media (max-width: 600px) {
+    .web-search-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.web-search-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all var(--transition);
+    text-align: center;
+}
+
+.web-search-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.web-search-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.web-search-card-icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.web-search-card-icon i {
+    font-size: 20px;
+}
+
+.web-search-card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.web-search-card-btn {
+    width: 100%;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: opacity 0.2s;
+}
+
+.web-search-card-btn:hover {
+    opacity: 0.85;
+}
