@@ -2356,23 +2356,29 @@ function showFilePreview(file) {
     previewVideo.style.display = 'none';
     previewAudio.style.display = 'none';
     
-    var url = URL.createObjectURL(file);
-    
     if (fileType === 'image') {
-        previewImage.src = url;
-        previewImage.style.display = 'block';
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            previewImage.src = e.target.result;
+            previewImage.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
     } else if (fileType === 'video') {
+        var url = URL.createObjectURL(file);
         previewVideo.src = url;
         previewVideo.style.display = 'block';
     } else if (fileType === 'audio') {
         var audioPlayer = document.getElementById('audioPlayer');
+        var url = URL.createObjectURL(file);
         audioPlayer.src = url;
         previewAudio.style.display = 'block';
     }
     
-    fileInfo.innerHTML = '<span><i class="fas fa-file"></i> ' + file.name + '</span>' +
-        '<span><i class="fas fa-hard-drive"></i> ' + formatFileSize(file.size) + '</span>' +
-        '<span><i class="fas fa-tag"></i> ' + (file.type || 'Unknown') + '</span>';
+    if (fileInfo) {
+        fileInfo.innerHTML = '<span><i class="fas fa-file"></i> ' + file.name + '</span>' +
+            '<span><i class="fas fa-hard-drive"></i> ' + formatFileSize(file.size) + '</span>' +
+            '<span><i class="fas fa-tag"></i> ' + (file.type || 'Unknown') + '</span>';
+    }
 }
 
 function displayResults(comparison, allResults) {
@@ -3163,17 +3169,37 @@ function resetAnalysis() {
     document.getElementById('analysisSection').style.display = 'none';
     document.getElementById('resultsSection').style.display = 'none';
     document.getElementById('scoreFill').style.strokeDashoffset = 326.73;
+
+    // Restore numbered steps 1-5 visibility (hidden for audio)
+    for (var i = 1; i <= 5; i++) {
+        var numStep = document.getElementById('step' + i);
+        if (numStep) numStep.style.display = '';
+    }
+
     // Hide video-only essential steps
     var screenappStep = document.getElementById('stepScreenapp');
     var overchatStep = document.getElementById('stepOverchat');
     if (screenappStep) screenappStep.classList.remove('visible');
     if (overchatStep) overchatStep.classList.remove('visible');
+
     // Hide image-only essential steps
     var imageStepIds = ['stepFauxlens', 'stepDeepfakedetection', 'stepAideepfake', 'stepAidetectlab', 'stepHivemoderation', 'stepSightengine', 'stepIsitai'];
     imageStepIds.forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.classList.remove('visible');
     });
+
+    // Hide audio-only essential steps
+    var audioStepIds = ['stepAudioDeepfakeVoice', 'stepAudioFreeAI', 'stepAudioAIVoice', 'stepAudioAIVideoDet', 'stepAudioScreenApp'];
+    audioStepIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.remove('visible');
+    });
+
+    // Reset deepfake insight box
+    var insightBox = document.getElementById('deepfakeInsightBox');
+    if (insightBox) insightBox.style.display = 'none';
+
     currentFile = null;
     analysisResults = {};
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3187,16 +3213,31 @@ function isMobileDevice() {
            (window.innerWidth <= 768);
 }
 
+function showPWABanner() {
+    var dismissed = localStorage.getItem('pwa_banner_dismissed');
+    var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                       window.navigator.standalone === true;
+    if (dismissed || isStandalone) return;
+    var banner = document.getElementById('pwaInstallBanner');
+    if (banner) {
+        banner.classList.add('show');
+        document.body.classList.add('pwa-banner-visible');
+    }
+}
+
+function hidePWABanner() {
+    var banner = document.getElementById('pwaInstallBanner');
+    if (banner) {
+        banner.classList.remove('show');
+        document.body.classList.remove('pwa-banner-visible');
+    }
+}
+
 function initPWA() {
     window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         deferredPrompt = e;
-        if (!isMobileDevice()) return;
-        var banner = document.getElementById('pwaInstallBanner');
-        if (banner) {
-            banner.classList.add('show');
-            document.body.classList.add('pwa-banner-visible');
-        }
+        showPWABanner();
     });
 
     var installBtn = document.getElementById('pwaInstallBtn');
@@ -3206,9 +3247,10 @@ function initPWA() {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then(function() {
                     deferredPrompt = null;
-                    document.getElementById('pwaInstallBanner').classList.remove('show');
-                    document.body.classList.remove('pwa-banner-visible');
+                    hidePWABanner();
                 });
+            } else {
+                hidePWABanner();
             }
         });
     }
@@ -3216,33 +3258,23 @@ function initPWA() {
     var closeBtn = document.getElementById('pwaCloseBtn');
     if (closeBtn) {
         closeBtn.addEventListener('click', function() {
-            document.getElementById('pwaInstallBanner').classList.remove('show');
-            document.body.classList.remove('pwa-banner-visible');
+            hidePWABanner();
             localStorage.setItem('pwa_banner_dismissed', '1');
         });
     }
 
     // Register service worker
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').then(function() {
-            // Fallback: show PWA banner on mobile if beforeinstallprompt didn't fire
-            // Show on all mobile devices as a fallback after 3 seconds
-            setTimeout(function() {
-                var banner = document.getElementById('pwaInstallBanner');
-                var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-                                   window.navigator.standalone === true;
-                var dismissed = localStorage.getItem('pwa_banner_dismissed');
-                // Show banner if not standalone, not dismissed, and either mobile OR deferredPrompt is not set
-                if (!isStandalone && !dismissed && (!deferredPrompt || isMobileDevice())) {
-                    if (banner) {
-                        banner.classList.add('show');
-                        document.body.classList.add('pwa-banner-visible');
-                    }
-                }
-            }, 3000);
-        }).catch(function(err) {
+        navigator.serviceWorker.register('sw.js').catch(function(err) {
             console.log('SW registration failed:', err);
         });
+    }
+
+    // Show PWA banner on mobile after a delay (covers iOS Safari and all mobile browsers)
+    if (isMobileDevice()) {
+        setTimeout(function() {
+            showPWABanner();
+        }, 2000);
     }
 }
 
@@ -3255,28 +3287,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Language switcher
     var langBtn = document.getElementById('langBtn');
     var langDropdown = document.getElementById('langDropdown');
-    
-    var langToggleLock = false;
-    function toggleLangDropdown(e) {
+
+    langBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        e.preventDefault();
-        if (langToggleLock) return;
-        langToggleLock = true;
-        setTimeout(function() { langToggleLock = false; }, 300);
         langDropdown.classList.toggle('show');
-    }
-    langBtn.addEventListener('click', toggleLangDropdown);
-    langBtn.addEventListener('touchend', toggleLangDropdown);
+    });
 
     document.querySelectorAll('.lang-option').forEach(function(opt) {
-        function selectLang(e) {
-            e.stopPropagation();
-            e.preventDefault();
+        opt.addEventListener('click', function() {
             setLanguage(opt.getAttribute('data-lang'));
             langDropdown.classList.remove('show');
-        }
-        opt.addEventListener('click', selectLang);
-        opt.addEventListener('touchend', selectLang);
+        });
     });
 
     document.addEventListener('click', function(e) {
@@ -3284,16 +3305,23 @@ document.addEventListener('DOMContentLoaded', function() {
             langDropdown.classList.remove('show');
         }
     });
-    document.addEventListener('touchend', function(e) {
+
+    document.addEventListener('touchstart', function(e) {
         if (!e.target.closest('#langSwitcher')) {
             langDropdown.classList.remove('show');
         }
-    });
+    }, { passive: true });
 
     // File upload
     var uploadArea = document.getElementById('uploadArea');
     var fileInput = document.getElementById('fileInput');
     var uploadBtn = document.getElementById('uploadBtn');
+
+    uploadArea.addEventListener('click', function(e) {
+        if (!e.target.closest('#uploadBtn') && !e.target.closest('#fileInput') && !e.target.closest('.upload-area-overlay')) {
+            fileInput.click();
+        }
+    });
 
     uploadArea.addEventListener('dragover', function(e) {
         e.preventDefault();
@@ -3309,17 +3337,6 @@ document.addEventListener('DOMContentLoaded', function() {
         uploadArea.classList.remove('drag-over');
         var files = e.dataTransfer.files;
         if (files.length > 0) handleFile(files[0]);
-    });
-
-    // Click on upload area should also trigger file input
-    uploadArea.addEventListener('click', function() {
-        fileInput.click();
-    });
-
-    // Upload button click handler
-    uploadBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        fileInput.click();
     });
 
     fileInput.addEventListener('change', function() {
