@@ -3412,43 +3412,43 @@ document.addEventListener('DOMContentLoaded', function() {
     initPWA();
 
     // Language switcher
-    var langBtn = document.getElementById('langBtn');
-    var langDropdown = document.getElementById('langDropdown');
+      var langBtn = document.getElementById('langBtn');
+      var langDropdown = document.getElementById('langDropdown');
+      var langIsOpen = false;
 
-    langBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        langDropdown.classList.toggle('show');
-    });
+      function openLangDropdown() {
+          langIsOpen = true;
+          langDropdown.style.display = 'block';
+      }
+      function closeLangDropdown() {
+          langIsOpen = false;
+          langDropdown.style.display = 'none';
+      }
 
-    document.querySelectorAll('.lang-option').forEach(function(opt) {
-        opt.addEventListener('click', function() {
-            setLanguage(opt.getAttribute('data-lang'));
-            langDropdown.classList.remove('show');
-        });
-    });
+      langBtn.onclick = function(e) {
+          e.stopPropagation();
+          if (langIsOpen) { closeLangDropdown(); } else { openLangDropdown(); }
+      };
 
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('#langSwitcher')) {
-            langDropdown.classList.remove('show');
-        }
-    });
+      document.querySelectorAll('.lang-option').forEach(function(opt) {
+          opt.onclick = function(e) {
+              e.stopPropagation();
+              setLanguage(opt.getAttribute('data-lang'));
+              closeLangDropdown();
+          };
+      });
 
-    document.addEventListener('touchstart', function(e) {
-        if (!e.target.closest('#langSwitcher')) {
-            langDropdown.classList.remove('show');
-        }
-    }, { passive: true });
+      document.addEventListener('click', function(e) {
+          if (langIsOpen && !e.target.closest('#langSwitcher')) closeLangDropdown();
+      });
+      document.addEventListener('touchstart', function(e) {
+          if (langIsOpen && !e.target.closest('#langSwitcher')) closeLangDropdown();
+      }, { passive: true });
 
-    // File upload
+      // File upload
     var uploadArea = document.getElementById('uploadArea');
     var fileInput = document.getElementById('fileInput');
     var uploadBtn = document.getElementById('uploadBtn');
-
-    uploadArea.addEventListener('click', function(e) {
-        if (!e.target.closest('#uploadBtn') && !e.target.closest('#fileInput') && !e.target.closest('.upload-area-overlay')) {
-            fileInput.click();
-        }
-    });
 
     uploadArea.addEventListener('dragover', function(e) {
         e.preventDefault();
