@@ -51,6 +51,9 @@ var TRANSLATIONS = {
         comparison_title: 'Cross-Analysis Summary',
         btn_download_report: 'Download Report',
         btn_new_analysis: 'New Analysis',
+        web_search_title: 'Search on the Web',
+        web_search_hint: 'Open the search engine, then drag & drop your file to search',
+        web_search_open: 'Open',
         verdict_ai: 'AI-Generated Content Detected',
         verdict_real: 'Authentic Content',
         verdict_uncertain: 'Inconclusive Results',
@@ -189,6 +192,9 @@ var TRANSLATIONS = {
         comparison_title: '\u0645\u0644\u062e\u0635 \u0627\u0644\u062a\u062d\u0644\u064a\u0644 \u0627\u0644\u0645\u0642\u0627\u0631\u0646',
         btn_download_report: '\u062a\u062d\u0645\u064a\u0644 \u0627\u0644\u062a\u0642\u0631\u064a\u0631',
         btn_new_analysis: '\u062a\u062d\u0644\u064a\u0644 \u062c\u062f\u064a\u062f',
+        web_search_title: '\u0627\u0644\u0628\u062d\u062b \u0639\u0644\u0649 \u0627\u0644\u0648\u064a\u0628',
+        web_search_hint: '\u0627\u0641\u062a\u062d \u0645\u062d\u0631\u0643 \u0627\u0644\u0628\u062d\u062b \u062b\u0645 \u0627\u0633\u062d\u0628 \u0648\u0623\u0641\u0644\u062a \u0645\u0644\u0641\u0643 \u0644\u0644\u0628\u062d\u062b',
+        web_search_open: '\u0641\u062a\u062d',
         verdict_ai: '\u062a\u0645 \u0627\u0643\u062a\u0634\u0627\u0641 \u0645\u062d\u062a\u0648\u0649 \u0645\u0648\u0644\u062f \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a',
         verdict_real: '\u0645\u062d\u062a\u0648\u0649 \u0623\u0635\u0644\u064a',
         verdict_uncertain: '\u0646\u062a\u0627\u0626\u062c \u063a\u064a\u0631 \u062d\u0627\u0633\u0645\u0629',
@@ -327,6 +333,9 @@ var TRANSLATIONS = {
         comparison_title: 'R\u00e9sum\u00e9 de l\'Analyse Crois\u00e9e',
         btn_download_report: 'T\u00e9l\u00e9charger le Rapport',
         btn_new_analysis: 'Nouvelle Analyse',
+        web_search_title: 'Recherche sur le Web',
+        web_search_hint: 'Ouvrez le moteur de recherche, puis glissez-d\u00e9posez votre fichier',
+        web_search_open: 'Ouvrir',
         verdict_ai: 'Contenu G\u00e9n\u00e9r\u00e9 par IA D\u00e9tect\u00e9',
         verdict_real: 'Contenu Authentique',
         verdict_uncertain: 'R\u00e9sultats Non Concluants',
@@ -2512,6 +2521,89 @@ function displayResults(comparison, allResults) {
         imageVideoReportIds.forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = ''; });
     }
     
+    // Web Reverse Search Section
+    var webSearchSection = document.getElementById('webSearchSection');
+    var webSearchGrid = document.getElementById('webSearchGrid');
+    if (webSearchSection && webSearchGrid) {
+        var isAudioForSearch = fileType === 'audio';
+        webSearchSection.style.display = '';
+
+        var engines = [
+            {
+                id: 'google',
+                name: 'Google Images',
+                icon: 'https://www.google.com/favicon.ico',
+                url: 'https://images.google.com/',
+                color: '#4285F4',
+                forAudio: false
+            },
+            {
+                id: 'bing',
+                name: 'Bing Visual',
+                icon: 'https://www.bing.com/favicon.ico',
+                url: 'https://www.bing.com/visualsearch',
+                color: '#00897B',
+                forAudio: false
+            },
+            {
+                id: 'yandex',
+                name: 'Yandex Images',
+                icon: 'https://yandex.com/favicon.ico',
+                url: 'https://yandex.com/images/',
+                color: '#FF0000',
+                forAudio: false
+            },
+            {
+                id: 'tineye',
+                name: 'TinEye',
+                icon: 'https://tineye.com/favicon.ico',
+                url: 'https://tineye.com/',
+                color: '#6E44FF',
+                forAudio: false
+            },
+            {
+                id: 'pinterest',
+                name: 'Pinterest',
+                icon: 'https://www.pinterest.com/favicon.ico',
+                url: 'https://www.pinterest.com/search/pins/?q=image',
+                color: '#E60023',
+                forAudio: false
+            },
+            {
+                id: 'saucenao',
+                name: 'SauceNAO',
+                icon: 'https://saucenao.com/favicon.ico',
+                url: 'https://saucenao.com/',
+                color: '#F5A623',
+                forAudio: false
+            }
+        ];
+
+        var gridHTML = '';
+        engines.forEach(function(eng) {
+            if (isAudioForSearch && !eng.forAudio) return;
+            gridHTML += '<div class="web-search-card" onclick="window.open(\'' + eng.url + '\', \'_blank\')">' +
+                '<div class="web-search-card-icon" style="background:' + eng.color + '22; border-color:' + eng.color + '44;">' +
+                '<img src="' + eng.icon + '" alt="' + eng.name + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'" />' +
+                '<i class="fas fa-globe" style="display:none;color:' + eng.color + '"></i>' +
+                '</div>' +
+                '<div class="web-search-card-name">' + eng.name + '</div>' +
+                '<button class="web-search-card-btn" style="background:' + eng.color + ';" onclick="event.stopPropagation();window.open(\'' + eng.url + '\', \'_blank\')">' +
+                '<i class="fas fa-external-link-alt"></i> ' + t('web_search_open') +
+                '</button>' +
+                '</div>';
+        });
+
+        if (isAudioForSearch) {
+            gridHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:12px;">' +
+                '<i class="fas fa-info-circle"></i> ' +
+                (currentLang === 'ar' ? 'البحث العكسي متاح للصور والفيديو فقط' : 'Reverse search is available for images and videos only') +
+                '</p>';
+        }
+
+        webSearchGrid.innerHTML = gridHTML;
+    }
+
     // Add deepfake insight paragraph
     var insightBox = document.getElementById('deepfakeInsightBox');
     if (insightBox) {
