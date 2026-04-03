@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI DZ CHECK - AI Content Detector</title>
-    <link rel="stylesheet" href="style.css?v=21">
+    <link rel="stylesheet" href="style.css?v=17">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
@@ -92,16 +92,17 @@
         <!-- Upload Section -->
         <div class="upload-section">
             <div class="upload-area" id="uploadArea">
+                <label class="upload-area-overlay" for="fileInput" aria-hidden="true"></label>
                 <div class="upload-icon">
                     <i class="fas fa-cloud-arrow-up"></i>
                 </div>
                 <p class="upload-text" data-i18n="upload_text">Drag & drop your file here or click to browse</p>
                 <p class="upload-hint" data-i18n="upload_hint">Supports: Images (JPG, PNG, WebP), Videos (MP4, AVI), Audio (MP3, WAV)</p>
                 <input type="file" id="fileInput" accept="image/*,video/*,audio/*">
-                <button class="upload-btn" id="uploadBtn">
+                <label class="upload-btn" id="uploadBtn" for="fileInput">
                     <i class="fas fa-folder-open"></i>
                     <span data-i18n="btn_browse">Browse Files</span>
-                </button>
+                </label>
             </div>
             <p class="helper-text" data-i18n="helper_text">Max file size: 50MB — Analysis uses multiple AI detection engines</p>
         </div>
@@ -207,7 +208,7 @@
                 <div class="step-item image-step" id="stepDeepfakedetection">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_deepfakedetection_title"><i class="fas fa-star essential-icon"></i> Deepfake Detection IO<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_deepfakedetection_title"><i class="fas fa-star essential-icon"></i> Deepfake Detection IO</h4>
                         <p data-i18n="step_deepfakedetection_desc">Analysis with Deepfake Detection image tool</p>
                     </div>
                     <div class="step-result" id="stepDeepfakedetectionResult"></div>
@@ -215,7 +216,7 @@
                 <div class="step-item image-step" id="stepAideepfake">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_aideepfake_title"><i class="fas fa-star essential-icon"></i> AI DeepFake Detector<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_aideepfake_title"><i class="fas fa-star essential-icon"></i> AI DeepFake Detector</h4>
                         <p data-i18n="step_aideepfake_desc">Scanning with AI DeepFake detection engine</p>
                     </div>
                     <div class="step-result" id="stepAideepfakeResult"></div>
@@ -223,7 +224,7 @@
                 <div class="step-item image-step" id="stepAidetectlab">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_aidetectlab_title"><i class="fas fa-star essential-icon"></i> AI Detect Lab<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_aidetectlab_title"><i class="fas fa-star essential-icon"></i> AI Detect Lab</h4>
                         <p data-i18n="step_aidetectlab_desc">Verification with AI Detect Lab engine</p>
                     </div>
                     <div class="step-result" id="stepAidetectlabResult"></div>
@@ -231,7 +232,7 @@
                 <div class="step-item image-step" id="stepHivemoderation">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_hivemoderation_title"><i class="fas fa-star essential-icon"></i> Hive Moderation<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_hivemoderation_title"><i class="fas fa-star essential-icon"></i> Hive Moderation</h4>
                         <p data-i18n="step_hivemoderation_desc">AI detection with Hive Moderation engine</p>
                     </div>
                     <div class="step-result" id="stepHivemoderationResult"></div>
@@ -239,7 +240,7 @@
                 <div class="step-item image-step" id="stepSightengine">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_sightengine_title"><i class="fas fa-star essential-icon"></i> Sightengine<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_sightengine_title"><i class="fas fa-star essential-icon"></i> Sightengine</h4>
                         <p data-i18n="step_sightengine_desc">Image analysis with Sightengine AI detector</p>
                     </div>
                     <div class="step-result" id="stepSightengineResult"></div>
@@ -247,7 +248,7 @@
                 <div class="step-item image-step" id="stepIsitai">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_isitai_title"><i class="fas fa-star essential-icon"></i> Is It AI<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_isitai_title"><i class="fas fa-star essential-icon"></i> Is It AI</h4>
                         <p data-i18n="step_isitai_desc">Verification with Is It AI image detector</p>
                     </div>
                     <div class="step-result" id="stepIsitaiResult"></div>
@@ -255,7 +256,7 @@
                 <div class="step-item video-step" id="stepScreenapp">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_screenapp_video_title"><i class="fas fa-star essential-icon"></i> ScreenApp Video Detection<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_screenapp_video_title"><i class="fas fa-star essential-icon"></i> ScreenApp Video Detection</h4>
                         <p data-i18n="step_screenapp_video_desc">Essential video verification with ScreenApp AI detector</p>
                     </div>
                     <div class="step-result" id="stepScreenappResult"></div>
@@ -263,7 +264,7 @@
                 <div class="step-item video-step" id="stepOverchat">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_overchat_video_title"><i class="fas fa-star essential-icon"></i> OverChat Video Detection<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_overchat_video_title"><i class="fas fa-star essential-icon"></i> OverChat Video Detection</h4>
                         <p data-i18n="step_overchat_video_desc">Essential video verification with OverChat AI detector</p>
                     </div>
                     <div class="step-result" id="stepOverchatResult"></div>
@@ -272,7 +273,7 @@
                 <div class="step-item audio-step" id="stepAudioDeepfakeVoice">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_audio_deepfake_voice_title"><i class="fas fa-star essential-icon"></i> Deepfake Voice Detection<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_audio_deepfake_voice_title"><i class="fas fa-star essential-icon"></i> Deepfake Voice Detection</h4>
                         <p data-i18n="step_audio_deepfake_voice_desc">Essential voice deepfake analysis with spectral detection</p>
                     </div>
                     <div class="step-result" id="stepAudioDeepfakeVoiceResult"></div>
@@ -280,7 +281,7 @@
                 <div class="step-item audio-step" id="stepAudioFreeAI">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_audio_free_ai_title"><i class="fas fa-star essential-icon"></i> Free AI Detector<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_audio_free_ai_title"><i class="fas fa-star essential-icon"></i> Free AI Detector</h4>
                         <p data-i18n="step_audio_free_ai_desc">Essential AI voice detection with Free AI Detector engine</p>
                     </div>
                     <div class="step-result" id="stepAudioFreeAIResult"></div>
@@ -288,7 +289,7 @@
                 <div class="step-item audio-step" id="stepAudioAIVoice">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_audio_ai_voice_title"><i class="fas fa-star essential-icon"></i> AI Voice Detector<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_audio_ai_voice_title"><i class="fas fa-star essential-icon"></i> AI Voice Detector</h4>
                         <p data-i18n="step_audio_ai_voice_desc">Essential voice synthesis detection with AI Voice Detector</p>
                     </div>
                     <div class="step-result" id="stepAudioAIVoiceResult"></div>
@@ -296,7 +297,7 @@
                 <div class="step-item audio-step" id="stepAudioAIVideoDet">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_audio_ai_video_det_title"><i class="fas fa-star essential-icon"></i> AI Video Detector (Audio)<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_audio_ai_video_det_title"><i class="fas fa-star essential-icon"></i> AI Video Detector (Audio)</h4>
                         <p data-i18n="step_audio_ai_video_det_desc">Essential audio scan with AI Video Detector engine</p>
                     </div>
                     <div class="step-result" id="stepAudioAIVideoDetResult"></div>
@@ -304,7 +305,7 @@
                 <div class="step-item audio-step" id="stepAudioScreenApp">
                     <div class="step-status"><i class="fas fa-hourglass"></i></div>
                     <div class="step-content">
-                        <h4 data-i18n="step_audio_screenapp_title"><i class="fas fa-star essential-icon"></i> ScreenApp AI Audio<span class="badge-new">NEW</span></h4>
+                        <h4 data-i18n="step_audio_screenapp_title"><i class="fas fa-star essential-icon"></i> ScreenApp AI Audio</h4>
                         <p data-i18n="step_audio_screenapp_desc">Essential audio verification with ScreenApp AI detector</p>
                     </div>
                     <div class="step-result" id="stepAudioScreenAppResult"></div>
@@ -608,6 +609,6 @@
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/exifr@7.1.3/dist/full.umd.js"></script>
-    <script src="script.js?v=21"></script>
+    <script src="script.js?v=17"></script>
 </body>
 </html>
