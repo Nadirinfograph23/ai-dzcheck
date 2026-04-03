@@ -1801,3 +1801,53 @@ input, button, a, [role="button"] {
 .web-search-card-btn:hover {
     opacity: 0.85;
 }
+
+/* Social Media Dork Section */
+.dork-section-header {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+}
+
+.dork-grid {
+    margin-top: 12px;
+}
+
+.dork-keyword-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(var(--accent-rgb, 163, 230, 53), 0.08);
+    border: 1px solid rgba(var(--accent-rgb, 163, 230, 53), 0.25);
+    border-radius: 8px;
+    padding: 6px 12px;
+    margin-bottom: 14px;
+    max-width: 100%;
+    flex-wrap: wrap;
+}
+
+.dork-kw-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.dork-kw-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    font-family: 'Courier New', monospace;
+    word-break: break-all;
+}
+
+.dork-no-kw {
+    font-size: 12px;
+    color: var(--warning);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
