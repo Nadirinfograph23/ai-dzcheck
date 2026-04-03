@@ -2398,9 +2398,9 @@ async function compareResults(results) {
     var finalScore = Math.round(allScores.reduce(function(a, b) { return a + b; }, 0) / allScores.length);
 
     // Decision based on average:
-    // >= 60% → AI, <= 40% → Real, 41-59% → Mixed (conflicting)
+    // >= 50% → AI, <= 40% → Real, 41-49% → Mixed (conflicting)
     var consensus;
-    if (finalScore >= 60) {
+    if (finalScore >= 50) {
         consensus = 'ai';
     } else if (finalScore <= 40) {
         consensus = 'real';
