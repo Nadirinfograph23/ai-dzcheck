@@ -705,13 +705,13 @@ async function analyzeDeepfakeVoice(file) {
         engine: 'Deepfake Voice Detector',
         aiScore: aiScore,
         confidence: Math.min(99, confidence),
-        verdict: aiScore > 50 ? 'ai' : 'real',
+        verdict: aiScore >= 50 ? 'ai' : 'real',
         details: {
             model: 'Deepfake Detection Voice Analysis v2.0',
             analysisTime: (1.0 + Math.random() * 1.2).toFixed(1) + 's',
             spectralAnalysis: audioAnalysis.details.spectralConsistency,
             pitchConsistency: audioAnalysis.details.pitchProsody,
-            detection: aiScore > 50 ? 'AI voice synthesis patterns detected' : 'Natural voice patterns observed',
+            detection: aiScore >= 50 ? 'AI voice synthesis patterns detected' : 'Natural voice patterns observed',
             reference: 'deepfakedetection.io/deepfake-voice-detection',
             method: 'Deep spectral + neural vocoder fingerprint analysis'
         }
@@ -734,13 +734,13 @@ async function analyzeFreeAIDetector(file, prevResults) {
         engine: 'Free AI Detector',
         aiScore: aiScore,
         confidence: Math.min(99, confidence),
-        verdict: aiScore > 50 ? 'ai' : 'real',
+        verdict: aiScore >= 50 ? 'ai' : 'real',
         details: {
             model: 'Free AI Detector Audio Engine v1.5',
             analysisTime: (0.8 + Math.random() * 1.0).toFixed(1) + 's',
             breathingAnalysis: audioAnalysis.details.breathingPatterns,
             noiseAnalysis: audioAnalysis.details.noiseFloor,
-            detection: aiScore > 50 ? 'AI-generated audio signatures found' : 'Audio appears naturally recorded',
+            detection: aiScore >= 50 ? 'AI-generated audio signatures found' : 'Audio appears naturally recorded',
             reference: 'free-ai-detector.replit.app',
             method: 'Breathing pattern + noise floor classification'
         }
@@ -763,13 +763,13 @@ async function analyzeAIVoiceDetector(file, prevResults) {
         engine: 'AI Voice Detector',
         aiScore: aiScore,
         confidence: Math.min(99, confidence),
-        verdict: aiScore > 50 ? 'ai' : 'real',
+        verdict: aiScore >= 50 ? 'ai' : 'real',
         details: {
             model: 'AI Voice Detector Pro v3.0',
             analysisTime: (0.9 + Math.random() * 1.1).toFixed(1) + 's',
             spectralFingerprint: audioAnalysis.details.spectralConsistency,
             prosodyAnalysis: audioAnalysis.details.pitchProsody,
-            detection: aiScore > 50 ? 'Voice synthesis artifacts detected' : 'Voice appears authentic',
+            detection: aiScore >= 50 ? 'Voice synthesis artifacts detected' : 'Voice appears authentic',
             reference: 'aitoolsforest.com/ai-tools/ai-voice-detector',
             method: 'Spectral fingerprint + prosody deviation analysis'
         }
@@ -792,13 +792,13 @@ async function analyzeAIVideoDetectorAudio(file, prevResults) {
         engine: 'AI Video Detector (Audio)',
         aiScore: aiScore,
         confidence: Math.min(99, confidence),
-        verdict: aiScore > 50 ? 'ai' : 'real',
+        verdict: aiScore >= 50 ? 'ai' : 'real',
         details: {
             model: 'AIVideoDetector Audio Scan v2.5',
             analysisTime: (1.1 + Math.random() * 0.9).toFixed(1) + 's',
             breathingPatterns: audioAnalysis.details.breathingPatterns,
             noiseFloor: audioAnalysis.details.noiseFloor,
-            detection: aiScore > 50 ? 'AI audio manipulation indicators found' : 'No AI manipulation detected in audio',
+            detection: aiScore >= 50 ? 'AI audio manipulation indicators found' : 'No AI manipulation detected in audio',
             reference: 'aivideodetector.com',
             method: 'Audio waveform decomposition + vocoder detection'
         }
@@ -823,13 +823,13 @@ async function analyzeScreenAppAudio(file, prevResults) {
         engine: 'ScreenApp AI Audio Detector',
         aiScore: aiScore,
         confidence: Math.min(99, confidence),
-        verdict: aiScore > 50 ? 'ai' : 'real',
+        verdict: aiScore >= 50 ? 'ai' : 'real',
         details: {
             model: 'ScreenApp Audio AI Detector v2.0',
             analysisTime: (0.7 + Math.random() * 1.3).toFixed(1) + 's',
             spectralAnalysis: audioAnalysis.details.spectralConsistency,
             pitchAnalysis: audioAnalysis.details.pitchProsody,
-            detection: aiScore > 50 ? 'AI-generated audio content detected' : 'Audio content appears naturally created',
+            detection: aiScore >= 50 ? 'AI-generated audio content detected' : 'Audio content appears naturally created',
             reference: 'screenapp.io/features/ai-video-detector',
             method: 'Multi-layer spectral + temporal pattern analysis'
         }
@@ -974,13 +974,13 @@ async function analyzeDeepfakeAPI(file) {
             engine: 'Deepfake Detection API',
             aiScore: aiScore,
             confidence: videoAnalysis.confidence,
-            verdict: aiScore > 50 ? 'ai' : 'real',
+            verdict: aiScore >= 50 ? 'ai' : 'real',
             details: {
                 model: fileType === 'video' ? 'DeMamba Temporal Analysis v2.1' : 'Spectral Analyzer v1.8',
                 analysisTime: (1.2 + Math.random() * 0.8).toFixed(1) + 's',
                 temporalConsistency: videoAnalysis.details.temporalConsistency,
                 spatialArtifacts: videoAnalysis.details.spatialArtifacts,
-                patterns: aiScore > 50 ? 'Spatio-temporal anomalies detected' : 'Natural motion patterns observed',
+                patterns: aiScore >= 50 ? 'Spatio-temporal anomalies detected' : 'Natural motion patterns observed',
                 method: videoAnalysis.details.method
             }
         };
@@ -997,7 +997,7 @@ async function analyzeDeepfakeAPI(file) {
             model: combined.modelDesc,
             analysisTime: combined.elapsed + 's',
             modelsUsed: combined.modelCount + '/' + combined.totalModels,
-            patterns: combined.aiScore > 50 ? 'Synthetic patterns detected' : 'Natural patterns observed',
+            patterns: combined.aiScore >= 50 ? 'Synthetic patterns detected' : 'Natural patterns observed',
             artifacts: combined.aiScore > 60 ? 'AI generation signatures found' : 'No significant AI artifacts'
         };
         Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1005,7 +1005,7 @@ async function analyzeDeepfakeAPI(file) {
             engine: combined.engineName,
             aiScore: combined.aiScore,
             confidence: combined.confidence,
-            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            verdict: combined.aiScore >= 50 ? 'ai' : 'real',
             details: details
         };
     }
@@ -1042,12 +1042,12 @@ async function analyzeDeepGuard(file, prevResult) {
             engine: 'DeepGuard',
             aiScore: aiScore,
             confidence: videoAnalysis.confidence + 2,
-            verdict: aiScore > 50 ? 'ai' : 'real',
+            verdict: aiScore >= 50 ? 'ai' : 'real',
             details: {
                 model: 'DeepGuard NSG-Enhanced v4.0',
                 analysisTime: (0.8 + Math.random() * 1.2).toFixed(1) + 's',
                 opticalFlowResidual: videoAnalysis.details.opticalFlowResidual,
-                consistency: aiScore > 50 ? 'Spatio-temporal inconsistencies detected' : 'Pixel distribution consistent',
+                consistency: aiScore >= 50 ? 'Spatio-temporal inconsistencies detected' : 'Pixel distribution consistent',
                 method: 'NSG physics-driven analysis'
             }
         };
@@ -1065,7 +1065,7 @@ async function analyzeDeepGuard(file, prevResult) {
             model: combined.modelDesc,
             analysisTime: combined.elapsed + 's',
             modelsUsed: combined.modelCount + '/' + combined.totalModels,
-            consistency: combined.aiScore > 50 ? 'Diffusion/GAN patterns detected' : 'No generative model signatures',
+            consistency: combined.aiScore >= 50 ? 'Diffusion/GAN patterns detected' : 'No generative model signatures',
             noiseAnalysis: combined.aiScore > 55 ? 'Unnatural noise pattern detected' : 'Natural noise pattern'
         };
         Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1073,7 +1073,7 @@ async function analyzeDeepGuard(file, prevResult) {
             engine: 'DeepGuard (' + combined.modelCount + ' models)',
             aiScore: combined.aiScore,
             confidence: combined.confidence,
-            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            verdict: combined.aiScore >= 50 ? 'ai' : 'real',
             details: details
         };
     }
@@ -1115,12 +1115,12 @@ async function analyzeDeepAI(file, prevResults) {
             engine: 'DeepAI',
             aiScore: aiScore,
             confidence: videoAnalysis.confidence,
-            verdict: aiScore > 50 ? 'ai' : 'real',
+            verdict: aiScore >= 50 ? 'ai' : 'real',
             details: {
                 model: 'DeepAI D3 Video Analysis v3.0',
                 analysisTime: (0.9 + Math.random() * 1.1).toFixed(1) + 's',
                 generationComplexity: videoAnalysis.details.generationComplexity,
-                patterns: aiScore > 50 ? 'Second-order feature anomalies detected' : 'Natural content patterns',
+                patterns: aiScore >= 50 ? 'Second-order feature anomalies detected' : 'Natural content patterns',
                 reference: 'deepai.org/ai-image-detector',
                 method: 'D3 second-order central difference features'
             }
@@ -1138,7 +1138,7 @@ async function analyzeDeepAI(file, prevResults) {
             model: 'DeepAI (' + combined.modelDesc + ')',
             analysisTime: combined.elapsed + 's',
             modelsUsed: combined.modelCount + '/' + combined.totalModels,
-            patterns: combined.aiScore > 50 ? 'AI generation artifacts detected' : 'Natural image characteristics',
+            patterns: combined.aiScore >= 50 ? 'AI generation artifacts detected' : 'Natural image characteristics',
             reference: 'deepai.org/ai-image-detector'
         };
         Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1146,7 +1146,7 @@ async function analyzeDeepAI(file, prevResults) {
             engine: 'DeepAI',
             aiScore: combined.aiScore,
             confidence: combined.confidence,
-            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            verdict: combined.aiScore >= 50 ? 'ai' : 'real',
             details: details
         };
     }
@@ -1187,12 +1187,12 @@ async function analyzeAIorNot(file, prevResults) {
             engine: 'AIorNot',
             aiScore: aiScore,
             confidence: videoAnalysis.confidence + 1,
-            verdict: aiScore > 50 ? 'ai' : 'real',
+            verdict: aiScore >= 50 ? 'ai' : 'real',
             details: {
                 model: 'AIorNot DeCoF Multi-Modal v2.5',
                 analysisTime: (0.7 + Math.random() * 1.0).toFixed(1) + 's',
                 temporalConsistency: videoAnalysis.details.temporalConsistency,
-                detection: aiScore > 50 ? 'Frame consistency anomalies found' : 'Temporal consistency verified',
+                detection: aiScore >= 50 ? 'Frame consistency anomalies found' : 'Temporal consistency verified',
                 reference: 'aiornot.com',
                 method: 'DeCoF frame consistency + TALL layout'
             }
@@ -1210,7 +1210,7 @@ async function analyzeAIorNot(file, prevResults) {
             model: 'AIorNot (' + combined.modelDesc + ')',
             analysisTime: combined.elapsed + 's',
             modelsUsed: combined.modelCount + '/' + combined.totalModels,
-            detection: combined.aiScore > 50 ? 'AI-generated content detected' : 'Content appears authentic',
+            detection: combined.aiScore >= 50 ? 'AI-generated content detected' : 'Content appears authentic',
             reference: 'aiornot.com'
         };
         Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1218,7 +1218,7 @@ async function analyzeAIorNot(file, prevResults) {
             engine: 'AIorNot',
             aiScore: combined.aiScore,
             confidence: combined.confidence,
-            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            verdict: combined.aiScore >= 50 ? 'ai' : 'real',
             details: details
         };
     }
@@ -1259,12 +1259,12 @@ async function analyzeIlluminarty(file, prevResults) {
             engine: 'Illuminarty',
             aiScore: aiScore,
             confidence: videoAnalysis.confidence + 1,
-            verdict: aiScore > 50 ? 'ai' : 'real',
+            verdict: aiScore >= 50 ? 'ai' : 'real',
             details: {
                 model: 'Illuminarty UNITE Detector v4.0',
                 analysisTime: (0.8 + Math.random() * 0.9).toFixed(1) + 's',
                 spatialArtifacts: videoAnalysis.details.spatialArtifacts,
-                detection: aiScore > 50 ? 'Synthetic video signatures found' : 'Content appears naturally created',
+                detection: aiScore >= 50 ? 'Synthetic video signatures found' : 'Content appears naturally created',
                 reference: 'app.illuminarty.ai',
                 method: 'UNITE universal synthetic video detection'
             }
@@ -1282,7 +1282,7 @@ async function analyzeIlluminarty(file, prevResults) {
             model: 'Illuminarty (' + combined.modelDesc + ')',
             analysisTime: combined.elapsed + 's',
             modelsUsed: combined.modelCount + '/' + combined.totalModels,
-            detection: combined.aiScore > 50 ? 'AI content patterns identified' : 'Natural content verified',
+            detection: combined.aiScore >= 50 ? 'AI content patterns identified' : 'Natural content verified',
             reference: 'app.illuminarty.ai'
         };
         Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1290,7 +1290,7 @@ async function analyzeIlluminarty(file, prevResults) {
             engine: 'Illuminarty',
             aiScore: combined.aiScore,
             confidence: combined.confidence,
-            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            verdict: combined.aiScore >= 50 ? 'ai' : 'real',
             details: details
         };
     }
@@ -1349,7 +1349,7 @@ async function analyzeScreenApp(file, prevResults) {
                 model: 'ScreenApp (' + combined.modelDesc + ')',
                 analysisTime: combined.elapsed + 's',
                 modelsUsed: combined.modelCount + '/' + combined.totalModels,
-                detection: combined.aiScore > 50 ? 'AI-generated content patterns detected' : 'Content appears authentic',
+                detection: combined.aiScore >= 50 ? 'AI-generated content patterns detected' : 'Content appears authentic',
                 reference: 'screenapp.io/features/ai-video-detector'
             };
             Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1357,7 +1357,7 @@ async function analyzeScreenApp(file, prevResults) {
                 engine: 'ScreenApp AI Detector',
                 aiScore: combined.aiScore,
                 confidence: combined.confidence,
-                verdict: combined.aiScore > 50 ? 'ai' : 'real',
+                verdict: combined.aiScore >= 50 ? 'ai' : 'real',
                 details: details
             };
         }
@@ -1367,11 +1367,11 @@ async function analyzeScreenApp(file, prevResults) {
         engine: 'ScreenApp AI Detector',
         aiScore: aiScore,
         confidence: confidence,
-        verdict: aiScore > 50 ? 'ai' : 'real',
+        verdict: aiScore >= 50 ? 'ai' : 'real',
         details: {
             model: fileType === 'video' ? 'ScreenApp VIDGUARD + DeMamba v2.0' : 'ScreenApp AI Detector v2.0',
             analysisTime: (0.7 + Math.random() * 1.1).toFixed(1) + 's',
-            detection: aiScore > 50 ? 'AI generation signatures detected' : 'Content appears naturally created',
+            detection: aiScore >= 50 ? 'AI generation signatures detected' : 'Content appears naturally created',
             mediaType: fileType,
             reference: 'screenapp.io/features/ai-video-detector'
         }
@@ -1414,7 +1414,7 @@ async function analyzeOverchat(file, prevResults) {
                 model: 'OverChat (' + combined.modelDesc + ')',
                 analysisTime: combined.elapsed + 's',
                 modelsUsed: combined.modelCount + '/' + combined.totalModels,
-                detection: combined.aiScore > 50 ? 'AI-generated content detected' : 'Content verified as authentic',
+                detection: combined.aiScore >= 50 ? 'AI-generated content detected' : 'Content verified as authentic',
                 reference: 'overchat.ai/video/ai-video-detector'
             };
             Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1422,7 +1422,7 @@ async function analyzeOverchat(file, prevResults) {
                 engine: 'OverChat AI Detector',
                 aiScore: combined.aiScore,
                 confidence: combined.confidence,
-                verdict: combined.aiScore > 50 ? 'ai' : 'real',
+                verdict: combined.aiScore >= 50 ? 'ai' : 'real',
                 details: details
             };
         }
@@ -1432,11 +1432,11 @@ async function analyzeOverchat(file, prevResults) {
         engine: 'OverChat AI Detector',
         aiScore: aiScore,
         confidence: confidence,
-        verdict: aiScore > 50 ? 'ai' : 'real',
+        verdict: aiScore >= 50 ? 'ai' : 'real',
         details: {
             model: fileType === 'video' ? 'OverChat Optical Flow + D3 v3.0' : 'OverChat AI Detector v3.0',
             analysisTime: (0.6 + Math.random() * 1.0).toFixed(1) + 's',
-            detection: aiScore > 50 ? 'AI manipulation indicators found' : 'No AI manipulation detected',
+            detection: aiScore >= 50 ? 'AI manipulation indicators found' : 'No AI manipulation detected',
             mediaType: fileType,
             reference: 'overchat.ai/video/ai-video-detector'
         }
@@ -1463,11 +1463,11 @@ async function analyzeFauxLens(file, prevResults) {
             engine: 'FauxLens',
             aiScore: aiScore,
             confidence: videoAnalysis.confidence + 1,
-            verdict: aiScore > 50 ? 'ai' : 'real',
+            verdict: aiScore >= 50 ? 'ai' : 'real',
             details: {
                 model: 'FauxLens Video Analysis v1.0',
                 analysisTime: (0.8 + Math.random() * 0.9).toFixed(1) + 's',
-                detection: aiScore > 50 ? 'Synthetic patterns detected' : 'Natural content verified',
+                detection: aiScore >= 50 ? 'Synthetic patterns detected' : 'Natural content verified',
                 reference: 'fauxlens.com'
             }
         };
@@ -1482,7 +1482,7 @@ async function analyzeFauxLens(file, prevResults) {
             model: 'FauxLens (' + combined.modelDesc + ')',
             analysisTime: combined.elapsed + 's',
             modelsUsed: combined.modelCount + '/' + combined.totalModels,
-            detection: combined.aiScore > 50 ? 'AI-generated image patterns detected' : 'Image appears authentic',
+            detection: combined.aiScore >= 50 ? 'AI-generated image patterns detected' : 'Image appears authentic',
             reference: 'fauxlens.com'
         };
         Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1490,7 +1490,7 @@ async function analyzeFauxLens(file, prevResults) {
             engine: 'FauxLens',
             aiScore: combined.aiScore,
             confidence: combined.confidence,
-            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            verdict: combined.aiScore >= 50 ? 'ai' : 'real',
             details: details
         };
     }
@@ -1524,11 +1524,11 @@ async function analyzeDeepfakeDetectionIO(file, prevResults) {
             engine: 'Deepfake Detection (Image)',
             aiScore: aiScore,
             confidence: videoAnalysis.confidence + 2,
-            verdict: aiScore > 50 ? 'ai' : 'real',
+            verdict: aiScore >= 50 ? 'ai' : 'real',
             details: {
                 model: 'Deepfake Detection IO v2.0',
                 analysisTime: (0.7 + Math.random() * 1.0).toFixed(1) + 's',
-                detection: aiScore > 50 ? 'Deepfake signatures found' : 'No deepfake detected',
+                detection: aiScore >= 50 ? 'Deepfake signatures found' : 'No deepfake detected',
                 reference: 'deepfakedetection.io'
             }
         };
@@ -1543,7 +1543,7 @@ async function analyzeDeepfakeDetectionIO(file, prevResults) {
             model: 'Deepfake Detection (' + combined.modelDesc + ')',
             analysisTime: combined.elapsed + 's',
             modelsUsed: combined.modelCount + '/' + combined.totalModels,
-            detection: combined.aiScore > 50 ? 'Deepfake manipulation detected' : 'Image verified as authentic',
+            detection: combined.aiScore >= 50 ? 'Deepfake manipulation detected' : 'Image verified as authentic',
             reference: 'deepfakedetection.io'
         };
         Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1551,7 +1551,7 @@ async function analyzeDeepfakeDetectionIO(file, prevResults) {
             engine: 'Deepfake Detection (Image)',
             aiScore: combined.aiScore,
             confidence: combined.confidence,
-            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            verdict: combined.aiScore >= 50 ? 'ai' : 'real',
             details: details
         };
     }
@@ -1585,11 +1585,11 @@ async function analyzeAIDeepfake(file, prevResults) {
             engine: 'AI DeepFake Detector',
             aiScore: aiScore,
             confidence: videoAnalysis.confidence,
-            verdict: aiScore > 50 ? 'ai' : 'real',
+            verdict: aiScore >= 50 ? 'ai' : 'real',
             details: {
                 model: 'AI DeepFake CA v1.5',
                 analysisTime: (0.9 + Math.random() * 0.8).toFixed(1) + 's',
-                detection: aiScore > 50 ? 'AI manipulation indicators found' : 'Content appears natural',
+                detection: aiScore >= 50 ? 'AI manipulation indicators found' : 'Content appears natural',
                 reference: 'aideepfake.ca'
             }
         };
@@ -1604,7 +1604,7 @@ async function analyzeAIDeepfake(file, prevResults) {
             model: 'AI DeepFake (' + combined.modelDesc + ')',
             analysisTime: combined.elapsed + 's',
             modelsUsed: combined.modelCount + '/' + combined.totalModels,
-            detection: combined.aiScore > 50 ? 'AI deepfake patterns identified' : 'No deepfake patterns found',
+            detection: combined.aiScore >= 50 ? 'AI deepfake patterns identified' : 'No deepfake patterns found',
             reference: 'aideepfake.ca'
         };
         Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1612,7 +1612,7 @@ async function analyzeAIDeepfake(file, prevResults) {
             engine: 'AI DeepFake Detector',
             aiScore: combined.aiScore,
             confidence: combined.confidence,
-            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            verdict: combined.aiScore >= 50 ? 'ai' : 'real',
             details: details
         };
     }
@@ -1646,11 +1646,11 @@ async function analyzeAIDetectLab(file, prevResults) {
             engine: 'AI Detect Lab',
             aiScore: aiScore,
             confidence: videoAnalysis.confidence + 1,
-            verdict: aiScore > 50 ? 'ai' : 'real',
+            verdict: aiScore >= 50 ? 'ai' : 'real',
             details: {
                 model: 'AI Detect Lab Video v2.0',
                 analysisTime: (0.8 + Math.random() * 0.9).toFixed(1) + 's',
-                detection: aiScore > 50 ? 'AI generation traces detected' : 'Content verified authentic',
+                detection: aiScore >= 50 ? 'AI generation traces detected' : 'Content verified authentic',
                 reference: 'aidetectlab.com'
             }
         };
@@ -1665,7 +1665,7 @@ async function analyzeAIDetectLab(file, prevResults) {
             model: 'AI Detect Lab (' + combined.modelDesc + ')',
             analysisTime: combined.elapsed + 's',
             modelsUsed: combined.modelCount + '/' + combined.totalModels,
-            detection: combined.aiScore > 50 ? 'AI generation signatures detected' : 'Natural image characteristics verified',
+            detection: combined.aiScore >= 50 ? 'AI generation signatures detected' : 'Natural image characteristics verified',
             reference: 'aidetectlab.com'
         };
         Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1673,7 +1673,7 @@ async function analyzeAIDetectLab(file, prevResults) {
             engine: 'AI Detect Lab',
             aiScore: combined.aiScore,
             confidence: combined.confidence,
-            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            verdict: combined.aiScore >= 50 ? 'ai' : 'real',
             details: details
         };
     }
@@ -1707,11 +1707,11 @@ async function analyzeHiveModeration(file, prevResults) {
             engine: 'Hive Moderation',
             aiScore: aiScore,
             confidence: videoAnalysis.confidence + 2,
-            verdict: aiScore > 50 ? 'ai' : 'real',
+            verdict: aiScore >= 50 ? 'ai' : 'real',
             details: {
                 model: 'Hive Moderation Video v3.0',
                 analysisTime: (0.9 + Math.random() * 1.0).toFixed(1) + 's',
-                detection: aiScore > 50 ? 'AI-generated content flagged' : 'Content passed moderation check',
+                detection: aiScore >= 50 ? 'AI-generated content flagged' : 'Content passed moderation check',
                 reference: 'hivemoderation.com'
             }
         };
@@ -1727,7 +1727,7 @@ async function analyzeHiveModeration(file, prevResults) {
             model: 'Hive Moderation (' + combined.modelDesc + ')',
             analysisTime: combined.elapsed + 's',
             modelsUsed: combined.modelCount + '/' + combined.totalModels,
-            detection: combined.aiScore > 50 ? 'AI-generated content detected by moderation engine' : 'Content passed AI moderation check',
+            detection: combined.aiScore >= 50 ? 'AI-generated content detected by moderation engine' : 'Content passed AI moderation check',
             reference: 'hivemoderation.com/ai-generated-content-detection'
         };
         Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1735,7 +1735,7 @@ async function analyzeHiveModeration(file, prevResults) {
             engine: 'Hive Moderation',
             aiScore: combined.aiScore,
             confidence: combined.confidence,
-            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            verdict: combined.aiScore >= 50 ? 'ai' : 'real',
             details: details
         };
     }
@@ -1769,11 +1769,11 @@ async function analyzeSightengine(file, prevResults) {
             engine: 'Sightengine',
             aiScore: aiScore,
             confidence: videoAnalysis.confidence,
-            verdict: aiScore > 50 ? 'ai' : 'real',
+            verdict: aiScore >= 50 ? 'ai' : 'real',
             details: {
                 model: 'Sightengine Video Analyzer v2.5',
                 analysisTime: (0.7 + Math.random() * 1.1).toFixed(1) + 's',
-                detection: aiScore > 50 ? 'AI-generated frames detected' : 'Video frames appear natural',
+                detection: aiScore >= 50 ? 'AI-generated frames detected' : 'Video frames appear natural',
                 reference: 'sightengine.com'
             }
         };
@@ -1788,7 +1788,7 @@ async function analyzeSightengine(file, prevResults) {
             model: 'Sightengine (' + combined.modelDesc + ')',
             analysisTime: combined.elapsed + 's',
             modelsUsed: combined.modelCount + '/' + combined.totalModels,
-            detection: combined.aiScore > 50 ? 'AI-generated image detected' : 'Image verified as natural',
+            detection: combined.aiScore >= 50 ? 'AI-generated image detected' : 'Image verified as natural',
             reference: 'sightengine.com/detect-ai-generated-images'
         };
         Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1796,7 +1796,7 @@ async function analyzeSightengine(file, prevResults) {
             engine: 'Sightengine',
             aiScore: combined.aiScore,
             confidence: combined.confidence,
-            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            verdict: combined.aiScore >= 50 ? 'ai' : 'real',
             details: details
         };
     }
@@ -1830,11 +1830,11 @@ async function analyzeIsItAI(file, prevResults) {
             engine: 'Is It AI',
             aiScore: aiScore,
             confidence: videoAnalysis.confidence + 1,
-            verdict: aiScore > 50 ? 'ai' : 'real',
+            verdict: aiScore >= 50 ? 'ai' : 'real',
             details: {
                 model: 'Is It AI Video Scanner v1.5',
                 analysisTime: (0.6 + Math.random() * 1.0).toFixed(1) + 's',
-                detection: aiScore > 50 ? 'AI generation indicators found' : 'Content appears genuine',
+                detection: aiScore >= 50 ? 'AI generation indicators found' : 'Content appears genuine',
                 reference: 'isitai.com'
             }
         };
@@ -1850,7 +1850,7 @@ async function analyzeIsItAI(file, prevResults) {
             model: 'Is It AI (' + combined.modelDesc + ')',
             analysisTime: combined.elapsed + 's',
             modelsUsed: combined.modelCount + '/' + combined.totalModels,
-            detection: combined.aiScore > 50 ? 'Content identified as AI-generated' : 'Content verified as human-created',
+            detection: combined.aiScore >= 50 ? 'Content identified as AI-generated' : 'Content verified as human-created',
             reference: 'isitai.com/ai-image-detector'
         };
         Object.keys(combined.scoreDetails).forEach(function(k) { details[k] = combined.scoreDetails[k]; });
@@ -1858,7 +1858,7 @@ async function analyzeIsItAI(file, prevResults) {
             engine: 'Is It AI',
             aiScore: combined.aiScore,
             confidence: combined.confidence,
-            verdict: combined.aiScore > 50 ? 'ai' : 'real',
+            verdict: combined.aiScore >= 50 ? 'ai' : 'real',
             details: details
         };
     }
@@ -2023,13 +2023,13 @@ async function analyzeReverseSearch(file, prevResults) {
                 engine: 'SDXL-Flux Detector',
                 aiScore: result.aiScore,
                 confidence: result.confidence,
-                verdict: result.aiScore > 50 ? 'ai' : 'real',
+                verdict: result.aiScore >= 50 ? 'ai' : 'real',
                 details: {
                     model: HF_MODELS[2].id,
                     analysisTime: result.elapsed + 's',
-                    sourcesFound: result.aiScore > 50 ? 0 : Math.round(2 + Math.random() * 5),
+                    sourcesFound: result.aiScore >= 50 ? 0 : Math.round(2 + Math.random() * 5),
                     databases: 'Flux/SDXL pattern matching',
-                    originalFound: result.aiScore > 50 ? 'AI generation patterns detected' : 'No AI patterns found'
+                    originalFound: result.aiScore >= 50 ? 'AI generation patterns detected' : 'No AI patterns found'
                 }
             };
         }
@@ -2050,7 +2050,7 @@ async function analyzeReverseSearch(file, prevResults) {
         engine: 'Reverse Search',
         aiScore: aiScore,
         confidence: 50 + Math.round(Math.random() * 30),
-        verdict: aiScore > 50 ? 'ai' : 'real',
+        verdict: aiScore >= 50 ? 'ai' : 'real',
         details: {
             sourcesFound: sourcesFound,
             matchScore: matchScore + '%',
@@ -2229,29 +2229,12 @@ async function compareResults(results) {
         reverseScore * w16
     );
     
-    // Balanced decision logic with wider uncertain zone
-    // AI verdict requires >= 60% (was 50%)
-    // Real verdict requires <= 38%
-    // 39-59% = uncertain / inconclusive
+    // Decision logic: >= 50% = AI, < 50% = Real
     var consensus;
-    if (finalScore >= 60) {
+    if (finalScore >= 50) {
         consensus = 'ai';
-    } else if (finalScore <= 38) {
-        consensus = 'real';
     } else {
-        // Inconclusive zone: use Cross-Analysis Summary highest average
-        var totalAiScore = deepfakeScore + deepguardScore + deepaiScore + aiornotScore + illuminartyScore +
-            fauxlensScore + dfdetectionScore + aideepfakeScore + aidetectlabScore +
-            hivemoderationScore + sightengineScore + isitaiScore +
-            screenappScore + overchatScore + metadataScore + reverseScore;
-        var avgAiScore = totalAiScore / 16;
-        if (avgAiScore >= 45) {
-            consensus = 'ai';
-        } else if (avgAiScore <= 35) {
-            consensus = 'real';
-        } else {
-            consensus = 'uncertain';
-        }
+        consensus = 'real';
     }
 
     // Additional consensus check: count how many engines agree
@@ -2259,13 +2242,13 @@ async function compareResults(results) {
     results.forEach(function(r) { verdicts[r.verdict]++; });
     var agreeing = Math.max(verdicts.ai, verdicts.real, verdicts.uncertain);
 
-    // Override: if 10+ engines say real but weighted score is borderline, trust consensus
-    if (verdicts.real >= 10 && finalScore < 65) {
-        consensus = 'real';
-    }
-    // Override: if 10+ engines say AI, reinforce AI verdict
-    if (verdicts.ai >= 10 && finalScore >= 45) {
+    // Override: if strong majority of engines say AI and score is borderline, trust engines
+    if (verdicts.ai >= 10 && finalScore >= 40) {
         consensus = 'ai';
+    }
+    // Override: if strong majority say real, trust them
+    if (verdicts.real >= 10 && finalScore < 50) {
+        consensus = 'real';
     }
 
     // Determine media-specific insight for the explanatory paragraph
