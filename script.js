@@ -3386,7 +3386,7 @@ function initPWA() {
                   deferredPrompt.userChoice.then(function() {
                       deferredPrompt = null;
                       hidePWABanner();
-                      localStorage.setItem('pwa_banner_dismissed_v2', '1');
+                      localStorage.setItem('pwa_banner_dismissed_v3', '1');
                   });
               }
           });
@@ -3396,7 +3396,7 @@ function initPWA() {
       if (closeBtn) {
           closeBtn.addEventListener('click', function() {
               hidePWABanner();
-              localStorage.setItem('pwa_banner_dismissed_v2', '1');
+              localStorage.setItem('pwa_banner_dismissed_v3', '1');
           });
       }
 
@@ -3408,7 +3408,7 @@ function initPWA() {
 
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
                          window.navigator.standalone === true;
-      var dismissed = localStorage.getItem('pwa_banner_dismissed_v2');
+      var dismissed = localStorage.getItem('pwa_banner_dismissed_v3');
       if (!isStandalone && !dismissed) {
           setTimeout(function() { showPWABanner(); }, 2000);
       }
@@ -3434,17 +3434,23 @@ document.addEventListener('DOMContentLoaded', function() {
           langDropdown.style.display = 'none';
       }
 
-      langBtn.onclick = function(e) {
+      function toggleLang(e) {
+          e.preventDefault();
           e.stopPropagation();
           if (langIsOpen) { closeLangDropdown(); } else { openLangDropdown(); }
-      };
+      }
+      langBtn.addEventListener('click', toggleLang);
+      langBtn.addEventListener('touchend', toggleLang);
 
       document.querySelectorAll('.lang-option').forEach(function(opt) {
-          opt.onclick = function(e) {
+          function selectLang(e) {
+              e.preventDefault();
               e.stopPropagation();
               setLanguage(opt.getAttribute('data-lang'));
               closeLangDropdown();
-          };
+          }
+          opt.addEventListener('click', selectLang);
+          opt.addEventListener('touchend', selectLang);
       });
 
       document.addEventListener('click', function(e) {
