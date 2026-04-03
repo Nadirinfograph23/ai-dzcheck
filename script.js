@@ -3226,22 +3226,20 @@ function initPWA() {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').then(function() {
             // Fallback: show PWA banner on mobile if beforeinstallprompt didn't fire
-            if (isMobileDevice()) {
+            // Show on all mobile devices as a fallback after 3 seconds
+            setTimeout(function() {
+                var banner = document.getElementById('pwaInstallBanner');
                 var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
                                    window.navigator.standalone === true;
                 var dismissed = localStorage.getItem('pwa_banner_dismissed');
-                if (!isStandalone && !dismissed) {
-                    setTimeout(function() {
-                        if (!deferredPrompt) {
-                            var banner = document.getElementById('pwaInstallBanner');
-                            if (banner) {
-                                banner.classList.add('show');
-                                document.body.classList.add('pwa-banner-visible');
-                            }
-                        }
-                    }, 3000);
+                // Show banner if not standalone, not dismissed, and either mobile OR deferredPrompt is not set
+                if (!isStandalone && !dismissed && (!deferredPrompt || isMobileDevice())) {
+                    if (banner) {
+                        banner.classList.add('show');
+                        document.body.classList.add('pwa-banner-visible');
+                    }
                 }
-            }
+            }, 3000);
         }).catch(function(err) {
             console.log('SW registration failed:', err);
         });
@@ -3311,6 +3309,17 @@ document.addEventListener('DOMContentLoaded', function() {
         uploadArea.classList.remove('drag-over');
         var files = e.dataTransfer.files;
         if (files.length > 0) handleFile(files[0]);
+    });
+
+    // Click on upload area should also trigger file input
+    uploadArea.addEventListener('click', function() {
+        fileInput.click();
+    });
+
+    // Upload button click handler
+    uploadBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        fileInput.click();
     });
 
     fileInput.addEventListener('change', function() {
