@@ -2640,7 +2640,7 @@ function displayResults(comparison, allResults) {
                       'No keyword could be extracted from the filename';
 
         var dorkHTML = '<div class="dork-section-header">' +
-            '<h4 class="web-search-title" style="margin-top:8px;"><i class="fas fa-crosshairs"></i> ' + dorkTitle + '</h4>' +
+            '<h4 class="web-search-title" style="margin-top:8px;"><i class="fas fa-crosshairs"></i> ' + dorkTitle + '<span class="badge-new">NEW</span></h4>' +
             '<p class="web-search-hint">' + dorkHint + '</p>';
 
         if (keyword) {
