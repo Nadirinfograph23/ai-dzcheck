@@ -3,12 +3,12 @@
    Offline support & caching
    ============================================ */
 
-var CACHE_NAME = 'aidzcheck-v15';
+var CACHE_NAME = 'aidzcheck-v22';
 var ASSETS = [
     '/',
     '/index.html',
-    '/style.css?v=3',
-    '/script.js?v=4',
+    '/style.css',
+    '/script.js',
     '/manifest.json',
     '/icon-192.png',
     '/icon-512.png',
