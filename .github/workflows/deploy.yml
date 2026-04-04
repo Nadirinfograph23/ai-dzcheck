@@ -1,0 +1,44 @@
+name: Cache Bust & Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:       # allows manual trigger from GitHub UI
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # full history so git diff works
+
+      # ── 2. Set up Python ───────────────────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      # ── 3. Run cache buster ────────────────────────────────────────────────
+      - name: Run cache_buster.py → build dist/
+        run: python3 cache_buster.py
+
+      # ── 4. Show manifest diff ──────────────────────────────────────────────
+      - name: Print hash manifest
+        run: cat hash_manifest.json
+
+      # ── 5. Deploy dist/ to Vercel ──────────────────────────────────────────
+      - name: Deploy to Vercel (production)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token:          ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id:         ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id:     ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory:     ./dist
+          vercel-args:           "--prod"
+          github-comment:        false
