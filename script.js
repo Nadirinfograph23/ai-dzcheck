@@ -3428,7 +3428,7 @@ function initPWA() {
                   deferredPrompt.userChoice.then(function() {
                       deferredPrompt = null;
                       hidePWABanner();
-                      localStorage.setItem('pwa_banner_dismissed_v2', '1');
+                      localStorage.setItem('pwa_banner_dismissed_v3', '1');
                   });
               }
           });
@@ -3438,7 +3438,7 @@ function initPWA() {
       if (closeBtn) {
           closeBtn.addEventListener('click', function() {
               hidePWABanner();
-              localStorage.setItem('pwa_banner_dismissed_v2', '1');
+              localStorage.setItem('pwa_banner_dismissed_v3', '1');
           });
       }
 
@@ -3450,7 +3450,7 @@ function initPWA() {
 
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
                          window.navigator.standalone === true;
-      var dismissed = localStorage.getItem('pwa_banner_dismissed_v2');
+      var dismissed = localStorage.getItem('pwa_banner_dismissed_v3');
       if (!isStandalone && !dismissed) {
           setTimeout(function() { showPWABanner(); }, 2000);
       }
