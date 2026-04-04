@@ -84,6 +84,7 @@ var TRANSLATIONS = {
         verdict_real_sub: 'Analysis suggests this content is authentic and not AI-generated',
         verdict_uncertain_sub: 'Results are mixed — further manual verification is recommended',
         verdict_mixed_sub: 'Detection engines show conflicting signals — results are mixed between AI and authentic',
+        verdict_mixed_note: 'Note: The content may be authentic, or it may have been manipulated using AI tools or design software.',
         toast_uploading: 'Processing file...',
         toast_complete: 'Analysis complete!',
         toast_error: 'Error processing file',
@@ -228,6 +229,7 @@ var TRANSLATIONS = {
         verdict_real_sub: '\u0627\u0644\u062a\u062d\u0644\u064a\u0644 \u064a\u0634\u064a\u0631 \u0625\u0644\u0649 \u0623\u0646 \u0647\u0630\u0627 \u0627\u0644\u0645\u062d\u062a\u0648\u0649 \u0623\u0635\u0644\u064a \u0648\u0644\u064a\u0633 \u0645\u0648\u0644\u062f\u0627\u064b',
         verdict_uncertain_sub: '\u0627\u0644\u0646\u062a\u0627\u0626\u062c \u0645\u062e\u062a\u0644\u0637\u0629 \u2014 \u064a\u0646\u0635\u062d \u0628\u0627\u0644\u062a\u062d\u0642\u0642 \u0627\u0644\u064a\u062f\u0648\u064a',
         verdict_mixed_sub: 'المحركات متباينة — بعضها يشير إلى ذكاء اصطناعي وبعضها يشير إلى أصالة',
+        verdict_mixed_note: 'ملاحظة: المحتوى قد يكون أصلي وقد تم التلاعب بالمحتوى عن طريق أدوات الذكاء الاصطناعي أو أدوات التصميم.',
         toast_uploading: '\u062c\u0627\u0631\u064a \u0645\u0639\u0627\u0644\u062c\u0629 \u0627\u0644\u0645\u0644\u0641...',
         toast_complete: '\u0627\u0643\u062a\u0645\u0644 \u0627\u0644\u062a\u062d\u0644\u064a\u0644!',
         toast_error: '\u062e\u0637\u0623 \u0641\u064a \u0645\u0639\u0627\u0644\u062c\u0629 \u0627\u0644\u0645\u0644\u0641',
@@ -372,6 +374,7 @@ var TRANSLATIONS = {
         verdict_real_sub: 'L\'analyse sugg\u00e8re que ce contenu est authentique',
         verdict_uncertain_sub: 'Les r\u00e9sultats sont mitig\u00e9s \u2014 une v\u00e9rification manuelle est recommand\u00e9e',
         verdict_mixed_sub: 'Les moteurs sont divis\u00e9s \u2014 certains indiquent une IA, d\'autres sugg\u00e8rent un contenu authentique',
+        verdict_mixed_note: 'Remarque : Le contenu peut être authentique ou avoir été manipulé à l\'aide d\'outils IA ou de conception.',
         toast_uploading: 'Traitement du fichier...',
         toast_complete: 'Analyse termin\u00e9e !',
         toast_error: 'Erreur lors du traitement',
@@ -495,6 +498,9 @@ function setLanguage(lang) {
         htmlRoot.setAttribute('lang', lang);
     }
     applyTranslations();
+    // Update mixed note text if it is visible
+    var mixedNote = document.getElementById('verdictMixedNote');
+    if (mixedNote) mixedNote.textContent = t('verdict_mixed_note');
     document.querySelectorAll('.lang-option').forEach(function(opt) {
         opt.classList.toggle('active', opt.getAttribute('data-lang') === lang);
     });
@@ -2126,8 +2132,8 @@ async function compareResults(results) {
     var sumScores = validResults.reduce(function(acc, r) { return acc + r.aiScore; }, 0);
     var avgScore = Math.round(sumScores / totalEngines);
 
-    // Main decision: average percentage >= 50 → AI, otherwise Real
-    var verdict = avgScore >= 50 ? 'ai' : 'real';
+    // Main decision: avg >= 50 → AI | 40–49 → Mixed | < 40 → Real
+    var verdict = avgScore >= 50 ? 'ai' : (avgScore >= 40 ? 'mixed' : 'real');
 
     // Engine vote counts (for display / breakdown only — NOT used to change verdict)
     var verdicts = { ai: 0, real: 0, uncertain: 0 };
@@ -2323,6 +2329,17 @@ function displayResults(comparison, allResults) {
         verdictSubtitle.textContent = detailText + ' ' + comparison.finalScore + '%';
     } else {
         verdictSubtitle.textContent = detailText + ' ' + comparison.finalScore + '%';
+    }
+
+    // Show mixed note if applicable
+    var existingNote = document.getElementById('verdictMixedNote');
+    if (existingNote) existingNote.remove();
+    if (comparison.verdict === 'mixed') {
+        var noteEl = document.createElement('p');
+        noteEl.id = 'verdictMixedNote';
+        noteEl.style.cssText = 'margin-top:10px;font-size:0.85rem;color:var(--warning);opacity:0.9;font-style:italic;';
+        noteEl.textContent = t('verdict_mixed_note');
+        verdictSubtitle.parentNode.insertBefore(noteEl, verdictSubtitle.nextSibling);
     }
     
     // Animate score - show the AI probability percentage
