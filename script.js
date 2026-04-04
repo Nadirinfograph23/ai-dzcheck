@@ -3,6 +3,47 @@
    AI Content Detection with multi-engine analysis
    ============================================ */
 
+// ==================== PWA EARLY CAPTURE ====================
+// Must be at top-level — beforeinstallprompt fires before DOMContentLoaded
+var deferredPrompt = null;
+(function() {
+    var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                       window.navigator.standalone === true;
+    var dismissed = localStorage.getItem('pwa_banner_dismissed_v4');
+    if (!isStandalone && !dismissed) {
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Show banner once DOM is ready
+            var showWhenReady = function() {
+                var banner = document.getElementById('pwaInstallBanner');
+                if (banner) {
+                    banner.classList.add('show');
+                    document.body.classList.add('pwa-banner-visible');
+                } else {
+                    setTimeout(showWhenReady, 200);
+                }
+            };
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(showWhenReady, 800);
+                });
+            } else {
+                setTimeout(showWhenReady, 800);
+            }
+        });
+        window.addEventListener('appinstalled', function() {
+            deferredPrompt = null;
+            var banner = document.getElementById('pwaInstallBanner');
+            if (banner) {
+                banner.classList.remove('show');
+                document.body.classList.remove('pwa-banner-visible');
+            }
+            localStorage.setItem('pwa_banner_dismissed_v4', '1');
+        });
+    }
+})();
+
 // ==================== TRANSLATIONS ====================
 var currentLang = localStorage.getItem('aidzcheck_lang') || 'en';
 
@@ -3103,22 +3144,15 @@ function resetAnalysis() {
 }
 
 // ==================== PWA ====================
-var deferredPrompt = null;
-
-function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-           (window.innerWidth <= 768);
+function showPWABanner() {
+    var banner = document.getElementById('pwaInstallBanner');
+    if (banner && !banner.classList.contains('show')) {
+        banner.classList.add('show');
+        document.body.classList.add('pwa-banner-visible');
+    }
 }
 
-function showPWABanner() {
-      var banner = document.getElementById('pwaInstallBanner');
-      if (banner && !banner.classList.contains('show')) {
-          banner.classList.add('show');
-          document.body.classList.add('pwa-banner-visible');
-      }
-  }
-
-  function hidePWABanner() {
+function hidePWABanner() {
     var banner = document.getElementById('pwaInstallBanner');
     if (banner) {
         banner.classList.remove('show');
@@ -3127,10 +3161,6 @@ function showPWABanner() {
 }
 
 function initPWA() {
-    var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-                       window.navigator.standalone === true;
-    var dismissed = localStorage.getItem('pwa_banner_dismissed_v3');
-
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').then(function(reg) {
             reg.update();
@@ -3139,29 +3169,15 @@ function initPWA() {
         });
     }
 
-    if (!isStandalone && !dismissed) {
-        window.addEventListener('beforeinstallprompt', function(e) {
-            e.preventDefault();
-            deferredPrompt = e;
-            setTimeout(function() { showPWABanner(); }, 1500);
-        });
-
-        window.addEventListener('appinstalled', function() {
-            deferredPrompt = null;
-            hidePWABanner();
-            localStorage.setItem('pwa_banner_dismissed_v3', '1');
-        });
-    }
-
     var installBtn = document.getElementById('pwaInstallBtn');
     if (installBtn) {
         installBtn.addEventListener('click', function() {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(function(choice) {
+                deferredPrompt.userChoice.then(function() {
                     deferredPrompt = null;
                     hidePWABanner();
-                    localStorage.setItem('pwa_banner_dismissed_v3', '1');
+                    localStorage.setItem('pwa_banner_dismissed_v4', '1');
                 });
             }
         });
@@ -3171,7 +3187,7 @@ function initPWA() {
     if (closeBtn) {
         closeBtn.addEventListener('click', function() {
             hidePWABanner();
-            localStorage.setItem('pwa_banner_dismissed_v3', '1');
+            localStorage.setItem('pwa_banner_dismissed_v4', '1');
         });
     }
 }
