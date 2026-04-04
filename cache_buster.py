@@ -251,8 +251,10 @@ def build(clean: bool = False) -> dict:
         else:
             print(f"  {fname:20s} no changes needed")
 
-    # 6. Write updated vercel.json with immutable headers for hashed files
-    _write_vercel_json(rename_map)
+    # 6. Remove vercel.json from dist/ — Vercel reads it from repo root only
+    dist_vercel = DIST / "vercel.json"
+    if dist_vercel.exists():
+        dist_vercel.unlink()
 
     # 7. Persist the manifest
     save_manifest(new_manifest)
@@ -268,55 +270,6 @@ def build(clean: bool = False) -> dict:
     return new_manifest
 
 
-def _write_vercel_json(rename_map: dict) -> None:
-    """
-    Write a dist/vercel.json with:
-      • immutable, long-lived cache for hashed assets
-      • no-cache for index.html, sw.js, manifest.json
-    """
-    headers = [
-        # Hashed CSS/JS → 1 year immutable
-        {
-            "source": r"/(.*)\.[a-f0-9]{8}\.(css|js)",
-            "headers": [
-                {"key": "Cache-Control", "value": "public, max-age=31536000, immutable"}
-            ]
-        },
-        # Hashed images → 1 year immutable
-        {
-            "source": r"/(.*)\.[a-f0-9]{8}\.(png|jpg|jpeg|gif|webp|svg|ico)",
-            "headers": [
-                {"key": "Cache-Control", "value": "public, max-age=31536000, immutable"}
-            ]
-        },
-        # Service worker — always fresh
-        {
-            "source": "/sw.js",
-            "headers": [
-                {"key": "Cache-Control", "value": "no-cache, no-store, must-revalidate"},
-                {"key": "Pragma",        "value": "no-cache"},
-            ]
-        },
-        # HTML entry point — always fresh
-        {
-            "source": "/index.html",
-            "headers": [
-                {"key": "Cache-Control", "value": "no-cache, no-store, must-revalidate"},
-                {"key": "Pragma",        "value": "no-cache"},
-            ]
-        },
-        # PWA manifest — always fresh
-        {
-            "source": "/manifest.json",
-            "headers": [
-                {"key": "Cache-Control", "value": "no-cache, no-store, must-revalidate"}
-            ]
-        },
-    ]
-
-    dist_vercel = DIST / "vercel.json"
-    dist_vercel.write_text(json.dumps({"headers": headers}, indent=2))
-    print("  vercel.json      cache rules updated ✅")
 
 
 # ── Check (dry-run) ────────────────────────────────────────────────────────────
