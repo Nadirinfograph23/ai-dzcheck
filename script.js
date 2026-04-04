@@ -22,7 +22,7 @@ window.addEventListener('appinstalled', function() {
         banner.classList.remove('show');
         document.body.classList.remove('pwa-banner-visible');
     }
-    localStorage.setItem('pwa_banner_dismissed_v5', '1');
+    sessionStorage.setItem('pwa_banner_dismissed', '1');
 });
 
 // ==================== TRANSLATIONS ====================
@@ -3128,8 +3128,12 @@ function resetAnalysis() {
 function showPWABanner() {
     var banner = document.getElementById('pwaInstallBanner');
     if (banner && !banner.classList.contains('show')) {
-        banner.classList.add('show');
-        document.body.classList.add('pwa-banner-visible');
+        banner.style.display = 'flex';
+        requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+                banner.classList.add('show');
+            });
+        });
     }
 }
 
@@ -3137,7 +3141,11 @@ function hidePWABanner() {
     var banner = document.getElementById('pwaInstallBanner');
     if (banner) {
         banner.classList.remove('show');
-        document.body.classList.remove('pwa-banner-visible');
+        setTimeout(function() {
+            if (!banner.classList.contains('show')) {
+                banner.style.display = 'none';
+            }
+        }, 500);
     }
 }
 
@@ -3153,14 +3161,14 @@ function hideIOSGuide() {
 
 function initPWA() {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js?v=25', { updateViaCache: 'none' })
+        navigator.serviceWorker.register('sw.js?v=26', { updateViaCache: 'none' })
             .then(function(reg) { reg.update(); })
             .catch(function(err) { console.log('SW error:', err); });
     }
 
-    var dismissed = localStorage.getItem('pwa_banner_dismissed_v5');
+    var dismissed = sessionStorage.getItem('pwa_banner_dismissed');
     if (!pwaIsInstalled && !dismissed) {
-        setTimeout(showPWABanner, 1800);
+        setTimeout(showPWABanner, 1500);
     }
 
     var installBtn = document.getElementById('pwaInstallBtn');
@@ -3171,10 +3179,10 @@ function initPWA() {
                 deferredPrompt.userChoice.then(function(choice) {
                     deferredPrompt = null;
                     hidePWABanner();
-                    localStorage.setItem('pwa_banner_dismissed_v5', '1');
+                    if (choice.outcome === 'accepted') {
+                        sessionStorage.setItem('pwa_banner_dismissed', '1');
+                    }
                 });
-            } else if (pwaIsIOS) {
-                showIOSGuide();
             } else {
                 showIOSGuide();
             }
@@ -3185,7 +3193,7 @@ function initPWA() {
     if (closeBtn) {
         closeBtn.addEventListener('click', function() {
             hidePWABanner();
-            localStorage.setItem('pwa_banner_dismissed_v5', '1');
+            sessionStorage.setItem('pwa_banner_dismissed', '1');
         });
     }
 
