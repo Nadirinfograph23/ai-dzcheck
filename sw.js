@@ -3,7 +3,7 @@
    Offline support & caching
    ============================================ */
 
-var CACHE_NAME = 'aidzcheck-v24';
+var CACHE_NAME = 'aidzcheck-v25';
 var ASSETS = [
     '/',
     '/index.html',
