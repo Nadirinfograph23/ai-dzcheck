@@ -4,45 +4,26 @@
    ============================================ */
 
 // ==================== PWA EARLY CAPTURE ====================
-// Must be at top-level — beforeinstallprompt fires before DOMContentLoaded
+// Capture beforeinstallprompt at the very top — fires before DOMContentLoaded
 var deferredPrompt = null;
-(function() {
-    var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-                       window.navigator.standalone === true;
-    var dismissed = localStorage.getItem('pwa_banner_dismissed_v4');
-    if (!isStandalone && !dismissed) {
-        window.addEventListener('beforeinstallprompt', function(e) {
-            e.preventDefault();
-            deferredPrompt = e;
-            // Show banner once DOM is ready
-            var showWhenReady = function() {
-                var banner = document.getElementById('pwaInstallBanner');
-                if (banner) {
-                    banner.classList.add('show');
-                    document.body.classList.add('pwa-banner-visible');
-                } else {
-                    setTimeout(showWhenReady, 200);
-                }
-            };
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    setTimeout(showWhenReady, 800);
-                });
-            } else {
-                setTimeout(showWhenReady, 800);
-            }
-        });
-        window.addEventListener('appinstalled', function() {
-            deferredPrompt = null;
-            var banner = document.getElementById('pwaInstallBanner');
-            if (banner) {
-                banner.classList.remove('show');
-                document.body.classList.remove('pwa-banner-visible');
-            }
-            localStorage.setItem('pwa_banner_dismissed_v4', '1');
-        });
+var pwaIsIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.MSStream;
+var pwaIsInstalled = window.matchMedia('(display-mode: standalone)').matches ||
+                     window.navigator.standalone === true;
+
+window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+});
+
+window.addEventListener('appinstalled', function() {
+    deferredPrompt = null;
+    var banner = document.getElementById('pwaInstallBanner');
+    if (banner) {
+        banner.classList.remove('show');
+        document.body.classList.remove('pwa-banner-visible');
     }
-})();
+    localStorage.setItem('pwa_banner_dismissed_v5', '1');
+});
 
 // ==================== TRANSLATIONS ====================
 var currentLang = localStorage.getItem('aidzcheck_lang') || 'en';
@@ -3160,13 +3141,26 @@ function hidePWABanner() {
     }
 }
 
+function showIOSGuide() {
+    var modal = document.getElementById('pwaIOSGuide');
+    if (modal) modal.style.display = 'flex';
+}
+
+function hideIOSGuide() {
+    var modal = document.getElementById('pwaIOSGuide');
+    if (modal) modal.style.display = 'none';
+}
+
 function initPWA() {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').then(function(reg) {
-            reg.update();
-        }).catch(function(err) {
-            console.log('SW registration failed:', err);
-        });
+        navigator.serviceWorker.register('sw.js?v=25', { updateViaCache: 'none' })
+            .then(function(reg) { reg.update(); })
+            .catch(function(err) { console.log('SW error:', err); });
+    }
+
+    var dismissed = localStorage.getItem('pwa_banner_dismissed_v5');
+    if (!pwaIsInstalled && !dismissed) {
+        setTimeout(showPWABanner, 1800);
     }
 
     var installBtn = document.getElementById('pwaInstallBtn');
@@ -3174,11 +3168,15 @@ function initPWA() {
         installBtn.addEventListener('click', function() {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(function() {
+                deferredPrompt.userChoice.then(function(choice) {
                     deferredPrompt = null;
                     hidePWABanner();
-                    localStorage.setItem('pwa_banner_dismissed_v4', '1');
+                    localStorage.setItem('pwa_banner_dismissed_v5', '1');
                 });
+            } else if (pwaIsIOS) {
+                showIOSGuide();
+            } else {
+                showIOSGuide();
             }
         });
     }
@@ -3187,7 +3185,18 @@ function initPWA() {
     if (closeBtn) {
         closeBtn.addEventListener('click', function() {
             hidePWABanner();
-            localStorage.setItem('pwa_banner_dismissed_v4', '1');
+            localStorage.setItem('pwa_banner_dismissed_v5', '1');
+        });
+    }
+
+    var iosCloseBtn = document.getElementById('pwaIOSGuideClose');
+    if (iosCloseBtn) {
+        iosCloseBtn.addEventListener('click', hideIOSGuide);
+    }
+    var iosOverlay = document.getElementById('pwaIOSGuide');
+    if (iosOverlay) {
+        iosOverlay.addEventListener('click', function(e) {
+            if (e.target === iosOverlay) hideIOSGuide();
         });
     }
 }
