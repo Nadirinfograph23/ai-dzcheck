@@ -2069,249 +2069,112 @@ async function analyzeReverseSearch(file, prevResults) {
     };
 }
 
-// Step 5: Compare Results - Balanced multi-engine comparison with EXIF-aware weighting
-// Dynamic weights based on metadata quality:
-//   Strong camera EXIF → metadata gets high weight to counterbalance model false positives
-//   No EXIF → models get full weight
+// Step 5: Compare Results - Equal-weight consensus across all engines
+// Logic: finalScore = arithmetic mean of all engine aiScores (no engine dominates)
+//   avg >= 50 → AI-generated  |  avg < 50 → Authentic
+//   EXIF signals are informational only and do NOT override the verdict
 async function compareResults(results) {
     await delay(600 + Math.random() * 400);
-    
-    // Detect file type for specialized weighting
+
     var fileType = currentFile ? getFileType(currentFile) : 'unknown';
-    var isVideoFile = fileType === 'video';
     var isAudioFile = fileType === 'audio';
+    var mediaLabel = fileType === 'video' ? 'video' : isAudioFile ? 'audio' : 'image';
 
-    // AUDIO FILES: Use the 5 audio-specific tools as core engines for consensus
-    if (isAudioFile) {
-        // Audio results order: [deepfakeVoice, freeAIDetector, aiVoiceDetector, aiVideoDetectorAudio, screenAppAudio, metadata, reverseSearch]
-        var audioDeepfakeVoiceScore = results[0] ? results[0].aiScore : 50;
-        var audioFreeAIScore = results[1] ? results[1].aiScore : 50;
-        var audioAIVoiceScore = results[2] ? results[2].aiScore : 50;
-        var audioAIVideoDetScore = results[3] ? results[3].aiScore : 50;
-        var audioScreenAppScore = results[4] ? results[4].aiScore : 50;
-        var audioMetadataScore = results[5] ? results[5].aiScore : 50;
-        var audioReverseScore = results[6] ? results[6].aiScore : 50;
+    // ── CORE LOGIC ──────────────────────────────────────────────────────────────
+    // All engines are treated equally — no single engine dominates.
+    // finalScore = simple arithmetic mean of every engine's aiScore.
+    // verdict rule: avg >= 50 → AI   |   avg < 50 → Real
+    // ────────────────────────────────────────────────────────────────────────────
+    var validResults = results.filter(function(r) {
+        return r && typeof r.aiScore === 'number';
+    });
+    var totalEngines = validResults.length;
 
-        // Audio weights: 5 core audio tools get highest weights (total = 0.85)
-        // wa1=DeepfakeVoice, wa2=FreeAIDetector, wa3=AIVoiceDetector, wa4=AIVideoDetector(Audio), wa5=ScreenAppAudio, wa6=Metadata, wa7=Reverse
-        var wa1 = 0.22, wa2 = 0.18, wa3 = 0.18, wa4 = 0.15, wa5 = 0.12, wa6 = 0.08, wa7 = 0.07;
-
-        var audioFinalScore = Math.round(
-            audioDeepfakeVoiceScore * wa1 +
-            audioFreeAIScore * wa2 +
-            audioAIVoiceScore * wa3 +
-            audioAIVideoDetScore * wa4 +
-            audioScreenAppScore * wa5 +
-            audioMetadataScore * wa6 +
-            audioReverseScore * wa7
-        );
-
-        // Audio consensus decision
-        var audioConsensus;
-        if (audioFinalScore >= 60) {
-            audioConsensus = 'ai';
-        } else if (audioFinalScore <= 38) {
-            audioConsensus = 'real';
-        } else {
-            var audioTotalScore = audioDeepfakeVoiceScore + audioFreeAIScore + audioAIVoiceScore + audioAIVideoDetScore + audioScreenAppScore + audioMetadataScore + audioReverseScore;
-            var audioAvgScore = audioTotalScore / 7;
-            if (audioAvgScore >= 45) {
-                audioConsensus = 'ai';
-            } else if (audioAvgScore <= 35) {
-                audioConsensus = 'real';
-            } else {
-                audioConsensus = 'uncertain';
-            }
-        }
-
-        // Audio consensus override by engine vote count
-        var audioVerdicts = { ai: 0, real: 0, uncertain: 0 };
-        results.forEach(function(r) { audioVerdicts[r.verdict]++; });
-        var audioAgreeing = Math.max(audioVerdicts.ai, audioVerdicts.real, audioVerdicts.uncertain);
-
-        if (audioVerdicts.real >= 4 && audioFinalScore < 65) {
-            audioConsensus = 'real';
-        }
-        if (audioVerdicts.ai >= 4 && audioFinalScore >= 45) {
-            audioConsensus = 'ai';
-        }
-
-        // Mixed check for audio: if AI and Real votes are close (difference <= 30% of total engines)
-        var audioTotalEngines = results.length;
-        if (audioTotalEngines > 0) {
-            var audioVoteDiff = Math.abs(audioVerdicts.ai - audioVerdicts.real);
-            if (audioVoteDiff / audioTotalEngines <= 0.30) {
-                audioConsensus = 'mixed';
-            }
-        }
-
-        var audioDeepfakeDetected = (audioConsensus === 'ai') && (audioDeepfakeVoiceScore >= 55 || audioFreeAIScore >= 55 || audioAIVoiceScore >= 55 || audioAIVideoDetScore >= 55 || audioScreenAppScore >= 55);
-
+    if (totalEngines === 0) {
         return {
-            finalScore: audioFinalScore,
-            naturalScore: 100 - audioFinalScore,
-            verdict: audioConsensus,
-            agreeing: audioAgreeing,
-            total: results.length,
-            deepfakeScore: audioDeepfakeVoiceScore,
-            deepguardScore: audioFreeAIScore,
-            deepaiScore: audioAIVoiceScore,
-            aiornotScore: audioAIVideoDetScore,
-            illuminartyScore: audioScreenAppScore,
-            screenappScore: audioMetadataScore,
-            overchatScore: audioReverseScore,
-            mediaLabel: 'audio',
-            deepfakeDetected: audioDeepfakeDetected,
-            otherReportsClean: (audioMetadataScore < 40 && audioReverseScore < 40),
-            weightsUsed: { deepfakeVoice: wa1, freeAIDetector: wa2, aiVoiceDetector: wa3, aiVideoDetectorAudio: wa4, screenAppAudio: wa5, metadata: wa6, reverse: wa7 },
-            exifInfluence: 'low',
-            breakdown: results.map(function(r) {
-                return { engine: r.engine, score: r.aiScore, verdict: r.verdict, confidence: r.confidence };
-            })
+            finalScore: 50, naturalScore: 50, verdict: 'uncertain',
+            agreeing: 0, total: 0, mediaLabel: mediaLabel,
+            deepfakeDetected: false, otherReportsClean: true,
+            exifInfluence: 'none', weightsUsed: 'equal',
+            breakdown: []
         };
     }
 
-    // NON-AUDIO FILES: Logic for images/videos with 16 engines
-    var deepfakeScore = results[0] ? results[0].aiScore : 50;
-    var deepguardScore = results[1] ? results[1].aiScore : 50;
-    var deepaiScore = results[2] ? results[2].aiScore : 50;
-    var aiornotScore = results[3] ? results[3].aiScore : 50;
-    var illuminartyScore = results[4] ? results[4].aiScore : 50;
-    var fauxlensScore = results[5] ? results[5].aiScore : 50;
-    var dfdetectionScore = results[6] ? results[6].aiScore : 50;
-    var aideepfakeScore = results[7] ? results[7].aiScore : 50;
-    var aidetectlabScore = results[8] ? results[8].aiScore : 50;
-    var hivemoderationScore = results[9] ? results[9].aiScore : 50;
-    var sightengineScore = results[10] ? results[10].aiScore : 50;
-    var isitaiScore = results[11] ? results[11].aiScore : 50;
-    var screenappScore = results[12] ? results[12].aiScore : 50;
-    var overchatScore = results[13] ? results[13].aiScore : 50;
-    var metadataScore = results[14] ? results[14].aiScore : 50;
-    var reverseScore = results[15] ? results[15].aiScore : 50;
+    // Equal-weight average of all engine AI scores
+    var sumScores = validResults.reduce(function(acc, r) { return acc + r.aiScore; }, 0);
+    var avgScore = Math.round(sumScores / totalEngines);
 
-    // Check EXIF signals from metadata analysis for dynamic weighting
-    var exifSignals = (results[14] && results[14]._exifSignals) ? results[14]._exifSignals : {};
-    var strongCameraExif = exifSignals.cameraFound && (exifSignals.gpsFound || exifSignals.exposureFound || exifSignals.dateTimeFound);
-    var aiSoftwareInExif = exifSignals.aiSoftwareDetected;
+    // Main decision: average percentage >= 50 → AI, otherwise Real
+    var verdict = avgScore >= 50 ? 'ai' : 'real';
 
-    // Dynamic weight calculation for 16 engines
-    // w1=Deepfake API, w2=DeepGuard, w3=DeepAI, w4=AIorNot, w5=Illuminarty,
-    // w6=FauxLens, w7=DeepfakeDetection, w8=AIDeepFake, w9=AIDetectLab,
-    // w10=HiveModeration, w11=Sightengine, w12=IsItAI,
-    // w13=ScreenApp, w14=OverChat, w15=Metadata, w16=Reverse
-    var w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14, w15, w16;
-
-    if (isVideoFile) {
-        // VIDEO: ScreenApp & OverChat are essential/primary engines with highest weights
-        w1 = 0.04; w2 = 0.03; w3 = 0.03; w4 = 0.03; w5 = 0.03;
-        w6 = 0.03; w7 = 0.03; w8 = 0.03; w9 = 0.03; w10 = 0.03; w11 = 0.03; w12 = 0.03;
-        w13 = 0.20; w14 = 0.20; w15 = 0.10; w16 = 0.11;
-    } else if (aiSoftwareInExif) {
-        // AI software found in EXIF - metadata is very reliable
-        w1 = 0.04; w2 = 0.03; w3 = 0.03; w4 = 0.03; w5 = 0.03;
-        w6 = 0.03; w7 = 0.03; w8 = 0.03; w9 = 0.03; w10 = 0.03; w11 = 0.03; w12 = 0.03;
-        w13 = 0.03; w14 = 0.03; w15 = 0.45; w16 = 0.06;
-    } else if (strongCameraExif) {
-        // Strong camera EXIF found
-        w1 = 0.05; w2 = 0.04; w3 = 0.04; w4 = 0.04; w5 = 0.04;
-        w6 = 0.04; w7 = 0.04; w8 = 0.04; w9 = 0.04; w10 = 0.04; w11 = 0.04; w12 = 0.04;
-        w13 = 0.03; w14 = 0.03; w15 = 0.35; w16 = 0.06;
-    } else if (exifSignals.cameraFound) {
-        // Camera found but limited EXIF
-        w1 = 0.06; w2 = 0.05; w3 = 0.05; w4 = 0.05; w5 = 0.05;
-        w6 = 0.05; w7 = 0.05; w8 = 0.05; w9 = 0.05; w10 = 0.05; w11 = 0.05; w12 = 0.05;
-        w13 = 0.04; w14 = 0.04; w15 = 0.16; w16 = 0.06;
-    } else {
-        // No camera EXIF - rely more on AI models
-        w1 = 0.07; w2 = 0.06; w3 = 0.06; w4 = 0.06; w5 = 0.06;
-        w6 = 0.06; w7 = 0.06; w8 = 0.06; w9 = 0.06; w10 = 0.06; w11 = 0.06; w12 = 0.06;
-        w13 = 0.04; w14 = 0.04; w15 = 0.05; w16 = 0.08;
-    }
-
-    var finalScore = Math.round(
-        deepfakeScore * w1 +
-        deepguardScore * w2 +
-        deepaiScore * w3 +
-        aiornotScore * w4 +
-        illuminartyScore * w5 +
-        fauxlensScore * w6 +
-        dfdetectionScore * w7 +
-        aideepfakeScore * w8 +
-        aidetectlabScore * w9 +
-        hivemoderationScore * w10 +
-        sightengineScore * w11 +
-        isitaiScore * w12 +
-        screenappScore * w13 +
-        overchatScore * w14 +
-        metadataScore * w15 +
-        reverseScore * w16
-    );
-    
-    // Count how many engines vote for each verdict
+    // Engine vote counts (for display / breakdown only — NOT used to change verdict)
     var verdicts = { ai: 0, real: 0, uncertain: 0 };
-    results.forEach(function(r) { verdicts[r.verdict]++; });
+    validResults.forEach(function(r) {
+        var v = r.verdict || (r.aiScore >= 50 ? 'ai' : 'real');
+        if (verdicts[v] !== undefined) verdicts[v]++;
+        else verdicts.uncertain++;
+    });
     var agreeing = Math.max(verdicts.ai, verdicts.real, verdicts.uncertain);
 
-    // Rule 1 & 2: Decision based on engine vote percentage across all engines
-    var totalEngineVotes = results.length;
-    var aiPercentage = totalEngineVotes > 0 ? (verdicts.ai / totalEngineVotes) * 100 : 50;
-    var consensus;
-
-    if (aiPercentage >= 50) {
-        // Rule 1: 50% or more engines detect AI -> AI-generated
-        consensus = 'ai';
-    } else if (aiPercentage >= 45) {
-        // Rule 2: Between 45% and 49% -> Mixed
-        consensus = 'mixed';
-    } else {
-        consensus = 'real';
+    // EXIF signals (informational only — do NOT override the verdict)
+    var exifSignals = {};
+    if (!isAudioFile) {
+        var metaIdx = results.length >= 16 ? 14 : results.length >= 6 ? 5 : -1;
+        if (metaIdx >= 0 && results[metaIdx] && results[metaIdx]._exifSignals) {
+            exifSignals = results[metaIdx]._exifSignals;
+        }
     }
+    var strongCameraExif = exifSignals.cameraFound &&
+        (exifSignals.gpsFound || exifSignals.exposureFound || exifSignals.dateTimeFound);
+    var exifInfluence = exifSignals.aiSoftwareDetected ? 'ai-software'
+        : strongCameraExif ? 'strong-camera'
+        : exifSignals.cameraFound ? 'camera'
+        : 'none';
 
-    // Rule 3: If AI count exceeds real count by +2 or more -> AI-generated
-    //         If real count exceeds AI count by +2 or more -> Authentic (real)
-    if (verdicts.ai - verdicts.real >= 2) {
-        consensus = 'ai';
-    } else if (verdicts.real - verdicts.ai >= 2) {
-        consensus = 'real';
-    }
+    // Deepfake detected = verdict is AI AND at least one engine scored >= 55
+    var deepfakeDetected = verdict === 'ai' &&
+        validResults.some(function(r) { return r.aiScore >= 55; });
 
-    // Rule 4: If phone or camera metadata is present, the content is authentic (real)
-    if (exifSignals.cameraFound) {
-        consensus = 'real';
-    }
+    // Individual engine scores (positional, same order as analyzeFile builds results[])
+    function score(idx) { return results[idx] ? results[idx].aiScore : null; }
 
-    // Determine media-specific insight for the explanatory paragraph
-    var mediaLabel = fileType === 'video' ? 'video' : 'image';
-    var deepfakeDetected = (consensus === 'ai') && (deepfakeScore >= 55 || deepguardScore >= 55 || deepaiScore >= 55 || aiornotScore >= 55 || illuminartyScore >= 55 || fauxlensScore >= 55 || dfdetectionScore >= 55 || aideepfakeScore >= 55 || aidetectlabScore >= 55 || hivemoderationScore >= 55 || sightengineScore >= 55 || isitaiScore >= 55 || screenappScore >= 55 || overchatScore >= 55);
-    var otherReportsClean = (metadataScore < 40 && reverseScore < 40);
-
+    var isAudio = isAudioFile;
     return {
-        finalScore: finalScore,
-        naturalScore: 100 - finalScore,
-        verdict: consensus,
+        finalScore: avgScore,
+        naturalScore: 100 - avgScore,
+        verdict: verdict,
         agreeing: agreeing,
         total: results.length,
-        deepfakeScore: deepfakeScore,
-        deepguardScore: deepguardScore,
-        deepaiScore: deepaiScore,
-        aiornotScore: aiornotScore,
-        illuminartyScore: illuminartyScore,
-        fauxlensScore: fauxlensScore,
-        dfdetectionScore: dfdetectionScore,
-        aideepfakeScore: aideepfakeScore,
-        aidetectlabScore: aidetectlabScore,
-        hivemoderationScore: hivemoderationScore,
-        sightengineScore: sightengineScore,
-        isitaiScore: isitaiScore,
-        screenappScore: screenappScore,
-        overchatScore: overchatScore,
+        // Image / Video engines
+        deepfakeScore:    score(0),
+        deepguardScore:   score(1),
+        deepaiScore:      score(2),
+        aiornotScore:     score(3),
+        illuminartyScore: score(4),
+        fauxlensScore:    score(5),
+        dfdetectionScore: score(6),
+        aideepfakeScore:  score(7),
+        aidetectlabScore: score(8),
+        hivemoderationScore: score(9),
+        sightengineScore: score(10),
+        isitaiScore:      score(11),
+        screenappScore:   score(12),
+        overchatScore:    score(13),
         mediaLabel: mediaLabel,
         deepfakeDetected: deepfakeDetected,
-        otherReportsClean: otherReportsClean,
-        weightsUsed: { model1: w1, model2: w2, deepai: w3, aiornot: w4, illuminarty: w5, fauxlens: w6, dfdetection: w7, aideepfake: w8, aidetectlab: w9, hivemoderation: w10, sightengine: w11, isitai: w12, screenapp: w13, overchat: w14, metadata: w15, reverse: w16 },
-        exifInfluence: strongCameraExif ? 'high' : exifSignals.cameraFound ? 'moderate' : 'low',
+        otherReportsClean: (
+            (score(14) !== null ? score(14) < 40 : true) &&
+            (score(15) !== null ? score(15) < 40 : true)
+        ),
+        weightsUsed: 'equal-' + totalEngines,
+        exifInfluence: exifInfluence,
         breakdown: results.map(function(r) {
-            return { engine: r.engine, score: r.aiScore, verdict: r.verdict, confidence: r.confidence };
+            return {
+                engine: r ? r.engine : '—',
+                score: r ? r.aiScore : null,
+                verdict: r ? (r.verdict || (r.aiScore >= 50 ? 'ai' : 'real')) : '—',
+                confidence: r ? r.confidence : null
+            };
         })
     };
 }
