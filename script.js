@@ -2247,36 +2247,37 @@ async function compareResults(results) {
         reverseScore * w16
     );
     
-    // Decision logic: >= 50% = AI, < 50% = Real
-    var consensus;
-    if (finalScore >= 50) {
-        consensus = 'ai';
-    } else {
-        consensus = 'real';
-    }
-
-    // Additional consensus check: count how many engines agree
+    // Count how many engines vote for each verdict
     var verdicts = { ai: 0, real: 0, uncertain: 0 };
     results.forEach(function(r) { verdicts[r.verdict]++; });
     var agreeing = Math.max(verdicts.ai, verdicts.real, verdicts.uncertain);
 
-    // Override: if strong majority of engines say AI and score is borderline, trust engines
-    if (verdicts.ai >= 10 && finalScore >= 40) {
+    // Rule 1 & 2: Decision based on engine vote percentage across all engines
+    var totalEngineVotes = results.length;
+    var aiPercentage = totalEngineVotes > 0 ? (verdicts.ai / totalEngineVotes) * 100 : 50;
+    var consensus;
+
+    if (aiPercentage >= 50) {
+        // Rule 1: 50% or more engines detect AI -> AI-generated
         consensus = 'ai';
-    }
-    // Override: if strong majority say real, trust them
-    if (verdicts.real >= 10 && finalScore < 50) {
+    } else if (aiPercentage >= 45) {
+        // Rule 2: Between 45% and 49% -> Mixed
+        consensus = 'mixed';
+    } else {
         consensus = 'real';
     }
 
-    // Mixed check: if engine votes between AI and Real are close (difference <= 30% of total engines)
-    // then override to 'mixed' regardless of the calculated consensus
-    var totalEngineVotes = results.length;
-    if (totalEngineVotes > 0) {
-        var voteDiff = Math.abs(verdicts.ai - verdicts.real);
-        if (voteDiff / totalEngineVotes <= 0.30) {
-            consensus = 'mixed';
-        }
+    // Rule 3: If AI count exceeds real count by +2 or more -> AI-generated
+    //         If real count exceeds AI count by +2 or more -> Authentic (real)
+    if (verdicts.ai - verdicts.real >= 2) {
+        consensus = 'ai';
+    } else if (verdicts.real - verdicts.ai >= 2) {
+        consensus = 'real';
+    }
+
+    // Rule 4: If phone or camera metadata is present, the content is authentic (real)
+    if (exifSignals.cameraFound) {
+        consensus = 'real';
     }
 
     // Determine media-specific insight for the explanatory paragraph
