@@ -349,7 +349,7 @@ var TRANSLATIONS = {
         verdict_ai_sub: 'Plusieurs moteurs d\'analyse indiquent que ce contenu a probablement \u00e9t\u00e9 g\u00e9n\u00e9r\u00e9 par IA',
         verdict_real_sub: 'L\'analyse sugg\u00e8re que ce contenu est authentique',
         verdict_uncertain_sub: 'Les r\u00e9sultats sont mitig\u00e9s \u2014 une v\u00e9rification manuelle est recommand\u00e9e',
-        verdict_mixed_sub: 'Les moteurs sont divisés — certains indiquent une IA, d'autres suggèrent un contenu authentique',
+        verdict_mixed_sub: 'Les moteurs sont divis\u00e9s \u2014 certains indiquent une IA, d\'autres sugg\u00e8rent un contenu authentique',
         toast_uploading: 'Traitement du fichier...',
         toast_complete: 'Analyse termin\u00e9e !',
         toast_error: 'Erreur lors du traitement',
@@ -359,7 +359,7 @@ var TRANSLATIONS = {
         verdict_ai_detail: 'Nos moteurs IA ont d\u00e9tect\u00e9 que ce contenu est probablement g\u00e9n\u00e9r\u00e9 par intelligence artificielle avec une probabilit\u00e9 de',
         verdict_real_detail: 'Nos moteurs IA sugg\u00e8rent que ce contenu est authentique et naturel avec une probabilit\u00e9 de',
         verdict_uncertain_detail: 'Les r\u00e9sultats sont mitig\u00e9s. Nous recommandons une v\u00e9rification manuelle. La probabilit\u00e9 IA est de',
-        verdict_mixed_detail: 'Les moteurs sont partagés. Certains détectent une IA, d'autres indiquent un contenu authentique. La probabilité IA est de',
+        verdict_mixed_detail: 'Les moteurs sont partag\u00e9s. Certains d\u00e9tectent une IA, d\'autres indiquent un contenu authentique. La probabilit\u00e9 IA est de',
         meta_filename: 'Nom du fichier',
         meta_filesize: 'Taille',
         meta_filetype: 'Type',
@@ -1883,7 +1883,7 @@ async function analyzeIsItAI(file, prevResults) {
     };
 }
 
-function analyzeMetadata(file) {
+async function analyzeMetadata(file) {
     var fileType = getFileType(file);
     var suspiciousName = /ai[-_]?gen|dalle|midjourney|stable[-_]?diffusion|deepfake|comfyui|novelai|niji/i.test(file.name);
 
