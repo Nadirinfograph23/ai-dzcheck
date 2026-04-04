@@ -1,0 +1,22 @@
+{
+  "style.css": {
+    "hashed": "style.705dd3b9.css",
+    "md5": "705dd3b9"
+  },
+  "script.js": {
+    "hashed": "script.a866410a.js",
+    "md5": "a866410a"
+  },
+  "icon-192.png": {
+    "hashed": "icon-192.ad34c9c8.png",
+    "md5": "ad34c9c8"
+  },
+  "icon-512.png": {
+    "hashed": "icon-512.d8d6574c.png",
+    "md5": "d8d6574c"
+  },
+  "apple-touch-icon.png": {
+    "hashed": "apple-touch-icon.e456b71c.png",
+    "md5": "e456b71c"
+  }
+}
