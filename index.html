@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI DZ CHECK - AI Content Detector</title>
-    <link rel="stylesheet" href="style.css?v=19">
+    <link rel="stylesheet" href="style.css?v=20">
     <style>
         /* ── Floating Messenger Notification ── */
         .privacy-toast {
@@ -111,6 +111,10 @@
             width: 100%;
             transform: scaleX(1);
             transform-origin: left;
+        }
+        @keyframes toastProgress {
+            from { transform: scaleX(1); }
+            to   { transform: scaleX(0); }
         }
         @media (max-width: 480px) {
             .privacy-toast {
@@ -783,37 +787,38 @@
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/exifr@7.1.3/dist/full.umd.js"></script>
-    <script src="script.js?v=21"></script>
+    <script src="script.js?v=22"></script>
     <script>
         (function () {
-            var SHOW_DELAY   = 1200;   // ms before toast appears
-            var VISIBLE_TIME = 7000;   // ms toast stays visible
+            var SHOW_DELAY   = 1200;
+            var VISIBLE_TIME = 7000;
             var toast     = document.getElementById('privacyToast');
             var closeBtn  = document.getElementById('toastClose');
             var progBar   = document.getElementById('toastProgressBar');
             var autoTimer = null;
-            var progAnim  = null;
+
+            if (!toast || !closeBtn) return;
 
             function dismissToast() {
                 clearTimeout(autoTimer);
-                if (progAnim) progAnim.cancel();
                 toast.classList.remove('toast-in');
                 toast.classList.add('toast-out');
-                toast.addEventListener('animationend', function handler() {
+                setTimeout(function() {
                     toast.style.display = 'none';
-                    toast.removeEventListener('animationend', handler);
-                }, { once: true });
+                }, 500);
             }
 
             function showToast() {
-                toast.classList.add('toast-in');
-
-                progAnim = progBar.animate(
-                    [{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }],
-                    { duration: VISIBLE_TIME, easing: 'linear', fill: 'forwards' }
-                );
-
-                autoTimer = setTimeout(dismissToast, VISIBLE_TIME);
+                toast.style.display = 'flex';
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        toast.classList.add('toast-in');
+                        if (progBar) {
+                            progBar.style.animation = 'toastProgress ' + VISIBLE_TIME + 'ms linear forwards';
+                        }
+                        autoTimer = setTimeout(dismissToast, VISIBLE_TIME);
+                    });
+                });
             }
 
             closeBtn.addEventListener('click', function (e) {
